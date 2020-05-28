@@ -6,13 +6,38 @@
 //
 
 import Foundation
+import UIKit
 
 class DataProvider {
     let group = DispatchGroup()
 }
 
 private extension DataProvider {
-    func fetchItem<T:Codable>(url: URL?, type: T.Type, completion: @escaping (T?) -> Void) {
+    func fetchArticles(url: URL?, completion: @escaping ([Article]?) -> Void) {
+        guard let url = url else { return }
+        group.enter()
+        NewsApi.getArticles(url: url) { articles in
+            completion(articles)
+            self.group.leave()
+        }
+    }
+
+    func fetchImage(url: URL?, completion: @escaping (UIImage?) -> Void) {
+        self.group.enter()
+        if
+            let url = url,
+            let data = try? Data(contentsOf: url)  {
+            let image = UIImage(data: data)
+            completion(image)
+            self.group.leave()
+        }
+        else {
+            completion(nil)
+            self.group.leave()
+        }
+    }
+
+    func fetchItem<T:Codable>(url: URL?, completion: @escaping (T?) -> Void) {
         group.enter()
         url?.apiGet { (result: Result<T,NetError>) in
 
@@ -28,19 +53,20 @@ final class ContentDataProvider: DataProvider {
     var movie: MediaSearch?
     var tv: TvSearch?
     var people: PeopleSearch?
+    var articles: [Article]?
 
     func get(_ kind: Tmdb.MoviesType,
-             completion: @escaping (MediaSearch?, TvSearch?, PeopleSearch?) -> Void) {
+             completion: @escaping (MediaSearch?, TvSearch?, PeopleSearch?, [Article]?) -> Void) {
 
         let mapped = kind.tv
         if let url = Tmdb.tvURL(kind: mapped) {
-            fetchItem(url: url, type: TvSearch.self) { (item) in
+            fetchItem(url: url) { (item: TvSearch?) in
                 self.tv = item
             }
         }
 
         if let url = Tmdb.moviesURL(kind: kind) {
-            fetchItem(url: url, type: MediaSearch.self) { (item) in
+            fetchItem(url: url) { (item: MediaSearch?) in
                 self.movie = item
             }
         }
@@ -48,33 +74,80 @@ final class ContentDataProvider: DataProvider {
         if
             kind == .popular,
             let url = Tmdb.peoplePopularURL {
-            fetchItem(url: url, type: PeopleSearch.self) { (item) in
+            fetchItem(url: url) { (item: PeopleSearch?) in
                 self.people = item
             }
         }
 
+        if let url = NewsApi.urlForCategory(NewsCategory.entertainment.rawValue) {
+            fetchArticles(url: url) { (articles) in
+                self.articles = articles
+            }
+        }
+
         group.notify(queue: .main) {
-            completion(self.movie, self.tv, self.people)
+            completion(self.movie, self.tv, self.people, self.articles)
         }
     }
 }
 
 final class MovieDataProvider: DataProvider {
-    func get(_ id: Int?, completion: @escaping (Media?) -> Void) {
+    var movie: Media?
+    var articles: [Article]?
+    var image: UIImage?
+
+    func get(_ id: Int?, completion: @escaping (Media?, [Article]?, UIImage?) -> Void) {
         let url = Tmdb.movieURL(movieId: id)
-        url?.apiGet { (result: Result<Media, NetError>) in
-            guard case .success(let item) = result else { return }
-            completion(item)
+        fetchItem(url: url) { (item: Media?) in
+            self.movie = item
+
+            if
+                let name = item?.title,
+                let url = NewsApi.urlForQuery("\(name) movie") {
+                self.fetchArticles(url: url) { (articles) in
+                    self.articles = articles
+                }
+            }
+
+            let url = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large)
+            self.fetchImage(url: url) { (image) in
+                self.image = image
+            }
+        }
+
+        group.notify(queue: .main) {
+            completion(self.movie, self.articles, self.image)
         }
     }
 }
 
 final class PersonDataProvider: DataProvider {
-    func get(_ id: Int?, completion: @escaping (Credit?) -> Void) {
+    var credit: Credit?
+    var articles: [Article]?
+    var image: UIImage?
+
+    func get(_ id: Int?, completion: @escaping (Credit?, [Article]?, UIImage?) -> Void) {
         let url = Tmdb.personURL(personId: id)
-        url?.apiGet { (result: Result<Credit, NetError>) in
-            guard case .success(let item) = result else { return }
-            completion(item)
+
+        fetchItem(url: url) { (item: Credit?) in
+            self.credit = item
+
+            if
+                let name = item?.name,
+                let url = NewsApi.urlForQuery(name) {
+                self.fetchArticles(url: url) { (articles) in
+                    self.articles = articles
+                }
+            }
+
+            let url = Tmdb.castProfileUrl(path: item?.profile_path, size: .large)
+            self.fetchImage(url: url) { (image) in
+                self.image = image
+            }
+        }
+
+        group.notify(queue: .main) {
+            completion(self.credit, self.articles, self.image)
         }
     }
 }
@@ -85,11 +158,11 @@ final class ProductionDataProvider: DataProvider {
 
     func get(_ id: Int?,
              completion: @escaping (MediaSearch?, TvSearch?) -> Void) {
-        fetchItem(url: Tmdb.moviesURL(productionId: id), type: MediaSearch.self) { (item) in
+        fetchItem(url: Tmdb.moviesURL(productionId: id)) { (item: MediaSearch?) in
             self.movie = item
         }
 
-        fetchItem(url: Tmdb.tvURL(productionId: id), type: TvSearch.self) { (item) in
+        fetchItem(url: Tmdb.tvURL(productionId: id)) { (item: TvSearch?) in
             self.tv = item
         }
 
@@ -99,12 +172,56 @@ final class ProductionDataProvider: DataProvider {
     }
 }
 
+final class SeasonDataProvider: DataProvider {
+    var season: Season?
+    var image: UIImage?
+
+    func get(_ seasonItem: Item?, completion: @escaping (Season?, UIImage?) -> Void) {
+        guard let item = seasonItem else { return }
+
+        let url = Tmdb.tvURL(tvId: item.id, seasonNumber: item.seasonNumber)
+        fetchItem(url: url) { (item: Season?) in
+            self.season = item
+
+            let imageUrl = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large)
+            self.fetchImage(url: imageUrl) { (image) in
+                self.image = image
+            }
+        }
+
+        group.notify(queue: .main) {
+            completion(self.season, self.image)
+        }
+    }
+}
+
 final class TvDataProvider: DataProvider {
-    func get(_ id: Int?, completion: @escaping (TV?) -> Void) {
+    var tv: TV?
+    var articles: [Article]?
+    var image: UIImage?
+    
+    func get(_ id: Int?, completion: @escaping (TV?, UIImage?, [Article]?) -> Void) {
         let url = Tmdb.tvURL(tvId: id)
-        url?.apiGet { (result: Result<TV, NetError>) in
-            guard case .success(let item) = result else { return }
-            completion(item)
+        fetchItem(url: url) { (item: TV?) in
+            self.tv = item
+
+            if let url = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large) {
+                self.fetchImage(url: url) { (image) in
+                    self.image = image
+                }
+            }
+
+            if
+                let name = item?.name,
+                let url = NewsApi.urlForQuery("\(name) tv") {
+                self.fetchArticles(url: url) { (articles) in
+                    self.articles = articles
+                }
+            }
+        }
+
+        group.notify(queue: .main) {
+            completion(self.tv, self.image, self.articles)
         }
     }
 }
@@ -117,15 +234,15 @@ final class SearchDataProvider: DataProvider {
     func get(_ query: String?, completion: @escaping (MediaSearch?, TvSearch?, PeopleSearch?) -> Void) {
         guard let query = query else { return }
 
-        fetchItem(url: Tmdb.searchURL(type: .movie, query: query), type: MediaSearch.self) { (item) in
+        fetchItem(url: Tmdb.searchURL(type: .movie, query: query)) { (item: MediaSearch?) in
             self.movieSearch = item
         }
 
-        fetchItem(url: Tmdb.searchURL(type: .tv, query: query), type: TvSearch.self) { (item) in
+        fetchItem(url: Tmdb.searchURL(type: .tv, query: query)) { (item: TvSearch?) in
             self.tvSearch = item
         }
 
-        fetchItem(url: Tmdb.searchURL(type: .person, query: query), type: PeopleSearch.self) { (item) in
+        fetchItem(url: Tmdb.searchURL(type: .person, query: query)) { (item: PeopleSearch?) in
             self.peopleSearch = item
         }
 

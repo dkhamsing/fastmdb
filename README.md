@@ -1,6 +1,8 @@
 ## fastmdb
 
-Swift iOS app to browse and search movies, tv, actors, credits :mag:
+- Swift iOS app to browse and search movies, tv, actors, credits :mag:
+- See at a glance movies and tv shows rated by color (green is good..) :zap:
+- Includes related news :newspaper:
 
 <img src=Images/0.png>
 
@@ -8,11 +10,12 @@ Swift iOS app to browse and search movies, tv, actors, credits :mag:
 
 - iOS 13
 - [TMdB API key](https://www.themoviedb.org/documentation/api)
+- [News API key](https://newsapi.org/register)
 
 ## Credits
 
 - [TMdB](https://www.themoviedb.org/)
-- [App icon by FMF Design](https://thenounproject.com/term/movie/3323072/)
+- [News API](https://newsapi.org/)
 
 ## Contact
 

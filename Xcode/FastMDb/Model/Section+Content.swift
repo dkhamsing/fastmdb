@@ -10,8 +10,14 @@ import Foundation
 
 extension Section {
 
-    static func contentSections(kind: Tmdb.MoviesType, movie: MediaSearch?, tv: TvSearch?, people: PeopleSearch?) -> [Section] {
+    static func contentSections(kind: Tmdb.MoviesType, movie: MediaSearch?, tv: TvSearch?, people: PeopleSearch?, articles: [Article]?) -> [Section] {
         var sections: [Section] = []
+
+        if let articles = articles {
+            let items = articles.map { $0.listItem }
+            let section = Article.section(items)
+            sections.append(section)
+        }
 
         if let movie = movie {
             let items = movie.results.map { $0.listItem }

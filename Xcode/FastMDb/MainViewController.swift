@@ -27,161 +27,75 @@ struct DataSource {
 
 class MainViewController: UIViewController {
 
-    // List
     var collectionId: Int? {
         didSet {
-            dataSource = DataSource(screen: .list)
-
-            let url = Tmdb.collectionURL(collectionId: collectionId)
-
-            spinner.startAnimating()
-
-            url?.apiGet { (result: Result<MediaCollection, NetError>) in
-
-                guard
-                    case .success(let collection) = result,
-                    let list = collection.parts?
-                        .sorted(by: { $0.release_date ?? "" > $1.release_date ?? "" })
-                        .map({ $0.listItem }) else { return }
-
-                // TODO: look up director in separate requests
-
-                let url = Tmdb.mediaPosterUrl(path: collection.backdrop_path, size: .large)
-                self.getImage(url: url) { (image) in
-                    self.dataSource.sections = [ Section(items: list) ]
-                    self.updateUI(image)
-                }
-                
-            }
-
-        }
-    }
-
-    var genreTvId: Int? {
-        didSet {
-            dataSource = DataSource(screen: .list)
-
-            let url = Tmdb.tvURL(genreId: genreTvId)
-
-            spinner.startAnimating()
-
-            url?.apiGet { (result: Result<TvSearch, NetError>) in
-                guard case .success(let search) = result else { return }
-
-                let items = search.results.map { $0.listItem }
-                self.dataSource.sections = [ Section(items: items) ]
-                self.updateUI()
-            }
-        }
-    }
-
-    var genreMovieId: Int? {
-        didSet {
-            dataSource = DataSource(screen: .list)
-
-            let url = Tmdb.moviesURL(genreId: genreMovieId)
-
-            spinner.startAnimating()
-
-            url?.apiGet { (result: Result<MediaSearch, NetError>) in
-                guard case .success(let search) = result else { return }
-
-                let items = search.results.map { $0.listItem }
-                self.dataSource.sections = [ Section(items: items) ]
-                self.updateUI()
-            }
-        }
-    }
-
-    var networkId: Int? {
-        didSet {
-            dataSource = DataSource(screen: .list)
-
-            let url = Tmdb.tvURL(networkId: networkId)
-
-            spinner.startAnimating()
-
-            url?.apiGet { (result: Result<TvSearch, NetError>) in
-                guard case .success(let search) = result else { return }
-
-                let items = search.results.map { $0.listItem }
-                self.dataSource.sections = [ Section(items: items) ]
-                self.updateUI()
-            }
-        }
-    }
-
-    var productionId: Int? {
-        didSet {
-            dataSource = DataSource(screen: .list)
-            spinner.startAnimating()
-            updateProduction(productionId)
-        }
-    }
-
-    var items: [Item]? {
-        didSet {
-            let section = Section(items: items)
-            let sections = [section]
-            dataSource = DataSource(screen: .list, sections: sections)
-            self.updateUI()
-        }
-    }
-
-    var sortedBy: String? {
-        didSet {
-            dataSource = DataSource(screen: .list)
-
-            let url = Tmdb.moviesURL(sortedBy: sortedBy)
-
-            spinner.startAnimating()
-
-            url?.apiGet { (result: Result<MediaSearch, NetError>) in
-                guard case .success(let search) = result else { return }
-
-                let items = search.results.map { $0.listItem }
-                self.dataSource.sections = [ Section(items: items) ]
-                self.updateUI()
-            }
-        }
-    }
-
-    // Detail
-    var movieId: Int? {
-        didSet {
-            dataSource = DataSource(screen: .detail)
-            spinner.startAnimating()
-            updateMovie(movieId)
-        }
-    }
-
-    var personId: Int? {
-        didSet {
-            dataSource = DataSource(screen: .detail)
-            spinner.startAnimating()
-            updatePerson(personId)
-        }
-    }
-
-    var tvId: Int? {
-        didSet {
-            dataSource = DataSource(screen: .detail)
-            spinner.startAnimating()
-            updateTv(tvId)
+            updateCollection(collectionId)
         }
     }
 
     var episode: Episode? {
         didSet {
-            dataSource = DataSource(screen: .detail)
             updateEpisode(episode)
+        }
+    }
+
+    var genreTvId: Int? {
+        didSet {
+            updateGenreTv(genreTvId)
+        }
+    }
+
+    var genreMovieId: Int? {
+        didSet {
+            updateGenreMovie(genreMovieId)
+        }
+    }
+
+    var items: [Item]? {
+        didSet {
+            updateItems(items)
+        }
+    }
+
+    var movieId: Int? {
+        didSet {
+            updateMovie(movieId)
+        }
+    }
+
+    var networkId: Int? {
+        didSet {
+            updateNetwork(networkId)
+        }
+    }
+
+    var personId: Int? {
+        didSet {
+            updatePerson(personId)
+        }
+    }
+
+    var productionId: Int? {
+        didSet {
+            updateProduction(productionId)
         }
     }
 
     var seasonItem: Item? {
         didSet {
-            dataSource = DataSource(screen: .detail)
             updateSeason(seasonItem)
+        }
+    }
+
+    var sortedBy: String? {
+        didSet {
+            updateSortedBy(sortedBy)
+        }
+    }
+
+    var tvId: Int? {
+        didSet {
+            updateTv(tvId)
         }
     }
 
@@ -272,7 +186,6 @@ private extension MainViewController {
 
 extension MainViewController {
     func loadContent(_ kind: Tmdb.MoviesType?) {
-
         guard let kind = kind else { return }
 
         spinner.startAnimating()
@@ -280,46 +193,21 @@ extension MainViewController {
         dataSource.kind = kind
         title = kind.title
 
-        self.dataSource.sections = []
-        self.updateUI()
+        dataSource.sections = []
+        updateUI()
 
         let provider = ContentDataProvider()
-        provider.get(kind) { (movie, tv, people) in
-            self.dataSource.sections = Section.contentSections(kind: kind, movie: movie, tv: tv, people: people)
+        provider.get(kind) { (movie, tv, people, articles) in
+            self.dataSource.sections = Section.contentSections(kind: kind, movie: movie, tv: tv, people: people, articles: articles)
             self.updateUI()
         }
     }
 
-    func updateUI(_ image: UIImage? = nil) {
-        // TODO: show banner instead? looks better on ipad
-        if let image = image {
-            let h = header
-            var frame = h.frame
-
-            let ratio: CGFloat = image.size.height / image.size.width
-
-            if ratio > 1 {
-                let fixedHeight: CGFloat = h.frame.height
-                frame.size.width = fixedHeight / ratio
-                frame.size.height = fixedHeight
-            } else {
-                let fixed: CGFloat = h.frame.width
-                frame.size.width = fixed
-                frame.size.height = fixed * ratio
-            }
-
-            h.frame = frame
-
-            tableView.tableHeaderView = h
-
-            imageButton.setImage(image, for: .normal)
-        }
-
+    func updateUI(_ image: UIImage? = nil, _ buttonUrl: URL? = nil) {
+        updateTableHeaderHeader(image: image, buttonUrl: buttonUrl)
         spinner.stopAnimating()
-
         tableView.reloadData()
     }
-
 }
 
 private extension MainViewController {
@@ -421,60 +309,155 @@ private extension MainViewController {
         }
     }
 
+    func updateTableHeaderHeader(image: UIImage?, buttonUrl: URL?) {
+           // TODO: show banner instead? looks better on ipad
+           guard let image = image else { return }
+
+           let h = header
+           var frame = h.frame
+
+           let ratio: CGFloat = image.size.height / image.size.width
+
+           if ratio > 1 {
+               let fixedHeight: CGFloat = h.frame.height
+               frame.size.width = fixedHeight / ratio
+               frame.size.height = fixedHeight
+           } else {
+               let fixed: CGFloat = h.frame.width
+               frame.size.width = fixed
+               frame.size.height = fixed * ratio
+           }
+
+           h.frame = frame
+
+           tableView.tableHeaderView = h
+
+           imageButton.setImage(image, for: .normal)
+
+           imageButton.url = buttonUrl
+       }
+
 }
 
 private extension MainViewController {
 
-    func updateEpisode(_ episode: Episode?) {
+    func updateCollection(_ collectionId: Int?) {
+        dataSource = DataSource(screen: .list)
         spinner.startAnimating()
 
-        let buttonUrl = Tmdb.stillImageUrl(path: episode?.still_path, size: .original)
-        self.imageButton.url = buttonUrl
+        let url = Tmdb.collectionURL(collectionId: collectionId)
+        url?.apiGet { (result: Result<MediaCollection, NetError>) in
+            guard
+                case .success(let collection) = result,
+                let list = collection.parts?
+                    .sorted(by: { $0.release_date ?? "" > $1.release_date ?? "" })
+                    .map({ $0.listItem }) else { return }
+
+            // TODO: look up director in separate requests
+
+            let url = Tmdb.mediaPosterUrl(path: collection.backdrop_path, size: .large)
+            self.getImage(url: url) { (image) in
+                self.dataSource.sections = [ Section(items: list) ]
+                self.updateUI(image)
+            }
+        }
+    }
+
+    func updateEpisode(_ episode: Episode?) {
+        dataSource = DataSource(screen: .detail)
+        spinner.startAnimating()
 
         let url = Tmdb.stillImageUrl(path: episode?.still_path, size: .original)
         self.getImage(url: url) { (image) in
             guard let episode = episode else { return }
-            
+
             self.dataSource.sections = episode.episodeSections
-            self.updateUI(image)
+            let buttonUrl = Tmdb.stillImageUrl(path: episode.still_path, size: .original)
+            self.updateUI(image, buttonUrl)
         }
     }
 
+    func updateGenreTv(_ genreTvId: Int?) {
+        dataSource = DataSource(screen: .list)
+        spinner.startAnimating()
+
+        let url = Tmdb.tvURL(genreId: genreTvId)
+        url?.apiGet { (result: Result<TvSearch, NetError>) in
+            guard case .success(let search) = result else { return }
+
+            let items = search.results.map { $0.listItem }
+            self.dataSource.sections = [ Section(items: items) ]
+            self.updateUI()
+        }
+    }
+
+    func updateGenreMovie(_ genreMovieId: Int?) {
+        dataSource = DataSource(screen: .list)
+        spinner.startAnimating()
+
+        let url = Tmdb.moviesURL(genreId: genreMovieId)
+        url?.apiGet { (result: Result<MediaSearch, NetError>) in
+            guard case .success(let search) = result else { return }
+
+            let items = search.results.map { $0.listItem }
+            self.dataSource.sections = [ Section(items: items) ]
+            self.updateUI()
+        }
+    }
+
+    func updateItems(_ items: [Item]?) {
+        let section = Section(items: items)
+        let sections = [section]
+        dataSource = DataSource(screen: .list, sections: sections)
+        updateUI()
+    }
+
     func updateMovie(_ movieId: Int?, limit: Int = Credit.numberOfEntries) {
+        dataSource = DataSource(screen: .detail)
+        spinner.startAnimating()
+
         let provider = MovieDataProvider()
-        provider.get(movieId) { (movie) in
+        provider.get(movieId) { (movie, articles, image) in
             guard let movie = movie else { return }
 
-            self.dataSource.sections = movie.sections(limit: limit)
-
+            self.dataSource.sections = movie.sections(articles: articles, limit: limit)
             let buttonUrl = Tmdb.mediaPosterUrl(path: movie.poster_path, size: .xxl)
-            self.imageButton.url = buttonUrl
+            self.updateUI(image, buttonUrl)
+        }
+    }
 
-            let url = Tmdb.mediaPosterUrl(path: movie.poster_path, size: .large)
-            self.getImage(url: url) { (image) in
-                self.updateUI(image)
-            }
+    func updateNetwork(_ networkId: Int?) {
+        dataSource = DataSource(screen: .list)
+        spinner.startAnimating()
+
+        let url = Tmdb.tvURL(networkId: networkId)
+        url?.apiGet { (result: Result<TvSearch, NetError>) in
+            guard case .success(let search) = result else { return }
+
+            let items = search.results.map { $0.listItem }
+            self.dataSource.sections = [ Section(items: items) ]
+            self.updateUI()
         }
     }
 
     func updatePerson(_ personId: Int?, limit: Int = Credit.numberOfEntries) {
+        dataSource = DataSource(screen: .detail)
+        spinner.startAnimating()
+
         let provider = PersonDataProvider()
-        provider.get(personId) { (credit) in
+        provider.get(personId) { (credit, articles, image) in
             guard let credit = credit else { return }
 
-            self.dataSource.sections = Section.personSections(credit: credit, limit: limit)
-
+            self.dataSource.sections = Section.personSections(credit: credit, articles: articles, limit: limit)
             let buttonUrl = Tmdb.castProfileUrl(path: credit.profile_path, size: .large)
-            self.imageButton.url = buttonUrl
-
-            let url = Tmdb.castProfileUrl(path: credit.profile_path, size: .large)
-            self.getImage(url: url) { (image) in
-                self.updateUI(image)
-            }
+            self.updateUI(image, buttonUrl)
         }
     }
 
     func updateProduction(_ productionId: Int?) {
+        dataSource = DataSource(screen: .list)
+        spinner.startAnimating()
+
         let provider = ProductionDataProvider()
         provider.get(productionId) { (movie, tv) in
             var sections: [Section] = []
@@ -493,42 +476,42 @@ private extension MainViewController {
     }
 
     func updateSeason(_ seasonItem: Item?) {
+        dataSource = DataSource(screen: .detail)
         spinner.startAnimating()
 
-        guard let item = seasonItem else { return }
-
-        let url = Tmdb.tvURL(tvId: item.id, seasonNumber: item.seasonNumber)
-        url?.apiGet { (result: Result<Season, NetError>) in
-            guard case .success(let season) = result else { return }
-
+        let provider = SeasonDataProvider()
+        provider.get(seasonItem) { (season, image) in
             self.dataSource.sections = Section.seasonSections(season)
+            let buttonUrl = Tmdb.mediaPosterUrl(path: season?.poster_path, size: .xxl)
+            self.updateUI(image, buttonUrl)
+        }
+    }
 
-            let buttonUrl = Tmdb.mediaPosterUrl(path: season.poster_path, size: .xxl)
-            self.imageButton.url = buttonUrl
+    func updateSortedBy(_ sortedBy: String?) {
+        dataSource = DataSource(screen: .list)
+        spinner.startAnimating()
 
-            let url = Tmdb.mediaPosterUrl(path: season.poster_path, size: .large)
+        let url = Tmdb.moviesURL(sortedBy: sortedBy)
+        url?.apiGet { (result: Result<MediaSearch, NetError>) in
+            guard case .success(let search) = result else { return }
 
-            self.getImage(url: url) { (image) in
-                self.updateUI(image)
-            }
+            let items = search.results.map { $0.listItem }
+            self.dataSource.sections = [ Section(items: items) ]
+            self.updateUI()
         }
     }
 
     func updateTv(_ id: Int?, limit: Int = Credit.numberOfEntries) {
+        dataSource = DataSource(screen: .detail)
+        spinner.startAnimating()
+
         let provider = TvDataProvider()
-        provider.get(id) { (tv) in
+        provider.get(id) { (tv, image, articles) in
             guard let tv = tv else { return }
 
-            self.dataSource.sections = tv.tvSections
-
+            self.dataSource.sections = tv.tvSections(articles)
             let buttonUrl = Tmdb.mediaPosterUrl(path: tv.poster_path, size: .xxl)
-            self.imageButton.url = buttonUrl
-
-            let url = Tmdb.mediaPosterUrl(path: tv.poster_path, size: .large)
-
-            self.getImage(url: url) { (image) in
-                self.updateUI(image)
-            }
+            self.updateUI(image, buttonUrl)
         }
     }
 

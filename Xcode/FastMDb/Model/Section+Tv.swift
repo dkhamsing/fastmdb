@@ -8,7 +8,7 @@
 import Foundation
 
 extension TV {
-    var tvSections: [Section] {
+    func tvSections(_ articles: [Article]?) -> [Section] {
         var sections: [Section] = []
 
         if let section = nextEpisodeSection {
@@ -16,6 +16,10 @@ extension TV {
         }
 
         if let section = overviewSection {
+            sections.append(section)
+        }
+        
+        if let section = Article.newsSection(articles) {
             sections.append(section)
         }
 
@@ -261,7 +265,7 @@ private extension TV {
         let titles = recs.map { $0.name }
         let items = recs.map { $0.listItem }
         let top3 = Array(titles.prefix(3))
-        let item = Item.init(title: top3.joined(separator: ", "), destination: .items, destinationTitle: "Related", items: items)
+        let item = Item(title: top3.joined(separator: ", "), destination: .items, destinationTitle: "Related", items: items)
 
         return Section(header: "related", items: [item])
     }

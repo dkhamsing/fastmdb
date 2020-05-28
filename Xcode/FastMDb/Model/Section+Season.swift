@@ -16,7 +16,7 @@ extension Section {
           if
               let o = season?.overview,
               o != "" {
-              let item = Item.init(title: o)
+              let item = Item(title: o)
               let section = Section(header: "overview", items: [item])
               sections.append(section)
           }

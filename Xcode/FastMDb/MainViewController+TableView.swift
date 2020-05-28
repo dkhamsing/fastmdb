@@ -123,6 +123,7 @@ private extension MainViewController {
             controller.items = item.items
             navigationController?.pushViewController(controller, animated: true)
         case .movie:
+            // MARK: known issue that the rating in api list and api detail is sometimes different
             let controller = MainViewController()
             controller.title = item.title
             controller.movieId = item.id

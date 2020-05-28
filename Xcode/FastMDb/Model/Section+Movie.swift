@@ -9,10 +9,14 @@ import Foundation
 import UIKit
 
 extension Media {
-    func sections(limit: Int) -> [Section] {
+    func sections(articles: [Article]?, limit: Int) -> [Section] {
         var list: [Section] = []
 
         if let section = metadataSection {
+            list.append(section)
+        }
+
+        if let section = Article.newsSection(articles) {            
             list.append(section)
         }
 
@@ -135,7 +139,7 @@ private extension Media {
         if
             let countries = production_countries,
             countries.count > 0 {
-            metadata.append(countries.map {$0.name}.joined(separator: ", "))
+            metadata.append(countries.map { $0.name }.joined(separator: ", "))
         }
 
         var items: [Item] = []

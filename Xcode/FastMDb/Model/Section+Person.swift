@@ -8,10 +8,14 @@
 import Foundation
 
 extension Section {
-    static func personSections(credit: Credit?, limit: Int) -> [Section] {
+    static func personSections(credit: Credit?, articles: [Article]?, limit: Int) -> [Section] {
         var sections: [Section] = []
 
         if let section = credit?.ageSection {
+            sections.append(section)
+        }
+
+        if let section = Article.newsSection(articles) {
             sections.append(section)
         }
 
@@ -438,12 +442,12 @@ private extension Credit {
 
         guard
             let bday = birthday,
-            let date = formatter.date(from: bday) else { return nil }
+            let bdayDate = formatter.date(from: bday) else { return nil }
 
         guard let dday = deathday,
-            let date2 = formatter.date(from: dday) else { return nil }
+            let ddayDate = formatter.date(from: dday) else { return nil }
 
-        guard let age = date.yearDifferenceWithDate(date2) else { return nil }
+        guard let age = bdayDate.yearDifferenceWithDate(ddayDate) else { return nil }
 
         return String(age)
     }
