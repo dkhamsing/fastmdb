@@ -97,7 +97,7 @@ extension Date {
         guard let date = date else { return nil }
 
         let calendar = Calendar.current
-        guard let interval = calendar.dateInterval(of: .year, for: date) else { return nil }
+        guard let interval = calendar.dateInterval(of: .day, for: date) else { return nil }
 
         let components = calendar.dateComponents([.year], from: self, to: interval.end)
 
