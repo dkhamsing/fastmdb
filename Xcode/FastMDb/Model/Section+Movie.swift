@@ -402,7 +402,7 @@ private extension Media {
             let r = release_date,
             let date = Tmdb.dateFormatter.date(from: r),
             let year = date.yearDifferenceWithDate(Date()),
-            year < 2 else { return nil }
+            year < 1 else { return nil }
 
         let calendar = Calendar.current
         guard let interval = calendar.dateInterval(of: .day, for: Date()) else { return nil }
