@@ -20,7 +20,7 @@ extension Article {
         if let desc = validDescription {
             sub.append(desc)
         }
-        return Item(title: title, subtitle: sub.joined(separator: Tmdb.separator), url: url, destination: .url)
+        return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), url: url, destination: .url)
     }
 
     static func section(_ items: [Item], limit: Int = 3) -> Section {
@@ -44,6 +44,38 @@ extension Article {
         let section = Article.section(items, limit: limit)
 
         return section
+    }
+
+    var titleDisplay: String? {
+        return title?
+            .filterOutStringAfter(" | ")?
+            .filterOutStringAfter(" - ")
+    }
+
+}
+
+private extension String {
+
+    func filterOutStringAfter(_ string: String) -> String? {
+        let handleDupe = filterOutDuplicateCredits(string)
+
+        let components = handleDupe?.components(separatedBy: string)
+
+        guard components?.count == 2 else { return handleDupe }
+
+        return components?.first
+    }
+
+    func filterOutDuplicateCredits(_ string: String) -> String? {
+        let components = self.components(separatedBy: string)
+
+        if
+            components.count == 3,
+            components[1] == components[2] {
+            return components.first
+        }
+
+        return self
     }
 
 }
