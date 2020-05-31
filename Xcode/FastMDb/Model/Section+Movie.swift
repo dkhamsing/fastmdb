@@ -507,6 +507,11 @@ private extension Int {
         let sign = (self < 0) ? "-" : ""
 
         switch num {
+        case 1_000_000_000...:
+            var formatted = num / 1_000_000_000
+            formatted = formatted.truncate(places: 2)
+            return "\(sign)\(formatted)B"
+
         case 1_000_000...:
             var formatted = num / 1_000_000
             formatted = formatted.truncate(places: 1)
