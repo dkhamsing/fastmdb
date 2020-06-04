@@ -159,8 +159,8 @@ private extension Media {
             items.append(Item(title: tagline))
         }
 
-        if overview != "" {
-            let item = Item(title: overview)
+        if let value = overviewDisplay {
+            let item = Item(title: value)
             items.append(item)
         }
 
@@ -381,6 +381,12 @@ private extension Media {
         guard let value = Languages.List[lang] else { return lang }
 
         return value
+    }
+
+    var overviewDisplay: String? {
+        let od = overview.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard od != "" else { return nil }
+        return od
     }
 
     var voteDisplay: String? {
