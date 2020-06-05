@@ -59,7 +59,7 @@ extension Section {
           if let episodes = season?.episodes,
               episodes.count > 0 {
               let items = episodes.map { $0.listItem }
-              let section = Section(header: "episodes", items: items)
+              let section = Section(header: "\(items.count) episodes", items: items)
               sections.append(section)
           }
 
