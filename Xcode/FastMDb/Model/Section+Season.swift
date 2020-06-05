@@ -11,60 +11,66 @@ import UIKit
 
 extension Section {
     static func seasonSections(_ season: Season?) -> [Section] {
-          var sections: [Section] = []
+        var sections: [Section] = []
 
-          if
-              let o = season?.overview,
-              o != "" {
-              let item = Item(title: o)
-              let section = Section(header: "overview", items: [item])
-              sections.append(section)
-          }
+        if let airDate = season?.air_date?.dateDisplay {
+            let item = Item(title: airDate)
+            let section = Section(header: "first episode air date", items: [item])
+            sections.append(section)
+        }
 
-          let limit = 5
+        if
+            let o = season?.overview,
+            o != "" {
+            let item = Item(title: o)
+            let section = Section(header: "overview", items: [item])
+            sections.append(section)
+        }
 
-          if
-              let cast = season?.credits?.cast,
-              cast.count > 0 {
+        let limit = 5
 
-              let items = cast.map { $0.listItemCast }
-              let topItems = Array(items.prefix(limit))
-              var section = Section(header: "cast", items: topItems)
+        if
+            let cast = season?.credits?.cast,
+            cast.count > 0 {
 
-              if cast.count > limit {
-                  section.footer = String.allCreditsText(cast.count)
-                  section.destinationItems = cast.map { $0.listItemCast }
-                  section.destination = .items
-              }
+            let items = cast.map { $0.listItemCast }
+            let topItems = Array(items.prefix(limit))
+            var section = Section(header: "cast", items: topItems)
 
-              sections.append(section)
-          }
+            if cast.count > limit {
+                section.footer = String.allCreditsText(cast.count)
+                section.destinationItems = cast.map { $0.listItemCast }
+                section.destination = .items
+            }
 
-          if
-              let crew = season?.credits?.crew,
-              crew.count > 0 {
-              let names = crew.compactMap { $0.name }.unique
-              let top = Array(names.prefix(limit))
-              let item = Item(title: top.joined(separator: ", "))
+            sections.append(section)
+        }
 
-              let section = Section(header: "crew",
-                                    items: [item],
-                                    footer: crew.count > limit ? String.allCreditsText(crew.count) : String.allCreditsText(),
-                                    destination: .items,
-                                    destinationItems: crew.map { $0.listItemCrew })
+        if
+            let crew = season?.credits?.crew,
+            crew.count > 0 {
+            let names = crew.compactMap { $0.name }.unique
+            let top = Array(names.prefix(limit))
+            let item = Item(title: top.joined(separator: ", "))
 
-              sections.append(section)
-          }
+            let section = Section(header: "crew",
+                                  items: [item],
+                                  footer: crew.count > limit ? String.allCreditsText(crew.count) : String.allCreditsText(),
+                                  destination: .items,
+                                  destinationItems: crew.map { $0.listItemCrew })
 
-          if let episodes = season?.episodes,
-              episodes.count > 0 {
-              let items = episodes.map { $0.listItem }
-              let section = Section(header: "\(items.count) episodes", items: items)
-              sections.append(section)
-          }
+            sections.append(section)
+        }
 
-          return sections
-      }
+        if let episodes = season?.episodes,
+            episodes.count > 0 {
+            let items = episodes.map { $0.listItem }
+            let section = Section(header: "\(items.count) episodes", items: items)
+            sections.append(section)
+        }
+
+        return sections
+    }
 }
 
 private extension Episode {
