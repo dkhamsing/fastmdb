@@ -19,15 +19,12 @@ extension Section {
             sections.append(section)
         }
 
-        if let movie = movie {
-            let s = movieSections(movie: movie, kind: kind)
+        if let s = movieSections(movie: movie, kind: kind) {
             sections.append(contentsOf: s)
         }
 
-        if let tv = tv {
-            let items = tv.results.map { $0.listItem }
-            let section = Section(header: "tv\(Tmdb.separator)\(kind.tv.title)", items: items)
-            sections.append(section)
+        if let s = tvSections(tv: tv, kind: kind) {
+            sections.append(contentsOf: s)
         }
 
         if let people = people {
@@ -43,20 +40,47 @@ extension Section {
 
 private extension Section {
 
-    static func movieSections(movie: MediaSearch, kind: Tmdb.MoviesType) -> [Section] {
+    static func movieSections(movie: MediaSearch?, kind: Tmdb.MoviesType) -> [Section]? {
+        guard let movie = movie else { return nil }
+
         var sections: [Section] = []
-        
+
         let english = movie.results.filter { $0.original_language == "en" }.map { $0.listItem }
         if english.count > 0 {
             let section = Section(header: "movies\(Tmdb.separator)English\(Tmdb.separator)\(kind.title)", items: english)
             sections.append(section)
         }
-        
+
         let notEnglish = movie.results.filter { $0.original_language != "en" }.map { $0.listItem }
         if notEnglish.count > 0 {
             let section = Section(header: "movies\(Tmdb.separator)Not English\(Tmdb.separator)\(kind.title)", items: notEnglish)
             sections.append(section)
         }
+
+        guard sections.count > 0 else { return nil }
+
+        return sections
+    }
+
+    static func tvSections(tv: TvSearch?, kind: Tmdb.MoviesType) -> [Section]? {
+        guard let tv = tv else { return nil }
+
+        var sections: [Section] = []
+
+        let english = tv.results.filter { $0.original_language == "en" }.map { $0.listItem }
+
+        if english.count > 0 {
+            let section = Section(header: "tv\(Tmdb.separator)English\(Tmdb.separator)\(kind.tv.title)", items: english)
+            sections.append(section)
+        }
+
+        let notEnglish = tv.results.filter { $0.original_language != "en" }.map { $0.listItem }
+        if notEnglish.count > 0 {
+            let section = Section(header: "tv\(Tmdb.separator)Not English\(Tmdb.separator)\(kind.tv.title)", items: notEnglish)
+            sections.append(section)
+        }
+
+        guard sections.count > 0 else { return nil }
 
         return sections
     }
@@ -64,6 +88,7 @@ private extension Section {
 }
 
 private extension Credit {
+
     var listItemPopular: Item {
         var sub: [String] = []
 
@@ -81,5 +106,6 @@ private extension Credit {
 
         return Item(id: id, title: name, subtitle: sub.joined(separator: ": "), destination: .person)
     }
+
 }
 
