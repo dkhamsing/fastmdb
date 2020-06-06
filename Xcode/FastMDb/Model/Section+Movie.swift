@@ -241,7 +241,8 @@ private extension Media {
             case
             "In Production",
             "Planned",
-            "Post Production":
+            "Post Production",
+            "Rumored":
                 return s
             default:
 //                print("status = \(s)")
