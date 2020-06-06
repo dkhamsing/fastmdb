@@ -8,6 +8,7 @@
 import Foundation
 
 extension Section {
+
     static func personSections(credit: Credit?, articles: [Article]?, limit: Int) -> [Section] {
         var sections: [Section] = []
 
@@ -54,11 +55,12 @@ private extension Credit {
             sections.append(section)
         }
 
-        if let section = crewMovieSection(limit: limit) {
-            sections.append(section)
+        let crewSections = movieCrewSections(limit: limit)
+        if crewSections.count > 0 {
+            sections.append(contentsOf: crewSections)
         }
 
-        if let section = crewTvSection(limit: limit) {
+        if let section = TvCrewSection(limit: limit) {
             sections.append(section)
         }
 
@@ -68,11 +70,12 @@ private extension Credit {
     func knownForOtherSections(limit: Int) -> [Section] {
         var sections: [Section] = []
 
-        if let section = crewMovieSection(limit: limit) {
-            sections.append(section)
+        let crewSections = movieCrewSections(limit: limit)
+        if crewSections.count > 0 {
+            sections.append(contentsOf: crewSections)
         }
 
-        if let section = crewTvSection(limit: limit) {
+        if let section = TvCrewSection(limit: limit) {
             sections.append(section)
         }
 
@@ -278,9 +281,41 @@ private extension Credit {
 
         return Section(header: "links", items: items)
     }
+
 }
 
 private extension Credit {
+
+    func collapseCrewItems(_ crew: [Credit]) -> [Item] {
+        let uniqueTitles = crew
+            .map { $0.original_title }
+            .unique
+
+        var items: [Item] = []
+        for title in uniqueTitles {
+            let crews = crew.filter { $0.original_title == title}
+
+            var item = Item()
+            var sub: [String] = []
+            if let c = crews.first {
+                item = Item(id: c.id, title: c.titleDisplay, destination: .movie, color: c.ratingColor)
+
+                if let year = c.releaseYear {
+                  sub.append(year)
+                }
+            }
+
+            let jobs = crews.map { $0.job ?? "" }
+            let jobString = jobs.joined(separator: ", ")
+
+            sub.append(jobString)
+
+            item.subtitle = sub.joined(separator: Tmdb.separator)
+            items.append(item)
+        }
+
+        return items
+    }
 
     func creditsSections(limit: Int) -> [Section] {
         var sections: [Section] = []
@@ -310,51 +345,140 @@ private extension Credit {
         return sections
     }
 
-    func crewMovieSection(limit: Int) -> Section? {
+    func creditsUpcoming(_ list: [Credit]) -> [Credit] {
+        let upcoming = list.filter {
+            let noReleaseDate = $0.release_date == nil || $0.release_date == ""
 
-        guard let credits = movie_credits else { return nil }
-
-        let crewSorted = credits.crew.sorted(by: { $0.release_date ?? "" > $1.release_date ?? ""})
-
-        let uniqueTitles = crewSorted
-            .map { $0.original_title }
-            .unique
-
-        var items: [Item] = []
-        for title in uniqueTitles {
-            let crews = crewSorted.filter { $0.original_title == title}
-
-            var item = Item()
-            var sub: [String] = []
-            if let c = crews.first {
-                item = Item(id: c.id, title: c.titleDisplay, destination: .movie, color: c.ratingColor)
-
-                if let year = c.releaseYear {
-                  sub.append(year)
-                }
+            var releaseDateInFuture = false
+            if let inFuture = $0.release_date?.inFuture,
+                inFuture == true {
+                releaseDateInFuture = true
             }
 
-            let jobs = crews.map { $0.job ?? "" }
-            let jobString = jobs.joined(separator: ", ")
-
-            sub.append(jobString)
-
-            item.subtitle = sub.joined(separator: Tmdb.separator)
-            items.append(item)
+            return releaseDateInFuture || noReleaseDate
         }
 
-        guard items.count > 0 else { return nil }
+        return upcoming
+    }
 
+    func movieCastReleasedSection(cast: [Credit]?, limit: Int) -> Section? {
+        guard let cast = cast else { return nil }
+
+        let upcoming = creditsUpcoming(cast)
+        let alreadyDisplayed = upcoming.map { $0.original_title }
+        let sorted = cast
+            .filter { alreadyDisplayed.contains($0.original_title) == false }
+            .sorted(by: { $0.release_date ?? "" > $1.release_date ?? ""})
+        let top = Array(sorted.prefix(limit))
+
+        guard top.count > 0 else { return nil }
+
+        let topItems = top.map { $0.movieCastItem }
+
+        var castTotal: String?
+        if cast.count > limit {
+            castTotal = String.allCreditsText(cast.count)
+        }
+
+        let section = Section(header: "movies\(Tmdb.separator)latest", items: topItems, footer: castTotal, destination: .items, destinationItems: cast.map { $0.movieCastItem }, destinationTitle: "Movies")
+
+        return section
+    }
+
+    func movieCastUpcomingSection(_ cast: [Credit]?) -> Section? {
+        guard let cast = cast else { return nil }
+
+        let upcoming = creditsUpcoming(cast)
+        guard upcoming.count > 0 else { return nil }
+
+        let i = upcoming.map { $0.movieCastItem }
+        let section = Section(header: "movies\(Tmdb.separator)upcoming", items: i)
+        return section
+    }
+
+    func movieCastSections(limit: Int) -> [Section] {
+        var sections: [Section] = []
+
+        if let section = movieCastUpcomingSection(movie_credits?.cast) {
+            sections.append(section)
+        }
+
+        if let section = movieCastReleasedSection(cast: movie_credits?.cast, limit: limit) {
+            sections.append(section)
+        }
+
+        return sections
+    }
+
+    func movieCrewReleasedSection(crew: [Credit]?, limit: Int) -> Section? {
+        guard let crew = crew else { return nil }
+
+        let upcoming = creditsUpcoming(crew)
+        let released = upcoming.map { $0.original_title }
+        let crewSorted = crew
+            .filter { released.contains($0.original_title) == false }
+            .sorted(by: { $0.release_date ?? "" > $1.release_date ?? ""})
+        let collapsedItems = collapseCrewItems(crewSorted)
+
+        guard collapsedItems.count > 0 else { return nil }
+
+        var total: String?
+        if collapsedItems.count > limit {
+            total = String.allCreditsText(collapsedItems.count)
+        }
+
+        let section = Section(header: "movie credits\(Tmdb.separator)latest", items: Array(collapsedItems.prefix(limit)), footer: total, destination: .items, destinationItems: collapsedItems, destinationTitle: "Movies")
+
+        return section
+    }
+
+    func movieCrewUpcomingSection(_ crew: [Credit]?) -> Section? {
+        guard let crew = crew else { return nil }
+
+        let upcoming = creditsUpcoming(crew)
+        let upcomingCollapsed = collapseCrewItems(upcoming)
+        guard upcomingCollapsed.count > 0 else {return nil }
+
+        let section = Section(header: "movies credits\(Tmdb.separator)upcoming", items: upcomingCollapsed)
+
+        return section
+    }
+
+    func movieCrewSections(limit: Int) -> [Section] {
+        var sections: [Section] = []
+
+        if let section = movieCrewUpcomingSection(movie_credits?.crew) {
+            sections.append(section)
+        }
+
+        if let section = movieCrewReleasedSection(crew: movie_credits?.crew, limit: limit) {
+            sections.append(section)
+        }
+
+        return sections
+    }
+
+    func tvCastSection(limit: Int) -> Section? {
+        guard
+            let c = tv_credits ,
+            c.cast.count > 0 else { return nil }
+
+        let items = c.cast
+            .sorted { $0.episode_count ?? 0 > $1.episode_count ?? 0 }
+            .map { $0.listItemTv }
+
+        guard items.count > 0 else { return nil }
         var total: String?
         if items.count > limit {
             total = String.allCreditsText(items.count)
         }
 
-        return Section(header: "movie credits", items: Array(items.prefix(limit)), footer: total, destination: .items, destinationItems: items, destinationTitle: "Movies")
+        let prefix = Array(items.prefix(limit))
 
+        return Section(header: "tv", items: prefix, footer: total, destination: .items, destinationItems: c.cast.map { $0.listItemTv }, destinationTitle: "TV")
     }
 
-    func crewTvSection(limit: Int) -> Section? {
+    func TvCrewSection(limit: Int) -> Section? {
 
         guard let crew = tv_credits?.crew else { return nil }
 
@@ -395,73 +519,6 @@ private extension Credit {
         }
 
         return Section(header: "tv credits", items: Array(items.prefix(limit)), footer: total, destination: .items, destinationItems: items, destinationTitle: "TV")
-    }
-
-    func movieCastSections(limit: Int) -> [Section] {
-        guard let credits = movie_credits else { return [] }
-
-        var sections: [Section] = []
-
-        // movies without release dates (upcoming)
-        let filtered = credits.cast.filter {
-            let noReleaseDate = $0.release_date == nil || $0.release_date == ""
-
-            var releaseDateInFuture = false
-            if let inFuture = $0.release_date?.inFuture,
-                inFuture == true {
-                releaseDateInFuture = true
-            }
-
-            return releaseDateInFuture || noReleaseDate
-        }
-        if filtered.count > 0 {
-            let i = filtered.map { $0.movieCastItem }
-
-            let sUpcoming = Section(header: "movies\(Tmdb.separator)upcoming", items: i)
-            sections.append(sUpcoming)
-        }
-
-        // movies ordered by releast date
-        let alreadyDisplayed = filtered.map { $0.original_title }
-        let sorted = credits.cast
-            .filter { alreadyDisplayed.contains($0.original_title) == false }
-            .sorted(by: { $0.release_date ?? "" > $1.release_date ?? ""})
-        let cast = Array(sorted.prefix(limit))
-
-        guard cast.count > 0 else { return sections }
-
-        let items = cast.map { $0.movieCastItem }
-
-        var castTotal: String?
-        if credits.cast.count > limit {
-            castTotal = String.allCreditsText(credits.cast.count)
-        }
-
-        let sLatest = Section(header: "movies\(Tmdb.separator)latest", items: items, footer: castTotal, destination: .items, destinationItems: credits.cast.map { $0.movieCastItem }, destinationTitle: "Movies")
-
-        sections.append(sLatest)
-
-        return sections
-    }
-
-    func tvCastSection(limit: Int) -> Section? {
-        guard
-            let c = tv_credits ,
-            c.cast.count > 0 else { return nil }
-
-        let items = c.cast
-            .sorted { $0.episode_count ?? 0 > $1.episode_count ?? 0 }
-            .map { $0.listItemTv }
-
-        guard items.count > 0 else { return nil }
-        var total: String?
-        if items.count > limit {
-            total = String.allCreditsText(items.count)
-        }
-
-        let prefix = Array(items.prefix(limit))
-
-        return Section(header: "tv", items: prefix, footer: total, destination: .items, destinationItems: c.cast.map { $0.listItemTv }, destinationTitle: "TV")
     }
 
 }
@@ -517,6 +574,7 @@ private extension Credit {
 }
 
 private extension String {
+    
     var age: String? {
         let formatter = Tmdb.dateFormatter
         guard let date = formatter.date(from: self) else { return nil }
@@ -541,4 +599,5 @@ private extension String {
         let finalUrl = baseUrl + encodedName
         return URL(string: finalUrl)
     }
+
 }
