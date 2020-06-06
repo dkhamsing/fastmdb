@@ -13,9 +13,7 @@ extension Section {
     static func seasonSections(_ season: Season?) -> [Section] {
         var sections: [Section] = []
 
-        if let airDate = season?.air_date?.dateDisplay {
-            let item = Item(title: airDate)
-            let section = Section(header: "first episode air date", items: [item])
+        if let section = season?.airDatesSection {
             sections.append(section)
         }
 
@@ -93,4 +91,31 @@ private extension Episode {
 
         return Item(title: name, subtitle: sub.joined(separator: Tmdb.separator), destination: .episode, episode: self, color: episodeRatingColor)
     }
+}
+
+private extension Season {
+
+    var airDatesSection: Section? {
+        guard let airDate = air_date?.dateDisplay else { return nil }
+        var items: [Item] = []
+
+        items.append(
+            Item(title: airDate, subtitle: "First Episode")
+        )
+
+        if
+            let episodes = episodes,
+            episodes.count > 1,
+            let last = episodes.filter ({ $0.air_date != nil }).last,
+            let airDate = last.air_date?.dateDisplay {
+            items.append(
+                Item(title: airDate, subtitle: "Last Episode")
+            )
+        }
+
+        let section = Section(header: "air dates", items: items)
+
+        return section
+    }
+
 }
