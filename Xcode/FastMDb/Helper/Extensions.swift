@@ -197,11 +197,17 @@ extension String {
 
         return "Seel all credits"
     }
+
+    var date: Date? {
+        let formatter = Tmdb.dateFormatter
+
+        return formatter.date(from: self)
+    }
     
     var dateDisplay: String? {
         let formatter = Tmdb.dateFormatter
 
-        guard let date = formatter.date(from: self) else { return nil }
+        guard let date = self.date  else { return nil }
 
         formatter.dateFormat = "MMM d, yyyy"
 

@@ -45,8 +45,9 @@ private extension Credit {
     func knownForActingSections(limit: Int) -> [Section] {
         var sections: [Section] = []
 
-        if let section = movieCastSection(limit: limit) {
-            sections.append(section)
+        let s = movieCastSections(limit: limit)
+        if s.count > 0 {
+            sections.append(contentsOf: s)
         }
 
         if let section = tvCastSection(limit: limit) {
@@ -75,8 +76,9 @@ private extension Credit {
             sections.append(section)
         }
 
-        if let section = movieCastSection(limit: limit) {
-            sections.append(section)
+        let s = movieCastSections(limit: limit)
+        if s.count > 0 {
+            sections.append(contentsOf: s)
         }
 
         if let section = tvCastSection(limit: limit) {
@@ -395,13 +397,38 @@ private extension Credit {
         return Section(header: "tv credits", items: Array(items.prefix(limit)), footer: total, destination: .items, destinationItems: items, destinationTitle: "TV")
     }
 
-    func movieCastSection(limit: Int) -> Section? {
-        guard let credits = movie_credits else { return nil }
+    func movieCastSections(limit: Int) -> [Section] {
+        guard let credits = movie_credits else { return [] }
 
-        let sorted = credits.cast.sorted(by: { $0.release_date ?? "" > $1.release_date ?? ""})
+        var sections: [Section] = []
+
+        // movies without release dates (upcoming)
+        let filtered = credits.cast.filter {
+            let noReleaseDate = $0.release_date == nil || $0.release_date == ""
+
+            var releaseDateInFuture = false
+            if let inFuture = $0.release_date?.inFuture,
+                inFuture == true {
+                releaseDateInFuture = true
+            }
+
+            return releaseDateInFuture || noReleaseDate
+        }
+        if filtered.count > 0 {
+            let i = filtered.map { $0.movieCastItem }
+
+            let sUpcoming = Section(header: "movies\(Tmdb.separator)upcoming", items: i)
+            sections.append(sUpcoming)
+        }
+
+        // movies ordered by releast date
+        let alreadyDisplayed = filtered.map { $0.original_title }
+        let sorted = credits.cast
+            .filter { alreadyDisplayed.contains($0.original_title) == false }
+            .sorted(by: { $0.release_date ?? "" > $1.release_date ?? ""})
         let cast = Array(sorted.prefix(limit))
 
-        guard cast.count > 0 else { return nil }
+        guard cast.count > 0 else { return sections }
 
         let items = cast.map { $0.movieCastItem }
 
@@ -410,7 +437,11 @@ private extension Credit {
             castTotal = String.allCreditsText(credits.cast.count)
         }
 
-        return Section(header: "movies", items: items, footer: castTotal, destination: .items, destinationItems: credits.cast.map { $0.movieCastItem }, destinationTitle: "Movies")
+        let sLatest = Section(header: "movies\(Tmdb.separator)latest", items: items, footer: castTotal, destination: .items, destinationItems: credits.cast.map { $0.movieCastItem }, destinationTitle: "Movies")
+
+        sections.append(sLatest)
+
+        return sections
     }
 
     func tvCastSection(limit: Int) -> Section? {
@@ -493,6 +524,14 @@ private extension String {
         guard let age = date.yearDifferenceWithDate(Date()) else { return nil }
 
         return String(age)
+    }
+
+    var inFuture: Bool {
+        guard let date = self.date else { return false }
+
+        let interval = date.timeIntervalSince(Date())
+
+        return interval > 0
     }
 
     var mapUrl: URL? {
