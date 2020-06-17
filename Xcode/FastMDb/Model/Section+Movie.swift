@@ -116,6 +116,17 @@ private extension Media {
             items.append(item)
         }
 
+        // google
+        if let name = title {
+            let item = Item(title: "Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.videoImage)
+            items.append(item)
+        }
+
+        if let name = title {
+            let item = Item(title: "Music", url: name.googleSearchMusicUrl, destination: .url, image: Item.videoImage)
+            items.append(item)
+        }
+
         guard items.count > 0 else { return nil }
 
         return Section(header: "links", items: items)
@@ -144,7 +155,9 @@ private extension Media {
 
         var items: [Item] = []
 
-        items.append( Item(title:titleDisplay, subtitle: metadata.joined(separator: Tmdb.separator)) )
+        items.append(
+            Item(title:titleDisplay, subtitle: metadata.joined(separator: Tmdb.separator))
+        )
 
         if let release = releaseDateDisplay {
             let item = Item(title: release, subtitle: releaseDateSubtitle)
@@ -236,25 +249,20 @@ private extension Media {
     }
 
     var statusDisplay: String? {
-        if let s = status {
-            switch s {
-            case
-            "In Production",
-            "Planned",
-            "Post Production",
-            "Rumored":
-                return s
-            default:
-//                print("status = \(s)")
-                break
-            }
+        if let s = status?.validStatus {
+            return s
+        }
+
+        if let s = status,
+            s == "Canceled" {
+            return s
         }
 
         if let year = releaseYear {
             return year
-        } else {
-            return "Release date n/a"
         }
+
+        return "Release date n/a"
     }
 
 }

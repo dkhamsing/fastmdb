@@ -92,7 +92,7 @@ private extension Episode {
             items.append(item)
         }
 
-        if let item = nextEpisodeItem {
+        if let item = dateItem {
             items.append(item)
         }
 

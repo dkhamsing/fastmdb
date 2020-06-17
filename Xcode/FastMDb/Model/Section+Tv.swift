@@ -8,6 +8,7 @@
 import Foundation
 
 extension TV {
+    
     func tvSections(_ articles: [Article]?) -> [Section] {
         var sections: [Section] = []
 
@@ -61,6 +62,7 @@ extension TV {
 
         return sections
     }
+
 }
 
 private extension TV {
@@ -140,6 +142,16 @@ private extension TV {
             items.append(item)
         }
 
+        if name != "" {
+            let item = Item(title: "Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.videoImage)
+            items.append(item)
+        }
+
+        if name != "" {
+            let item = Item(title: "Music", url: name.googleSearchMusicUrl, destination: .url, image: Item.videoImage)
+            items.append(item)
+        }
+
         return Section(header: "links", items: items)
     }
 
@@ -154,12 +166,23 @@ private extension TV {
     }
 
     var nextEpisodeSection: Section? {
-        guard var item = next_episode_to_air?.nextEpisodeItem else { return nil }
+        guard let item = nextEpisodeItem else { return nil }
+
+        return Section(header: "next episode", items: [item])
+    }
+
+    var nextEpisodeItem: Item? {
+        guard var item = next_episode_to_air?.dateItem else { return nil }
 
         item.episode = next_episode_to_air
         item.destination = .episode
 
-        return Section(header: "next episode", items: [item])
+        if let s = item.subtitle,
+            let network = networks?.first?.name {
+            item.subtitle = "\(s) on \(network)"
+        }
+
+        return item
     }
 
     var overviewSection: Section? {
@@ -180,10 +203,8 @@ private extension TV {
                 sub.append(country)
             }
 
-            if let aired = aired {
-                sub.append(aired)
-            } else {
-                sub.append("Air date n/a")
+            if let s = statusDisplay {
+                sub.append(s)
             }
 
             if
@@ -374,6 +395,18 @@ private extension TV {
             count > 0 else { return nil }
 
         return "\(count) season\(count == 1 ? "" : "s")"
+    }
+
+    var statusDisplay: String? {
+        if let s = status?.validStatus {
+            return s
+        }
+
+        if let aired = aired {
+            return aired
+        }
+
+        return "Air date n/a"
     }
 
 }

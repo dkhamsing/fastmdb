@@ -81,6 +81,7 @@ private extension String {
 }
 
 extension Date {
+
     var shortTimeAgoSinceDate: String {
         // From Time
         let fromDate = self
@@ -121,10 +122,7 @@ extension Date {
 
         return "a moment ago"
     }
-}
 
-
-extension Date {
     func yearDifferenceWithDate(_ date: Date?) -> Int? {
         guard let date = date else { return nil }
 
@@ -135,6 +133,7 @@ extension Date {
 
         return components.year
     }
+    
 }
 
 extension Double {
@@ -212,6 +211,44 @@ extension String {
         formatter.dateFormat = "MMM d, yyyy"
 
         return formatter.string(from: date)
+    }
+
+    var inFuture: Bool {
+        guard let date = self.date else { return false }
+
+        let interval = date.timeIntervalSince(Date())
+
+        return interval > 0
+    }
+
+    var validStatus: String? {
+        switch self {
+        case
+        "In Production",
+        "Planned",
+        "Post Production",
+        "Rumored":
+            return self
+        default:
+//            print("status = \(self)")
+            break
+        }
+        return nil
+    }
+
+    static func googleSearchUrlWithQuery(_ query: String) -> URL? {
+        let baseUrl = "https://www.google.com/search?q="
+        let item = query.replacingOccurrences(of: " ", with: "+")
+
+        return URL(string: "\(baseUrl)\(item)")
+    }
+
+    var googleSearchMusicUrl: URL? { 
+        return String.googleSearchUrlWithQuery("music \(self)")
+    }
+
+    var googleSearchWatchUrl: URL? {
+        return String.googleSearchUrlWithQuery("watch \(self)")
     }
 
     var justWatchUrl: URL? {

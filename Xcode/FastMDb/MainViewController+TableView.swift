@@ -10,22 +10,22 @@ import UIKit
 extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let s = dataSource.sections[section]
+        let s = dataSource[section]
         return s.header
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return dataSource.sections.count
+        return dataSource.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let s = dataSource.sections[section]
+        let s = dataSource[section]
         return s.items?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let section = dataSource.sections[indexPath.section]
+        let section = dataSource[indexPath.section]
         guard let items = section.items else { return UITableViewCell() }
 
         let item = items[indexPath.row]
@@ -48,7 +48,7 @@ extension MainViewController: UITableViewDataSource {
 extension MainViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        let s = dataSource.sections[indexPath.section]
+        let s = dataSource[indexPath.section]
         if let items = s.items {
             let item = items[indexPath.row]
             if let _ = item.destination {
@@ -60,7 +60,7 @@ extension MainViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let buttonSection = dataSource.sections[section]
+        let buttonSection = dataSource[section]
 
         guard let title = buttonSection.footer else { return nil }
 
@@ -82,11 +82,16 @@ extension MainViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         navigationItem.searchController?.searchBar.resignFirstResponder()
 
-        let s = dataSource.sections[indexPath.section]
+        let s = dataSource[indexPath.section]
         guard let items = s.items else { return }
         let item = items[indexPath.row]
 
         loadDestination(item)
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let value = tableView.contentOffset.y + tableView.safeAreaInsets.top
+        imageButton.alpha = (300 - value)/300
     }
 
 }

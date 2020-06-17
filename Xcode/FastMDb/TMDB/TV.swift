@@ -47,6 +47,7 @@ struct TV: Codable {
 }
 
 extension TV {
+
     var countryDisplay: String? {
         guard
             let country = origin_country?.first,
@@ -68,12 +69,32 @@ extension TV {
     }
     
     var listItem: Item {
-        var sub: [String] = []
+        var item = listItemNoSub
 
+        var sub: [String] = []
         if first_air_date.yearDisplay != "" {
             sub.append(first_air_date.yearDisplay)
         }
+        sub.append(contentsOf: subtitleLanguageCountry)
 
+        item.subtitle = sub.joined(separator: Tmdb.separator)
+
+        return item
+    }
+
+    var listItemWithoutYear: Item {
+        var item = listItemNoSub
+        item.subtitle = subtitleLanguageCountry.joined(separator: Tmdb.separator)
+
+        return item
+    }
+
+}
+
+private extension TV {
+
+    var subtitleLanguageCountry: [String] {
+        var sub: [String] = []
         if
             let country = original_language,
             country != "en",
@@ -84,14 +105,17 @@ extension TV {
             sub.append(country)
         }
 
-        return Item(id: id, title: displayName, subtitle: sub.joined(separator: Tmdb.separator), destination: .tv, color: ratingColor)
+        return sub
     }
-}
 
-private extension TV {
+    var listItemNoSub: Item {
+        return Item(id: id, title: displayName, destination: .tv, color: ratingColor)
+    }
+
     var ratingColor: UIColor? {
         guard vote_count > Tmdb.voteThreshold else { return nil }
 
         return vote_average.color
     }
+
 }

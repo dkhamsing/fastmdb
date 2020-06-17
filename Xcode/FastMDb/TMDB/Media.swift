@@ -43,7 +43,8 @@ struct Media: Codable {
 }
 
 extension Media {
-    var listItem: Item {
+
+    var listItemSub: [String] {
         var sub: [String] = []
 
         if let year = releaseYear {
@@ -55,6 +56,26 @@ extension Media {
             country != "en",
             let lang = Languages.List[country] {
             sub.append(lang)
+        }
+        return sub
+    }
+
+    var listItem: Item {
+        let sub = listItemSub.joined(separator: Tmdb.separator)
+
+        return Item(id: id, title: titleDisplay, subtitle: sub, destination: .movie, color: ratingColor)
+    }
+
+    var listItemCollection: Item {
+        var sub = listItemSub
+
+        if let c = credits?.crew {
+            let d = c.filter { $0.job == CrewJob.Director.rawValue }
+            if d.count > 0 {
+                let directors = d.compactMap { $0.name }
+                let director = "Directed by \(directors.joined(separator: ", "))"
+                sub.append(director)
+            }
         }
 
         return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .movie, color: ratingColor)

@@ -24,7 +24,7 @@ struct Episode: Codable {
 }
 
 extension Episode {
-    var nextEpisodeItem: Item? {
+    var dateItem: Item? {
         guard
             let airdate = air_date,
             let display = airdate.dateDisplay else { return nil }

@@ -11,20 +11,6 @@ import SafariServices // TODO: swap out safari controller with custom image cont
 // TODO: lists pagination
 // TODO: error handling
 
-enum ScreenType {
-    case landing, list, detail, search
-}
-
-enum CellType: String {
-    case regular, color
-}
-
-struct DataSource {
-    var screen: ScreenType
-    var kind: Tmdb.MoviesType?
-    var sections: [Section] = []
-}
-
 class MainViewController: UIViewController {
 
     var collectionId: Int? {
@@ -100,14 +86,17 @@ class MainViewController: UIViewController {
     }
 
     // Data
-    var dataSource = DataSource(screen: .landing, kind: .popular)
+    var screen: ScreenType = .landing
+    var kind: Tmdb.MoviesType = .popular
+    var dataSource: [Section] = []
     var search = TableSearch()
     var startSearch = false
 
     // UI
-    fileprivate var imageButton = ImageButton()
+    var imageButton = ImageButton()
     let spinner = UIActivityIndicatorView(style: .large)
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    var searchResultsButtons = StackButtons()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,7 +104,10 @@ class MainViewController: UIViewController {
 
         setup()
         config()
-        loadContent(dataSource.kind)
+        
+        if screen == .landing {
+            loadContent(kind)
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -135,6 +127,9 @@ class MainViewController: UIViewController {
 private extension MainViewController {
 
     func setup() {
+        navigationController?.navigationBar.tintColor = .systemTeal
+
+        // table
         tableView.register(MainListCell.self, forCellReuseIdentifier: CellType.regular.rawValue)
         tableView.register(MainListCell.self, forCellReuseIdentifier: CellType.color.rawValue)
         tableView.rowHeight = UITableView.automaticDimension
@@ -145,17 +140,20 @@ private extension MainViewController {
         tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.separatorInset = .zero
 
+        // search
         let search = UISearchController(searchResultsController: nil)
         search.searchResultsUpdater = self
         search.obscuresBackgroundDuringPresentation = false
         search.delegate = self
         navigationItem.searchController = search
 
-        navigationController?.navigationBar.tintColor = .systemTeal
+        // search results button
+        searchResultsButtons.isHidden = true
+        searchResultsButtons.delegate = self
 
+        // long press on image button
         let interaction = UIContextMenuInteraction(delegate: self)
-        imageButton.addInteraction(interaction)
-        // TODO: change bounds of image button, right now width is full
+        imageButton.addInteraction(interaction) // TODO: change bounds of image button, right now width is full
     }
 
     func config() {
@@ -170,44 +168,56 @@ private extension MainViewController {
             spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
 
-        if dataSource.screen == .landing {
-            let image = UIImage(systemName: "shuffle")
-            let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleBarButton))
-            navigationItem.rightBarButtonItem = barButtonItem
-        }
-        else {
-            let image = UIImage(systemName: "house")
-            let barButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(goHome))
-            navigationItem.rightBarButtonItem = barButtonItem
-        }
+        let button = barButtonItem(screen)
+        navigationItem.rightBarButtonItem = button
+
+        searchResultsButtons.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchResultsButtons)
+        NSLayoutConstraint.activate([
+            searchResultsButtons.heightAnchor.constraint(equalToConstant: StackButtons.height), // TODO: this height changes depending on device, should be fixed
+            searchResultsButtons.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            searchResultsButtons.widthAnchor.constraint(equalTo: view.widthAnchor),
+        ])
     }
 
 }
 
 extension MainViewController {
+
     func loadContent(_ kind: Tmdb.MoviesType?) {
         guard let kind = kind else { return }
 
-        spinner.startAnimating()
-
-        dataSource.kind = kind
         title = kind.title
 
-        dataSource.sections = []
-        updateUI()
+        spinner.startAnimating()
+
+        screen = .landing
+
+        let updater = Updater(dataSource: [])
+        updateScreen(updater)
 
         let provider = ContentDataProvider()
         provider.get(kind) { (movie, tv, people, articles) in
-            self.dataSource.sections = Section.contentSections(kind: kind, movie: movie, tv: tv, people: people, articles: articles)
-            self.updateUI()
+            let sections = Section.contentSections(kind: kind, movie: movie, tv: tv, people: people, articles: articles)
+            let updater = Updater(dataSource: sections)
+            self.updateScreen(updater)
         }
+
+        self.kind = kind
     }
 
-    func updateUI(_ image: UIImage? = nil, _ buttonUrl: URL? = nil) {
-        updateTableHeaderHeader(image: image, buttonUrl: buttonUrl)
+    func updateScreen(_ updater: Updater?) {
+        updateTableHeaderHeader(image: updater?.image, buttonUrl: updater?.buttonUrl)
+
         spinner.stopAnimating()
+
+        if let ds = updater?.dataSource {
+            dataSource = ds
+        }
+
         tableView.reloadData()
     }
+
 }
 
 private extension MainViewController {
@@ -240,16 +250,7 @@ private extension MainViewController {
     }
 
     @objc
-    func handleBarButton() {
-        if let kind = dataSource.kind {
-            let list = Tmdb.MoviesType.allCases.filter { $0.rawValue != kind.rawValue }
-            let random = list.randomElement() ?? .popular
-
-            loadContent(random)
-        }
-    }
-
-    @objc func imageTap(sender: ImageButton) {
+    func imageTap(sender: ImageButton) {
         guard let url = sender.url else { return }
 
         let sfvc = SFSafariViewController(url: url)
@@ -257,9 +258,28 @@ private extension MainViewController {
         present(sfvc, animated: true, completion: nil)
     }
 
+    @objc
+    func loadRandom() {
+        let list = Tmdb.MoviesType.allCases.filter { $0.rawValue != kind.rawValue }
+        let random = list.randomElement()
+
+        loadContent(random)
+    }
+
 }
 
 private extension MainViewController {
+
+    func barButtonItem(_ screen: ScreenType) -> UIBarButtonItem {
+        if screen == .landing {
+            let image = UIImage(systemName: "shuffle")
+            return UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(loadRandom))
+        }
+        else {
+            let image = UIImage(systemName: "house")
+            return  UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(goHome))
+        }
+    }
 
     var header: UIView {
         let headerView = UIView()
@@ -285,100 +305,71 @@ private extension MainViewController {
         return headerView
     }
 
-    func getImage(url: URL?, completion: @escaping (UIImage?) -> Void) {
-        guard let url = url else {
-            DispatchQueue.main.async {
-                completion(nil)
-            }
-            return
-        }
-
-        DispatchQueue.global().async {
-            guard let data = try? Data(contentsOf: url) else {
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
-                return
-            }
-
-            let image = UIImage(data: data)
-
-            DispatchQueue.main.async {
-                completion(image)
-            }
-        }
-    }
-
     func updateTableHeaderHeader(image: UIImage?, buttonUrl: URL?) {
-           // TODO: show banner instead? looks better on ipad
-           guard let image = image else { return }
+        // TODO: show banner instead? looks better on ipad
+        guard let image = image else { return }
 
-           let h = header
-           var frame = h.frame
+        let h = header
+        var frame = h.frame
 
-           let ratio: CGFloat = image.size.height / image.size.width
+        let ratio: CGFloat = image.size.height / image.size.width
 
-           if ratio > 1 {
-               let fixedHeight: CGFloat = h.frame.height
-               frame.size.width = fixedHeight / ratio
-               frame.size.height = fixedHeight
-           } else {
-               let fixed: CGFloat = h.frame.width
-               frame.size.width = fixed
-               frame.size.height = fixed * ratio
-           }
+        if ratio > 1 {
+            let fixedHeight: CGFloat = h.frame.height
+            frame.size.width = fixedHeight / ratio
+            frame.size.height = fixedHeight
+        } else {
+            let fixed: CGFloat = h.frame.width
+            frame.size.width = fixed
+            frame.size.height = fixed * ratio
+        }
 
-           h.frame = frame
+        h.frame = frame
 
-           tableView.tableHeaderView = h
+        tableView.tableHeaderView = h
 
-           imageButton.setImage(image, for: .normal)
+        imageButton.setImage(image, for: .normal)
 
-           imageButton.url = buttonUrl
-       }
+        imageButton.url = buttonUrl
+    }
 
 }
 
 private extension MainViewController {
 
     func updateCollection(_ collectionId: Int?) {
-        dataSource = DataSource(screen: .list)
+        screen = .list
         spinner.startAnimating()
 
-        let url = Tmdb.collectionURL(collectionId: collectionId)
-        url?.apiGet { (result: Result<MediaCollection, NetError>) in
-            guard
-                case .success(let collection) = result,
-                let list = collection.parts?
-                    .sorted(by: { $0.release_date ?? "" > $1.release_date ?? "" })
-                    .map({ $0.listItem }) else { return }
+        let provider = CollectionDataProvider()
+        provider.get(collectionId) { (movies, image) in
+            guard let movies = movies else { return }
 
-            // TODO: look up director in separate requests
-
-            let url = Tmdb.mediaPosterUrl(path: collection.backdrop_path, size: .large)
-            self.getImage(url: url) { (image) in
-                self.dataSource.sections = [ Section(items: list) ]
-                self.updateUI(image)
-            }
+            let items = movies.map { $0.listItemCollection }
+            let sections = [ Section(items: items) ]
+            let u = Updater(image: image, dataSource: sections)
+            self.updateScreen(u)
         }
     }
 
     func updateEpisode(_ episode: Episode?) {
-        dataSource = DataSource(screen: .detail)
+        screen = .list
         spinner.startAnimating()
 
         let url = Tmdb.stillImageUrl(path: episode?.still_path, size: .original)
-        self.getImage(url: url) { (image) in
+        let provider = ImageDataProvider()
+        provider.get(url) { (image) in
             guard let episode = episode else { return }
 
-            self.dataSource.sections = episode.episodeSections
+            let sections = episode.episodeSections
             let buttonUrl = Tmdb.stillImageUrl(path: episode.still_path, size: .original)
-            self.updateUI(image, buttonUrl)
+            let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
+            self.updateScreen(u)
         }
     }
 
     func updateGenreTv(_ genreTvId: Int?) {
-        dataSource = DataSource(screen: .list)
+        screen = .list
         spinner.startAnimating()
 
         let url = Tmdb.tvURL(genreId: genreTvId)
@@ -386,13 +377,14 @@ private extension MainViewController {
             guard case .success(let search) = result else { return }
 
             let items = search.results.map { $0.listItem }
-            self.dataSource.sections = [ Section(items: items) ]
-            self.updateUI()
+            let sections = [ Section(items: items) ]
+            let u = Updater(dataSource: sections)
+            self.updateScreen(u)
         }
     }
 
     func updateGenreMovie(_ genreMovieId: Int?) {
-        dataSource = DataSource(screen: .list)
+        screen = .list
         spinner.startAnimating()
 
         let url = Tmdb.moviesURL(genreId: genreMovieId)
@@ -400,95 +392,101 @@ private extension MainViewController {
             guard case .success(let search) = result else { return }
 
             let items = search.results.map { $0.listItem }
-            self.dataSource.sections = [ Section(items: items) ]
-            self.updateUI()
+            let sections = [ Section(items: items) ]
+            let u = Updater(dataSource: sections)
+            self.updateScreen(u)
         }
     }
 
     func updateItems(_ items: [Item]?) {
+        screen = .list
+
         let section = Section(items: items)
         let sections = [section]
-        dataSource = DataSource(screen: .list, sections: sections)
-        updateUI()
+        let u = Updater(dataSource: sections)
+        updateScreen(u)
     }
 
     func updateMovie(_ movieId: Int?, limit: Int = Credit.numberOfEntries) {
-        dataSource = DataSource(screen: .detail)
+        screen = .list
         spinner.startAnimating()
 
         let provider = MovieDataProvider()
         provider.get(movieId) { (movie, articles, image) in
             guard let movie = movie else { return }
 
-            self.dataSource.sections = movie.sections(articles: articles, limit: limit)
+            let sections = movie.sections(articles: articles, limit: limit)
             let buttonUrl = Tmdb.mediaPosterUrl(path: movie.poster_path, size: .xxl)
-            self.updateUI(image, buttonUrl)
+            let u = Updater(image: image, buttonUrl: buttonUrl, dataSource:sections)
+            self.updateScreen(u)
         }
     }
 
     func updateNetwork(_ networkId: Int?) {
-        dataSource = DataSource(screen: .list)
+        screen = .list
         spinner.startAnimating()
 
         let url = Tmdb.tvURL(networkId: networkId)
         url?.apiGet { (result: Result<TvSearch, NetError>) in
             guard case .success(let search) = result else { return }
 
-            let items = search.results.map { $0.listItem }
-            self.dataSource.sections = [ Section(items: items) ]
-            self.updateUI()
+            let sections = TV.networkSections(search.results)
+            let u = Updater(dataSource: sections)
+            self.updateScreen(u)
         }
     }
 
     func updatePerson(_ personId: Int?, limit: Int = Credit.numberOfEntries) {
-        dataSource = DataSource(screen: .detail)
+        screen = .list
         spinner.startAnimating()
 
         let provider = PersonDataProvider()
         provider.get(personId) { (credit, articles, image) in
             guard let credit = credit else { return }
 
-            self.dataSource.sections = Section.personSections(credit: credit, articles: articles, limit: limit)
+            let sections = Section.personSections(credit: credit, articles: articles, limit: limit)
             let buttonUrl = Tmdb.castProfileUrl(path: credit.profile_path, size: .large)
-            self.updateUI(image, buttonUrl)
+            let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
+            self.updateScreen(u)
         }
     }
 
     func updateProduction(_ productionId: Int?) {
-        dataSource = DataSource(screen: .list)
+        screen = .list
         spinner.startAnimating()
 
         let provider = ProductionDataProvider()
         provider.get(productionId) { (movie, tv) in
             var sections: [Section] = []
 
-            if let section = movie?.productionSection {
-                sections.append(section)
+            if let s = movie?.productionSections {
+                sections.append(contentsOf: s)
             }
 
-            if let section = tv?.productionSection {
-                sections.append(section)
+            if let s = tv?.productionSections {
+                sections.append(contentsOf: s)
             }
 
-            self.dataSource.sections = sections
-            self.updateUI()
+            let u = Updater(dataSource: sections)
+            self.updateScreen(u)
         }
     }
 
     func updateSeason(_ seasonItem: Item?) {
-        dataSource = DataSource(screen: .detail)
+        screen = .list
         spinner.startAnimating()
 
         let provider = SeasonDataProvider()
         provider.get(seasonItem) { (season, image) in
-            self.dataSource.sections = Section.seasonSections(season)
+            let sections = Section.seasonSections(season)
             let buttonUrl = Tmdb.mediaPosterUrl(path: season?.poster_path, size: .xxl)
-            self.updateUI(image, buttonUrl)
+            let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
+            self.updateScreen(u)
         }
     }
 
     func updateSortedBy(_ sortedBy: String?) {
-        dataSource = DataSource(screen: .list)
+        screen = .list
         spinner.startAnimating()
 
         let url = Tmdb.moviesURL(sortedBy: sortedBy)
@@ -496,28 +494,31 @@ private extension MainViewController {
             guard case .success(let search) = result else { return }
 
             let items = search.results.map { $0.listItem }
-            self.dataSource.sections = [ Section(items: items) ]
-            self.updateUI()
+            let sections = [ Section(items: items) ]
+            let u = Updater(dataSource: sections)
+            self.updateScreen(u)
         }
     }
 
     func updateTv(_ id: Int?, limit: Int = Credit.numberOfEntries) {
-        dataSource = DataSource(screen: .detail)
+        screen = .list
         spinner.startAnimating()
 
         let provider = TvDataProvider()
         provider.get(id) { (tv, image, articles) in
             guard let tv = tv else { return }
 
-            self.dataSource.sections = tv.tvSections(articles)
+            let sections = tv.tvSections(articles)
             let buttonUrl = Tmdb.mediaPosterUrl(path: tv.poster_path, size: .xxl)
-            self.updateUI(image, buttonUrl)
+            let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
+            self.updateScreen(u)
         }
     }
 
 }
 
 extension MainViewController: UIContextMenuInteractionDelegate {
+
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let _ = imageButton.url else { return nil }
 
@@ -532,12 +533,37 @@ extension MainViewController: UIContextMenuInteractionDelegate {
 
         return sfvc
     }
+
 }
 
 private extension Credit {
+
     static let numberOfEntries = 10
+
 }
 
-private class ImageButton: UIButton {
+class ImageButton: UIButton {
+
     var url: URL?
+
+}
+
+enum CellType: String {
+
+    case regular, color
+
+}
+
+enum ScreenType {
+
+    case landing, list, search
+
+}
+
+struct Updater {
+
+    var image: UIImage?
+    var buttonUrl: URL?
+    var dataSource: [Section]?
+    
 }

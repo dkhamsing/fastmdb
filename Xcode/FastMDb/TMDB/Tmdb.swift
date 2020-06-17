@@ -110,13 +110,13 @@ struct Tmdb {
         return urlComponents.url
     }
 
-    static func movieURL(movieId: Int?) -> URL? {
+    static func movieURL(movieId: Int?, append: String = "credits,videos,external_ids,recommendations,similar") -> URL? {
         guard let movieId = movieId else { return nil }
 
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.movie)/\(movieId)"
 
-        let appendQueryItem = URLQueryItem(name: "append_to_response", value: "credits,videos,external_ids,recommendations,similar")
+        let appendQueryItem = URLQueryItem(name: "append_to_response", value: append)
         urlComponents.queryItems = [ Tmdb.keyQueryItem, appendQueryItem ]
 
         return urlComponents.url

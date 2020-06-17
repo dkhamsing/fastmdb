@@ -9,8 +9,16 @@ import Foundation
 
 // TODO: have tappable footers to show single list of results when more than what is displayed + later on allow paging
 extension Section {
-    static func searchSection(_ movie: MediaSearch?, _ tv: TvSearch?, _ people: PeopleSearch?) -> [Section] {
+    static func searchSection(_ movie: MediaSearch?, _ tv: TvSearch?, _ people: PeopleSearch?, _ articles: [Article]?) -> [Section] {
         var sections: [Section] = []
+
+        if let articles = articles {
+            let items = articles.map { $0.listItem }
+            if items.count > 0 {
+                let section = Article.section(items)
+                sections.append(section)
+            }
+        }
 
         if let section = movie?.section {
             sections.append(section)
