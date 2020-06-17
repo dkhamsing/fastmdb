@@ -9,21 +9,13 @@ import Foundation
 import UIKit
 
 extension Article {
-    var listItem: Item {
-        var sub: [String] = []
-        if let ago = publishedAt?.shortTimeAgoSinceDate {
-            sub.append(ago)
-        }
-        if let source = source?.name {
-            sub.append(source)
-        }
-        if let desc = validDescription {
-            sub.append(desc)
-        }
-        return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), url: url, destination: .url)
-    }
 
-    static func section(_ items: [Item], limit: Int = 3) -> Section {
+    static func newsSection(_ articles: [Article]?, limit: Int = 2) -> Section? {
+        guard
+            let articles = articles,
+            articles.count > 0 else { return nil }
+
+        let items = articles.map { $0.listItemWithTimeAgo }
         let latest = Array(items.prefix(limit))
 
         var footer: String?
@@ -31,19 +23,62 @@ extension Article {
             footer = "See all news"
         }
 
-        return Section(header: "news", items: latest, footer: footer, destination: .items, destinationItems: items, destinationTitle: "News")
+        let sec = sectionsGroupedByTime(articles)
+
+        return Section(header: "news", items: latest, footer: footer, destination: .sections, destinationSections: sec, destinationTitle: "News")
     }
 
-    static func newsSection(_ articles: [Article]?, limit: Int = 2) -> Section? {
-        guard
-            let articles = articles,
-            articles.count > 0 else { return nil }
+}
 
-        let items = articles.map { $0.listItem }
+private extension Article {
 
-        let section = Article.section(items, limit: limit)
+    static func sectionsGroupedByTime(_ articles: [Article]?) -> [Section] {
+        let sorted = articles?.sorted { $0.publishedAt ?? Date() > $1.publishedAt ?? Date() }
+        guard let headers = sorted?.compactMap({ $0.relativeTimeAgo }) else { return [] }
 
-        return section
+        var sec: [Section] = []
+        for header in headers.unique {
+            let items = articles?.filter { $0.relativeTimeAgo == header }.map { $0.listItem }
+            sec.append(
+                Section(header: header, items: items)
+            )
+        }
+
+        return sec
+    }
+
+    var listItem: Item {
+        return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), url: url, destination: .url)
+    }
+
+    var listItemWithTimeAgo: Item {
+        var s: [String] = []
+        if let ago = publishedAt?.shortTimeAgoSinceDate {
+            s.append(ago)
+        }
+        s.append(contentsOf: sub)
+
+        return Item(title: titleDisplay, subtitle: s.joined(separator: Tmdb.separator), url: url, destination: .url)
+    }
+
+
+    var relativeTimeAgo: String? {
+        guard let p = publishedAt else { return nil }
+
+        let rdf = RelativeDateTimeFormatter()
+        return rdf.localizedString(for: p, relativeTo: Date())
+    }
+
+    var sub: [String] {
+        var sub: [String] = []
+        if let source = source?.name {
+            sub.append(source)
+        }
+        if let desc = validDescription {
+            sub.append(desc)
+        }
+
+        return sub
     }
 
     var titleDisplay: String? {
@@ -51,7 +86,6 @@ extension Article {
             .filterOutStringAfter(" | ")?
             .filterOutStringAfter(" - ")
     }
-
 }
 
 private extension String {

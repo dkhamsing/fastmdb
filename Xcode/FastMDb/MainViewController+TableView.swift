@@ -167,6 +167,8 @@ private extension MainViewController {
         case .url:
             guard let url = item.url else { return }
             UIApplication.shared.open(url)
+        default:
+            print("todo for \(item)")
         }
     }
 
@@ -191,7 +193,11 @@ private extension MainViewController {
             controller.title = section.destinationTitle
             controller.items = section.destinationItems
             navigationController?.pushViewController(controller, animated: true)
-
+        case .sections:
+            let controller = MainViewController()
+            controller.title = section.destinationTitle
+            controller.sections = section.destinationSections
+            navigationController?.pushViewController(controller, animated: true)
         default:
             print("handle button not implemented for \(s)")
         }

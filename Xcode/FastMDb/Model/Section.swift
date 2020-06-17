@@ -14,5 +14,6 @@ struct Section {
 
     var destination: Destination?
     var destinationItems: [Item]?
+    var destinationSections: [Section]?
     var destinationTitle: String?
 }

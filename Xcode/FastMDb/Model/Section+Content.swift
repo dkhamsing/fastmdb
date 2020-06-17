@@ -13,10 +13,8 @@ extension Section {
     static func contentSections(kind: Tmdb.MoviesType, movie: MediaSearch?, tv: TvSearch?, people: PeopleSearch?, articles: [Article]?) -> [Section] {
         var sections: [Section] = []
 
-        if let articles = articles {
-            let items = articles.map { $0.listItem }
-            let section = Article.section(items)
-            sections.append(section)
+        if let s = Article.newsSection(articles, limit: 3) {
+            sections.append(s)
         }
 
         if let s = movieSections(movie: movie, kind: kind) {

@@ -73,6 +73,12 @@ class MainViewController: UIViewController {
         }
     }
 
+    var sections: [Section]? {
+        didSet {
+            updateSections(sections)
+        }
+    }
+
     var sortedBy: String? {
         didSet {
             updateSortedBy(sortedBy)
@@ -498,6 +504,13 @@ private extension MainViewController {
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
+    }
+
+    func updateSections(_ sections: [Section]?) {
+        screen = .list
+
+        let u = Updater(dataSource: sections)
+        updateScreen(u)
     }
 
     func updateTv(_ id: Int?, limit: Int = Credit.numberOfEntries) {

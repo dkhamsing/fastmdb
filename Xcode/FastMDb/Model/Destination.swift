@@ -20,6 +20,7 @@ enum Destination {
     person,
     network,
     production,
+    sections,
     season,
     tv,
     url
