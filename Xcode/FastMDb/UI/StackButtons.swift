@@ -8,13 +8,13 @@
 
 import UIKit
 
-protocol SelectKind {
+protocol SelectKind: class {
     func didselectKind(_ kind: SearchKind)
 }
 
 class StackButtons: UIView {
 
-    var delegate: SelectKind?
+    weak var delegate: SelectKind?
     static let height: CGFloat = 90
     private var stack = UIStackView()
 
