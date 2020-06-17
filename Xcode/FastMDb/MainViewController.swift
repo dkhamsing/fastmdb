@@ -119,7 +119,7 @@ class MainViewController: UIViewController {
     }
 
     deinit {
-        print("deinit")
+        print("deinit \(self)")
     }
 
 }
