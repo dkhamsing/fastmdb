@@ -218,7 +218,7 @@ private extension Media {
             let titles = recs.map { $0.titleDisplay ?? "" }
             let top3 = Array(titles.prefix(3))
             let items: [Item] = recs.map { $0.listItem }
-            let item = Item(title: top3.joined(separator: ", "), subtitle: "Related", destination: .items, destinationTitle: "Related", items: items)
+            let item = Item(title: top3.joined(separator: ", "), subtitle: "Recommendations", destination: .items, destinationTitle: "Recommendations", items: items)
             moreItems.append(item)
         }
 
