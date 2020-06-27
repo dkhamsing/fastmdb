@@ -34,7 +34,9 @@ struct TV: Codable {
     var networks: [TvNetwork]?
     var poster_path: String?
     var production_companies: [Production]?
+
     var recommendations: TvSearch?
+    var similar: TvSearch?
 
     var seasons: [Season]?
     var status: String?

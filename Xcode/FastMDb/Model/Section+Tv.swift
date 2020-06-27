@@ -28,7 +28,7 @@ extension TV {
             sections.append(section)
         }
 
-        if let section = recommendedSection {
+        if let section = relatedSection {
             sections.append(section)
         }
 
@@ -278,17 +278,34 @@ private extension TV {
         return section
     }
 
-    var recommendedSection: Section? {
-        guard
+    var relatedSection: Section? {
+        var relatedItems: [Item] = []
+
+        if
             let recs = recommendations?.results,
-            recs.count > 0 else { return nil }
+            recs.count > 0 {
+
+            let titles = recs.map { $0.name }
+            let items = recs.map { $0.listItem }
+            let top3 = Array(titles.prefix(3))
+            let item = Item(title: top3.joined(separator: ", "), subtitle: "Recommendations", destination: .items, destinationTitle: "Recommendations", items: items)
+            relatedItems.append(item)
+        }
+
+        if
+            let recs = similar?.results,
+            recs.count > 0 {
 
         let titles = recs.map { $0.name }
         let items = recs.map { $0.listItem }
         let top3 = Array(titles.prefix(3))
-        let item = Item(title: top3.joined(separator: ", "), destination: .items, destinationTitle: "Related", items: items)
+        let item = Item(title: top3.joined(separator: ", "), subtitle: "Similar", destination: .items, destinationTitle: "Similar", items: items)
+            relatedItems.append(item)
+        }
 
-        return Section(header: "related", items: [item])
+        guard relatedItems.count > 0 else { return nil }
+
+        return Section(header: "related", items: relatedItems)
     }
 
 }
