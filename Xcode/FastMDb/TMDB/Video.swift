@@ -21,11 +21,19 @@ extension Video {
     }
 
     var url: URL? {
-        guard site.lowercased() == "youtube" else { return nil }
+        switch site.lowercased() {
+        case "youtube":
+            let baseUrl = YouTube.urlBase
+            let url = URL(string: "\(baseUrl)/\(key)")
 
-        let baseUrl = YouTube.urlBase
-        let url = URL(string: "\(baseUrl)/\(key)")
+            return url
+        case "vimeo":
+            let baseUrl = "https://vimeo.com/"
+            let url = URL(string: "\(baseUrl)/\(key)")
 
-        return url
+            return url
+        default:
+            return nil
+        }
     }
 }
