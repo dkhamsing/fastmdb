@@ -167,11 +167,161 @@ private extension MainViewController {
         case .url:
             guard let url = item.url else { return }
             UIApplication.shared.open(url)
+        case .videos:
+            guard
+                let items = item.items,
+                items.count > 0 else { return }
+
+            let controller = VideosViewController()
+            controller.items = item.items
+            navigationController?.pushViewController(controller, animated: true)
         default:
             print("todo for \(item)")
         }
     }
 
+}
+
+// TODO: move to own file
+import LinkPresentation
+class VideosViewController: UIViewController {
+    let tableView = UITableView(frame: .zero, style: .insetGrouped)
+
+    var dataSource: UITableViewDiffableDataSource<VideoSection,VideoItem>!
+
+    enum VideoSection: CaseIterable {
+        case main
+    }
+
+    var items: [Item]? {
+        didSet {
+            guard
+                let items = items,
+                items.count > 0 else { return }
+
+            fetchImages(items)
+
+            let ds = makeDataSource()
+            dataSource = ds
+            tableView.dataSource = ds
+
+            var snapshot = NSDiffableDataSourceSnapshot<VideoSection,VideoItem>()
+            snapshot.appendSections([.main])
+            snapshot.appendItems(items.map{$0.videoItem}, toSection: .main)
+            dataSource.apply(snapshot, animatingDifferences: false)
+        }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        title = "Videos"
+        setup()
+    }
+
+    func makeDataSource() -> UITableViewDiffableDataSource<VideoSection,VideoItem> {
+        return UITableViewDiffableDataSource<VideoSection, VideoItem>(tableView: tableView) { (tableView, indexPath, videoItem) -> UITableViewCell? in
+            let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "videoId")
+
+            cell.textLabel?.text = videoItem.title
+            cell.detailTextLabel?.text = videoItem.subtitle
+            cell.imageView?.image = videoItem.image
+
+            cell.detailTextLabel?.textColor = .secondaryLabel
+
+            return cell
+        }
+    }
+
+    // TODO: cache images
+    func fetchImages(_ items: [Item]) {
+        let group = DispatchGroup()
+        var videoItems: [VideoItem] = []
+        for item in items {
+            if let url = item.url {
+                group.enter()
+                print(url)
+                let provider = LPMetadataProvider()
+                provider.startFetchingMetadata(for: url) { (metadata, error) in
+                    if let metadata = metadata,
+                        let imageProvider = metadata.imageProvider {
+//                        print(metadata)
+                        imageProvider.loadObject(ofClass: UIImage.self) { image, _ in
+                            if let image = image as? UIImage {
+//                                print("\(url.absoluteString): got image with size \(image.size)")
+                                var vi = item.videoItem
+                                vi.image = image
+                                videoItems.append(vi)
+                            }
+                            group.leave()
+                        }
+                    }
+                    else {
+                        group.leave()
+                    }
+                }
+            }
+        }
+
+        group.notify(queue: .main) {
+//            print("we're finished with items \(videoItems)")
+
+            var snapshot = NSDiffableDataSourceSnapshot<VideoSection,VideoItem>()
+            snapshot.appendSections([.main])
+
+
+            var sorted: [VideoItem] = []
+            for item in items {
+                let filtered = videoItems
+                    .filter { $0.url?.absoluteString == item.url?.absoluteString }
+
+                if let f = filtered.first {
+                    sorted.append(f)
+                }
+                else {
+                    sorted.append(item.videoItem)
+                }
+            }
+
+            snapshot.appendItems(sorted, toSection: .main)
+            self.dataSource.apply(snapshot, animatingDifferences: false)
+        }
+    }
+
+    func setup() {
+        tableView.delegate = self
+
+        tableView.frame = view.bounds
+        tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(tableView)
+    }
+}
+
+extension VideosViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        let snapshot = dataSource.snapshot()
+        let items = snapshot.itemIdentifiers
+        let item = items[indexPath.row]
+
+        guard let url = item.url else { return }
+
+        UIApplication.shared.open(url)
+    }
+}
+
+struct VideoItem: Hashable {
+    let title: String?
+    let subtitle: String?
+    var image: UIImage?
+    var url: URL?
+}
+
+extension Item {
+    var videoItem: VideoItem {
+        return VideoItem(title: title, subtitle: subtitle, url: url)
+    }
 }
 
 private class DestinationButton: UIButton {

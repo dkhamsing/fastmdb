@@ -23,5 +23,6 @@ enum Destination {
     sections,
     season,
     tv,
+    videos,
     url
 }
