@@ -180,8 +180,8 @@ private extension Media {
         if
             let videos = videos?.results,
             videos.count > 0 {
-//            let item = Item(title: "Videos", destination: .items, destinationTitle: "Videos", items: videos.map { $0.listItem } )
-            let item = Item(title: "Videos", destination: .videos, items: videos.map { $0.listItem })
+//            let item = Item(title: "Video Clips", destination: .items, destinationTitle: "Videos", items: videos.map { $0.listItem } )
+            let item = Item(title: "Video Clips", destination: .videos, items: videos.map { $0.listItem })
             items.append(item)
         }
 
