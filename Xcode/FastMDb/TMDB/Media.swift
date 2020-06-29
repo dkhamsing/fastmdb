@@ -31,6 +31,7 @@ struct Media: Codable {
     var production_countries: [ProductionCountry]?
     var poster_path: String?
     var recommendations: MediaSearch?
+    var reviews: ReviewSearch?
     var release_date: String?
     var runtime: Int?
     var similar: MediaSearch?
@@ -40,6 +41,21 @@ struct Media: Codable {
 
     // TV
     var original_name: String?
+}
+
+// TODO: move to Review.swift file
+struct ReviewSearch: Codable {
+    var results: [Review]
+}
+
+struct Review: Codable {
+    var author, content: String
+}
+
+extension Review {
+    var listItem: Item {
+        return Item.init(title: content, subtitle: author)
+    }
 }
 
 extension Media {

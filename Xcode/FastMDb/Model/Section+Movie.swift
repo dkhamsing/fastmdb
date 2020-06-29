@@ -245,7 +245,16 @@ private extension Media {
         guard let rating = ratingDisplay else { return nil }
 
         let item = Item(title: rating, subtitle: voteDisplay, color: vote_average.color)
-        let section = Section(header: "rating", items: [item])
+        var section = Section(header: "rating", items: [item])
+
+        if reviews?.results.count ?? 0 > 0 {
+            let reviewItems = reviews?.results.map { $0.listItem }
+            section.destinationItems = reviewItems
+            section.destinationTitle = "Reviews"
+            section.destination = .items
+            section.footer = "See reviews"
+        }
+
         return section
     }
 
