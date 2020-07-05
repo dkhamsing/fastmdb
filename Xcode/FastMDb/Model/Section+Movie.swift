@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 extension Media {
+    
     func sections(articles: [Article]?, limit: Int) -> [Section] {
         var list: [Section] = []
 

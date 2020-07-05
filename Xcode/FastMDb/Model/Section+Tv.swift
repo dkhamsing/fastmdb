@@ -9,66 +9,66 @@ import Foundation
 
 extension TV {
     
-    func tvSections(_ articles: [Article]?) -> [Section] {
-        var sections: [Section] = []
+    func sections(_ articles: [Article]?) -> [Section] {
+        var list: [Section] = []
 
         if let section = nextEpisodeSection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = overviewSection {
-            sections.append(section)
+            list.append(section)
         }
         
         if let section = Article.newsSection(articles) {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = ratingSection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = mediaSection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = relatedSection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = linksSection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = googleSection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = createdBySection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = networksSection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = genresSection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = productionSection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = castSection {
-            sections.append(section)
+            list.append(section)
         }
 
         if let section = crewSection {
-            sections.append(section)
+            list.append(section)
         }
 
-        return sections
+        return list
     }
 
 }

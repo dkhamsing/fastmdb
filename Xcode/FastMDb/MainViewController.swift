@@ -521,7 +521,7 @@ private extension MainViewController {
         provider.get(id) { (tv, image, articles) in
             guard let tv = tv else { return }
 
-            let sections = tv.tvSections(articles)
+            let sections = tv.sections(articles)
             let buttonUrl = Tmdb.mediaPosterUrl(path: tv.poster_path, size: .xxl)
             let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
             self.updateScreen(u)
