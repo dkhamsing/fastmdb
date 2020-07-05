@@ -88,7 +88,6 @@ private extension Media {
     var linksSection: Section? {
         var items: [Item] = []
 
-        // homepage
         if
             let homepage = homepage,
             homepage != "" {
@@ -97,22 +96,19 @@ private extension Media {
             items.append(item)
         }
 
-        // wikipedia
         if let name = title {
             let item = Item(title: "Wikipedia", url: name.wikipediaUrl, destination: .url, image: Item.linkImage)
             items.append(item)
         }
 
-        // imdb
         if
             let id = external_ids?.validImdbId {
             let item = Item(title: "IMDb", url: Imdb.url(id: id, kind: .title), destination: .url, image: Item.linkImage)
             items.append(item)
         }
 
-        // justwatch
         if let name = title {
-            let item = Item(title: "JustWatch", url: name.justWatchUrl, destination: .url, image: Item.videoImage)
+            let item = Item(title: "JustWatch", url: name.justWatchUrl, destination: .url, image: Item.linkImage)
             items.append(item)
         }
 
