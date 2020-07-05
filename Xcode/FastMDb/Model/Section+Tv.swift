@@ -143,12 +143,12 @@ private extension TV {
         }
 
         if name != "" {
-            let item = Item(title: "Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.videoImage)
+            let item = Item(title: "Google Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.videoImage)
             items.append(item)
         }
 
         if name != "" {
-            let item = Item(title: "Music", url: name.itunesMusicSearchUrl, destination: .music, image: Item.videoImage)
+            let item = Item(title: "Apple Music", url: name.itunesMusicSearchUrl, destination: .music, image: Item.videoImage)
             items.append(item)
         }
 
