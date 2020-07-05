@@ -28,11 +28,19 @@ extension TV {
             sections.append(section)
         }
 
+        if let section = mediaSection {
+            sections.append(section)
+        }
+
         if let section = relatedSection {
             sections.append(section)
         }
 
         if let section = linksSection {
+            sections.append(section)
+        }
+
+        if let section = googleSection {
             sections.append(section)
         }
 
@@ -106,6 +114,24 @@ private extension TV {
         return Section(header: "genres", items: items)
     }
 
+    var googleSection: Section? {
+        var items: [Item] = []
+
+        if name != "" {
+            let item = Item(title: "Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
+            items.append(item)
+        }
+
+        if name != "" {
+            let item = Item(title: "Music", url: name.googleSearchMusicUrl, destination: .url, image: Item.linkImage)
+            items.append(item)
+        }
+
+        guard items.count > 0 else { return nil }
+
+        return Section(header: "google", items: items)
+    }
+
     var linksSection: Section? {
         var items: [Item] = []
 
@@ -138,12 +164,20 @@ private extension TV {
         }
 
         if name != "" {
-            let item = Item(title: "JustWatch", url: name.justWatchUrl, destination: .url, image: Item.videoImage)
+            let item = Item(title: "JustWatch", url: name.justWatchUrl, destination: .url, image: Item.linkImage)
             items.append(item)
         }
 
-        if name != "" {
-            let item = Item(title: "Google Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.videoImage)
+        return Section(header: "links", items: items)
+    }
+
+    var mediaSection: Section? {
+        var items: [Item] = []
+
+        if
+            let videos = videos?.results,
+            videos.count > 0 {
+            let item = Item(title: "Video Clips", destination: .videos, items: videos.map { $0.listItem }, image: Item.videoImage)
             items.append(item)
         }
 
@@ -152,7 +186,9 @@ private extension TV {
             items.append(item)
         }
 
-        return Section(header: "links", items: items)
+        guard items.count > 0 else { return nil }
+
+        return Section(header: "media", items: items)
     }
 
     var networksSection: Section? {
@@ -246,14 +282,6 @@ private extension TV {
             let o = overview,
             o != "" {
             items.append(Item(title: o))
-        }
-
-        if
-            let videos = videos?.results,
-            videos.count > 0 {
-//            let item = Item(title: "Video Clips", destination: .items, destinationTitle: "Videos", items: videos.map { $0.listItem } )
-            let item = Item(title: "Video Clips", destination: .videos, items: videos.map { $0.listItem })
-            items.append(item)
         }
 
         return Section(header: "tv", items: items)

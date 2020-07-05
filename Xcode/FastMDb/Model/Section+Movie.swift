@@ -32,11 +32,19 @@ extension Media {
             list.append(section)
         }
 
+        if let section = mediaSection {
+            list.append(section)
+        }
+
         if let section = moreSection {
             list.append(section)
         }
 
         if let section = linksSection {
+            list.append(section)
+        }
+
+        if let section = googleSection {
             list.append(section)
         }
 
@@ -79,6 +87,24 @@ private extension Media {
         return Section(header: "budget", items: [i])
     }
 
+    var googleSection: Section? {
+        var items: [Item] = []
+
+        if let name = title {
+            let item = Item(title: "Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
+            items.append(item)
+        }
+
+        if let name = title {
+            let item = Item(title: "Music", url: name.googleSearchMusicUrl, destination: .url, image: Item.linkImage)
+            items.append(item)
+        }
+
+        guard items.count > 0 else { return nil }
+
+        return Section(header: "google", items: items)
+    }
+
     var languageSection: Section? {
         guard let lang = languageDisplay else { return nil }
 
@@ -112,9 +138,18 @@ private extension Media {
             items.append(item)
         }
 
-        // google
-        if let name = title {
-            let item = Item(title: "Google Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.videoImage)
+        guard items.count > 0 else { return nil }
+
+        return Section(header: "links", items: items)
+    }
+
+    var mediaSection: Section? {
+        var items: [Item] = []
+
+        if
+            let videos = videos?.results,
+            videos.count > 0 {
+            let item = Item(title: "Video Clips", destination: .videos, items: videos.map { $0.listItem }, image: Item.videoImage)
             items.append(item)
         }
 
@@ -125,9 +160,8 @@ private extension Media {
 
         guard items.count > 0 else { return nil }
 
-        return Section(header: "links", items: items)
+        return Section(header: "media", items: items)
     }
-
 
     var metadataSection: Section? {
         var metadata: [String] = []
@@ -170,14 +204,6 @@ private extension Media {
 
         if let value = overviewDisplay {
             let item = Item(title: value)
-            items.append(item)
-        }
-
-        if
-            let videos = videos?.results,
-            videos.count > 0 {
-//            let item = Item(title: "Video Clips", destination: .items, destinationTitle: "Videos", items: videos.map { $0.listItem } )
-            let item = Item(title: "Video Clips", destination: .videos, items: videos.map { $0.listItem })
             items.append(item)
         }
 
