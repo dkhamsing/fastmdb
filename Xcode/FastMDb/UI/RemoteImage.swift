@@ -17,8 +17,7 @@ struct RemoteImage: View {
     var body: some View {
         Image(uiImage: UIImage(data: self.remoteData.data) ?? UIImage())
             .resizable()
-            .scaledToFit()
-            .aspectRatio(contentMode: .fill)
+            .aspectRatio(contentMode: .fit)
     }
 }
 

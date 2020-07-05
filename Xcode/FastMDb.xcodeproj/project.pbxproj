@@ -47,6 +47,9 @@
 		65530BAA246E4DF90045DC1B /* Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65530BA9246E4DF90045DC1B /* Season.swift */; };
 		655B0F4224B1478A00E587E9 /* iTunes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B0F4124B1478A00E587E9 /* iTunes.swift */; };
 		655B0F4424B14AF200E587E9 /* RemoteImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B0F4324B14AF200E587E9 /* RemoteImage.swift */; };
+		655B0F4624B16E7F00E587E9 /* MusicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B0F4524B16E7F00E587E9 /* MusicView.swift */; };
+		655B0F4824B1735900E587E9 /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B0F4724B1735900E587E9 /* VideoView.swift */; };
+		655B0F4C24B176A700E587E9 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B0F4B24B176A700E587E9 /* ActivityIndicator.swift */; };
 		657655D72474D5B30080D6B1 /* NewsApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657655D52474D5B30080D6B1 /* NewsApiModel.swift */; };
 		657655DE2474E4E00080D6B1 /* NewsApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657655DD2474E4E00080D6B1 /* NewsApi.swift */; };
 		65883AC82471F9F400C1A55A /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883AC72471F9F400C1A55A /* Item.swift */; };
@@ -110,6 +113,9 @@
 		65530BA9246E4DF90045DC1B /* Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Season.swift; sourceTree = "<group>"; };
 		655B0F4124B1478A00E587E9 /* iTunes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunes.swift; sourceTree = "<group>"; };
 		655B0F4324B14AF200E587E9 /* RemoteImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteImage.swift; sourceTree = "<group>"; };
+		655B0F4524B16E7F00E587E9 /* MusicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicView.swift; sourceTree = "<group>"; };
+		655B0F4724B1735900E587E9 /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
+		655B0F4B24B176A700E587E9 /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		657655D52474D5B30080D6B1 /* NewsApiModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsApiModel.swift; sourceTree = "<group>"; };
 		657655DD2474E4E00080D6B1 /* NewsApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsApi.swift; sourceTree = "<group>"; };
 		65883AC72471F9F400C1A55A /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -139,8 +145,12 @@
 		650BAB2824971ED5003A0E95 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				655B0F4B24B176A700E587E9 /* ActivityIndicator.swift */,
 				654D0F6F246B16BA00B2A968 /* MainListCell.swift */,
+				655B0F4524B16E7F00E587E9 /* MusicView.swift */,
+				655B0F4324B14AF200E587E9 /* RemoteImage.swift */,
 				650BAB262496BDFD003A0E95 /* StackButtons.swift */,
+				655B0F4724B1735900E587E9 /* VideoView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -169,7 +179,6 @@
 				654D0F66246B169A00B2A968 /* Info.plist */,
 				654D0F58246B169800B2A968 /* AppDelegate.swift */,
 				655B0F4124B1478A00E587E9 /* iTunes.swift */,
-				655B0F4324B14AF200E587E9 /* RemoteImage.swift */,
 				654D0F73246B16BA00B2A968 /* MainViewController.swift */,
 				654D0F74246B16BA00B2A968 /* MainViewController+Search.swift */,
 				654D0F6D246B16BA00B2A968 /* MainViewController+TableView.swift */,
@@ -372,10 +381,13 @@
 				654D0F81246B16BA00B2A968 /* External.swift in Sources */,
 				654D0F91246B16C900B2A968 /* DataProvider.swift in Sources */,
 				65530B9E246E4C440045DC1B /* Genre.swift in Sources */,
+				655B0F4624B16E7F00E587E9 /* MusicView.swift in Sources */,
+				655B0F4C24B176A700E587E9 /* ActivityIndicator.swift in Sources */,
 				654D0F7D246B16BA00B2A968 /* Section+Search.swift in Sources */,
 				654D0F96246B16C900B2A968 /* Languages.swift in Sources */,
 				65883AD2247348E100C1A55A /* Destination.swift in Sources */,
 				650BAB272496BDFD003A0E95 /* StackButtons.swift in Sources */,
+				655B0F4824B1735900E587E9 /* VideoView.swift in Sources */,
 				650BAB2C24982C2E003A0E95 /* Section+Network.swift in Sources */,
 				654D0F7C246B16BA00B2A968 /* Section+Tv.swift in Sources */,
 				65530BAA246E4DF90045DC1B /* Season.swift in Sources */,
