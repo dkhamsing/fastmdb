@@ -5,32 +5,71 @@
 //  Copyright © 2020 dk. All rights reserved.
 //
 
+import UIKit
 import SwiftUI
 
-struct RemoteImage: View {
-    @ObservedObject var remoteData: RemoteData
+class ImageModel: ObservableObject {
+    @Published var image: UIImage? = nil
 
-    init(url: URL) {
-        remoteData = RemoteData(url: url)
+    private var imageCache = ImageCache.getImageCache()
+
+    init(url: URL?) {
+        loadImage(url: url)
     }
 
-    var body: some View {
-        Image(uiImage: UIImage(data: self.remoteData.data) ?? UIImage())
-            .resizable()
-            .aspectRatio(contentMode: .fit)
+    func loadImage(url: URL?) {
+        if let image = getImageFromCache(url: url) {
+            self.image = image
+            return
+        }
+
+        getImageFromUrl(url: url) { image in
+            if let image = image {
+                self.imageCache.set(forKey: url?.absoluteString ?? "", image: image)
+            }
+
+            DispatchQueue.main.async {
+                self.image = image
+            }
+        }
     }
-}
 
-class RemoteData: ObservableObject {
-    @Published var data = Data()
+    func getImageFromCache(url: URL?) -> UIImage? {
+        guard let url = url else { return nil }
 
-    init(url: URL) {
+        guard let cacheImage = imageCache.get(forKey: url.absoluteString) else { return nil }
+
+        print("cache hit")
+
+        return cacheImage
+    }
+
+    func getImageFromUrl(url: URL?, completion: @escaping (UIImage?) ->Void) {
+        guard let url = url else { return }
+
+        print(url.absoluteString)
+
         DispatchQueue.global().async {
             guard let data = try? Data(contentsOf: url) else { return }
 
-            DispatchQueue.main.async {
-                self.data = data
-            }
+            let image = UIImage(data: data)
+            completion(image)
+        }
+    }
+}
+
+struct RemoteImage: View {
+    @ObservedObject var imageModel: ImageModel
+
+    init(url: URL?) {
+        imageModel = ImageModel(url: url)
+    }
+
+    var body: some View {
+        imageModel.image.map {
+            Image(uiImage: $0)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
         }
     }
 }

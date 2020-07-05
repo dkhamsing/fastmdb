@@ -56,6 +56,7 @@
 		65883ACE2472F2FF00C1A55A /* Section+Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883ACD2472F2FF00C1A55A /* Section+Content.swift */; };
 		65883AD02472F39600C1A55A /* Section+Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883ACF2472F39600C1A55A /* Section+Season.swift */; };
 		65883AD2247348E100C1A55A /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883AD1247348E100C1A55A /* Destination.swift */; };
+		65B7496024B18DA600C8997C /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B7495F24B18DA600C8997C /* ImageCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +123,7 @@
 		65883ACD2472F2FF00C1A55A /* Section+Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Content.swift"; sourceTree = "<group>"; };
 		65883ACF2472F39600C1A55A /* Section+Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Season.swift"; sourceTree = "<group>"; };
 		65883AD1247348E100C1A55A /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
+		65B7495F24B18DA600C8997C /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				655B0F4B24B176A700E587E9 /* ActivityIndicator.swift */,
+				65B7495F24B18DA600C8997C /* ImageCache.swift */,
 				654D0F6F246B16BA00B2A968 /* MainListCell.swift */,
 				655B0F4524B16E7F00E587E9 /* MusicView.swift */,
 				655B0F4324B14AF200E587E9 /* RemoteImage.swift */,
@@ -404,6 +407,7 @@
 				65883AD02472F39600C1A55A /* Section+Season.swift in Sources */,
 				655B0F4224B1478A00E587E9 /* iTunes.swift in Sources */,
 				654D0F7B246B16BA00B2A968 /* Section+Movie.swift in Sources */,
+				65B7496024B18DA600C8997C /* ImageCache.swift in Sources */,
 				65530BA6246E4DA10045DC1B /* TvNetwork.swift in Sources */,
 				65883AC82471F9F400C1A55A /* Item.swift in Sources */,
 				654D0F97246B16C900B2A968 /* Search.swift in Sources */,
