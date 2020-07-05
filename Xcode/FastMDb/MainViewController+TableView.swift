@@ -194,7 +194,7 @@ private extension MainViewController {
 }
 
 private class DestinationButton: UIButton {
-    var section: Section?
+    var section: ItemSection?
 }
 
 private extension MainViewController {

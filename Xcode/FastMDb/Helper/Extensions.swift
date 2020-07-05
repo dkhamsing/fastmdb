@@ -10,7 +10,7 @@ import UIKit
 
 extension Article {
 
-    static func newsSection(_ articles: [Article]?, limit: Int = 2) -> Section? {
+    static func newsSection(_ articles: [Article]?, limit: Int = 2) -> ItemSection? {
         guard
             let articles = articles,
             articles.count > 0 else { return nil }
@@ -25,22 +25,22 @@ extension Article {
 
         let sec = sectionsGroupedByTime(articles)
 
-        return Section(header: "news", items: latest, footer: footer, destination: .sections, destinationSections: sec, destinationTitle: "News")
+        return ItemSection(header: "news", items: latest, footer: footer, destination: .sections, destinationSections: sec, destinationTitle: "News")
     }
 
 }
 
 private extension Article {
 
-    static func sectionsGroupedByTime(_ articles: [Article]?) -> [Section] {
+    static func sectionsGroupedByTime(_ articles: [Article]?) -> [ItemSection] {
         let sorted = articles?.sorted { $0.publishedAt ?? Date() > $1.publishedAt ?? Date() }
         guard let headers = sorted?.compactMap({ $0.relativeTimeAgo }) else { return [] }
 
-        var sec: [Section] = []
+        var sec: [ItemSection] = []
         for header in headers.unique {
             let items = articles?.filter { $0.relativeTimeAgo == header }.map { $0.listItem }
             sec.append(
-                Section(header: header, items: items)
+                ItemSection(header: header, items: items)
             )
         }
 

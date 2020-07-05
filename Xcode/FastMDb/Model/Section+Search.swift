@@ -8,9 +8,9 @@
 import Foundation
 
 // TODO: have tappable footers to show single list of results when more than what is displayed + later on allow paging
-extension Section {
-    static func searchSection(_ movie: MediaSearch?, _ tv: TvSearch?, _ people: PeopleSearch?, _ articles: [Article]?) -> [Section] {
-        var sections: [Section] = []
+extension ItemSection {
+    static func searchSection(_ movie: MediaSearch?, _ tv: TvSearch?, _ people: PeopleSearch?, _ articles: [Article]?) -> [ItemSection] {
+        var sections: [ItemSection] = []
 
         if let section = Article.newsSection(articles) {
             sections.append(section)
@@ -29,7 +29,7 @@ extension Section {
         }
 
         if sections.count == 0 {
-            sections.append(Section.noResultsSection)
+            sections.append(ItemSection.noResultsSection)
         }
 
         return sections
@@ -37,47 +37,47 @@ extension Section {
 }
 
 private extension MediaSearch {
-    var section: Section? {
+    var section: ItemSection? {
         let items = results.map { $0.listItem }
 
         guard items.count > 0 else { return nil }
 
         let count = total_results
 
-        return Section(header: "Movies (\(count))", items: items)
+        return ItemSection(header: "Movies (\(count))", items: items)
     }
 }
 
 private extension PeopleSearch {
-    var section: Section? {
+    var section: ItemSection? {
         let items = self.results.map { $0.listItemSearch }
 
         guard items.count > 0 else { return nil }
 
         let count = self.total_results
 
-        return Section(header: "People (\(count))", items: items)
+        return ItemSection(header: "People (\(count))", items: items)
     }
 }
 
-private extension Section {
-    static var noResultsSection: Section {
+private extension ItemSection {
+    static var noResultsSection: ItemSection {
         let item = Item(title: "Nothing found for your search 😅")
-        let section = Section(header: "Results", items: [item])
+        let section = ItemSection(header: "Results", items: [item])
 
         return section
     }
 }
 
 private extension TvSearch {
-    var section: Section? {
+    var section: ItemSection? {
         let items = results.map { $0.listItem }
 
         guard items.count > 0 else { return nil }
 
         let count = total_results
 
-        return Section(header: "TV (\(count))", items: items)
+        return ItemSection(header: "TV (\(count))", items: items)
     }
 }
 

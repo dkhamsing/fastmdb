@@ -7,10 +7,10 @@
 
 import Foundation
 
-extension Section {
+extension ItemSection {
 
-    static func personSections(credit: Credit?, articles: [Article]?, limit: Int) -> [Section] {
-        var sections: [Section] = []
+    static func personSections(credit: Credit?, articles: [Article]?, limit: Int) -> [ItemSection] {
+        var sections: [ItemSection] = []
 
         if let section = credit?.ageSection {
             sections.append(section)
@@ -59,8 +59,8 @@ private extension Credit {
         return creditCount
     }
 
-    func knownForActingSections(limit: Int) -> [Section] {
-        var sections: [Section] = []
+    func knownForActingSections(limit: Int) -> [ItemSection] {
+        var sections: [ItemSection] = []
 
         let s = movieCastSections(limit: limit)
         if s.count > 0 {
@@ -83,8 +83,8 @@ private extension Credit {
         return sections
     }
 
-    func knownForOtherSections(limit: Int) -> [Section] {
-        var sections: [Section] = []
+    func knownForOtherSections(limit: Int) -> [ItemSection] {
+        var sections: [ItemSection] = []
 
         let crewSections = movieCrewSections(limit: limit)
         if crewSections.count > 0 {
@@ -111,7 +111,7 @@ private extension Credit {
 
 private extension Credit {
 
-    var ageSection: Section? {
+    var ageSection: ItemSection? {
           guard
               deathday == nil,
               let birthday = birthday else { return nil }
@@ -134,12 +134,12 @@ private extension Credit {
               item.image = Item.mapImage
           }
 
-          return Section(header: "age", items: [item])
+          return ItemSection(header: "age", items: [item])
       }
 
-    var bioSection: Section? {
+    var bioSection: ItemSection? {
         // biography, imdb
-        var bioSection = Section(header: "biography")
+        var bioSection = ItemSection(header: "biography")
         var bioItems: [Item] = []
         if
             let biography = biography,
@@ -177,7 +177,7 @@ private extension Credit {
         return bioSection
     }
 
-    var googleSection: Section? {
+    var googleSection: ItemSection? {
         var items: [Item] = []
 
         if let name = name {
@@ -187,10 +187,10 @@ private extension Credit {
 
         guard items.count > 0 else { return nil }
 
-        return Section(header: "google", items: items)
+        return ItemSection(header: "google", items: items)
     }
 
-    var knownForSection: Section? {
+    var knownForSection: ItemSection? {
         let magic = 10
 
         guard
@@ -220,10 +220,10 @@ private extension Credit {
             let i = items,
             i.count > 0 else { return nil }
 
-        return Section(header: "known for", items: i)
+        return ItemSection(header: "known for", items: i)
     }
 
-    var linksSection: Section? {
+    var linksSection: ItemSection? {
         var items: [Item] = []
 
         if let instagram = external_ids?.validInstagramId {
@@ -246,7 +246,7 @@ private extension Credit {
             items.append(item)
         }
 
-        return Section(header: "links", items: items)
+        return ItemSection(header: "links", items: items)
     }
 
 }
@@ -296,8 +296,8 @@ private extension Credit {
         return items
     }
 
-    func creditsSections(limit: Int) -> [Section] {
-        var sections: [Section] = []
+    func creditsSections(limit: Int) -> [ItemSection] {
+        var sections: [ItemSection] = []
         if let known = known_for_department {
 
             if known == "Acting" {
@@ -341,7 +341,7 @@ private extension Credit {
         return upcoming
     }
 
-    func movieCastReleasedSection(cast: [Credit]?, limit: Int) -> Section? {
+    func movieCastReleasedSection(cast: [Credit]?, limit: Int) -> ItemSection? {
         guard let cast = cast else { return nil }
 
         let upcoming = creditsUpcoming(cast)
@@ -360,24 +360,24 @@ private extension Credit {
             castTotal = String.allCreditsText(cast.count)
         }
 
-        let section = Section(header: "movies\(Tmdb.separator)latest", items: topItems, footer: castTotal, destination: .items, destinationItems: cast.map { $0.movieCastItem }, destinationTitle: "Movies")
+        let section = ItemSection(header: "movies\(Tmdb.separator)latest", items: topItems, footer: castTotal, destination: .items, destinationItems: cast.map { $0.movieCastItem }, destinationTitle: "Movies")
 
         return section
     }
 
-    func movieCastUpcomingSection(_ cast: [Credit]?) -> Section? {
+    func movieCastUpcomingSection(_ cast: [Credit]?) -> ItemSection? {
         guard let cast = cast else { return nil }
 
         let upcoming = creditsUpcoming(cast)
         guard upcoming.count > 0 else { return nil }
 
         let i = upcoming.map { $0.movieCastItem }
-        let section = Section(header: "movies\(Tmdb.separator)upcoming", items: i)
+        let section = ItemSection(header: "movies\(Tmdb.separator)upcoming", items: i)
         return section
     }
 
-    func movieCastSections(limit: Int) -> [Section] {
-        var sections: [Section] = []
+    func movieCastSections(limit: Int) -> [ItemSection] {
+        var sections: [ItemSection] = []
 
         if let section = movieCastUpcomingSection(movie_credits?.cast) {
             sections.append(section)
@@ -390,7 +390,7 @@ private extension Credit {
         return sections
     }
 
-    func movieCrewReleasedSection(crew: [Credit]?, limit: Int) -> Section? {
+    func movieCrewReleasedSection(crew: [Credit]?, limit: Int) -> ItemSection? {
         guard let crew = crew else { return nil }
 
         let upcoming = creditsUpcoming(crew)
@@ -406,25 +406,25 @@ private extension Credit {
             total = String.allCreditsText(collapsedItems.count)
         }
 
-        let section = Section(header: "movie credits\(Tmdb.separator)latest", items: Array(collapsedItems.prefix(limit)), footer: total, destination: .items, destinationItems: collapsedItems, destinationTitle: "Movies")
+        let section = ItemSection(header: "movie credits\(Tmdb.separator)latest", items: Array(collapsedItems.prefix(limit)), footer: total, destination: .items, destinationItems: collapsedItems, destinationTitle: "Movies")
 
         return section
     }
 
-    func movieCrewUpcomingSection(_ crew: [Credit]?) -> Section? {
+    func movieCrewUpcomingSection(_ crew: [Credit]?) -> ItemSection? {
         guard let crew = crew else { return nil }
 
         let upcoming = creditsUpcoming(crew)
         let upcomingCollapsed = Credit.collapsedMovieCrewItems(upcoming)
         guard upcomingCollapsed.count > 0 else {return nil }
 
-        let section = Section(header: "movie credits\(Tmdb.separator)upcoming", items: upcomingCollapsed)
+        let section = ItemSection(header: "movie credits\(Tmdb.separator)upcoming", items: upcomingCollapsed)
 
         return section
     }
 
-    func movieCrewSections(limit: Int) -> [Section] {
-        var sections: [Section] = []
+    func movieCrewSections(limit: Int) -> [ItemSection] {
+        var sections: [ItemSection] = []
 
         if let section = movieCrewUpcomingSection(movie_credits?.crew) {
             sections.append(section)
@@ -450,7 +450,7 @@ private extension Credit {
         return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tv, color: ratingColor)
     }
 
-    func tvCastSection(limit: Int) -> Section? {
+    func tvCastSection(limit: Int) -> ItemSection? {
         guard
             let c = tv_credits ,
             c.cast.count > 0 else { return nil }
@@ -467,11 +467,11 @@ private extension Credit {
 
         let prefix = Array(items.prefix(limit))
 
-        return Section(header: "tv", items: prefix, footer: total, destination: .items, destinationItems: c.cast.map { $0.listItemTv }, destinationTitle: "TV")
+        return ItemSection(header: "tv", items: prefix, footer: total, destination: .items, destinationItems: c.cast.map { $0.listItemTv }, destinationTitle: "TV")
     }
 
-    func TvCrewSections(limit: Int) -> [Section]? {
-        var sections: [Section] = []
+    func TvCrewSections(limit: Int) -> [ItemSection]? {
+        var sections: [ItemSection] = []
 
         if let section = TvCrewSectionUpcoming(limit: limit) {
             sections.append(section)
@@ -486,7 +486,7 @@ private extension Credit {
         return sections
     }
 
-    func TvCrewSectionUpcoming(limit: Int) -> Section? {
+    func TvCrewSectionUpcoming(limit: Int) -> ItemSection? {
         guard let crew = tv_credits?.crew else { return nil }
 
         let items = Credit.collapsedTvCredits(crew)
@@ -510,10 +510,10 @@ private extension Credit {
             total = String.allCreditsText(items.count)
         }
 
-        return Section(header: "tv credits\(Tmdb.separator)upcoming", items: Array(items.prefix(limit)), footer: total, destination: .items, destinationItems: items, destinationTitle: "TV")
+        return ItemSection(header: "tv credits\(Tmdb.separator)upcoming", items: Array(items.prefix(limit)), footer: total, destination: .items, destinationItems: items, destinationTitle: "TV")
     }
 
-    func TvCrewSectionLatest(limit: Int) -> Section? {
+    func TvCrewSectionLatest(limit: Int) -> ItemSection? {
         guard let crew = tv_credits?.crew else { return nil }
 
         let items = Credit.collapsedTvCredits(crew)
@@ -537,7 +537,7 @@ private extension Credit {
             total = String.allCreditsText(items.count)
         }
 
-        return Section(header: "tv credits\(Tmdb.separator)latest", items: Array(items.prefix(limit)), footer: total, destination: .items, destinationItems: items, destinationTitle: "TV")
+        return ItemSection(header: "tv credits\(Tmdb.separator)latest", items: Array(items.prefix(limit)), footer: total, destination: .items, destinationItems: items, destinationTitle: "TV")
     }
 
 }

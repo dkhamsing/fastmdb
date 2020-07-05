@@ -9,8 +9,8 @@
 import Foundation
 
 extension Episode {
-    var episodeSections: [Section] {
-        var sections: [Section] = []
+    var episodeSections: [ItemSection] {
+        var sections: [ItemSection] = []
 
         sections.append(mainSection)
 
@@ -40,7 +40,7 @@ extension Episode {
 
 private extension Episode {
 
-    var crewSection: Section? {
+    var crewSection: ItemSection? {
         guard let crew = crew else { return nil }
 
         var filtered = crew
@@ -53,10 +53,10 @@ private extension Episode {
 
         guard items.count > 0 else { return nil }
 
-        return Section(header: "crew", items: items)
+        return ItemSection(header: "crew", items: items)
     }
 
-    var directorSection: Section? {
+    var directorSection: ItemSection? {
         guard let crew = crew else { return nil }
 
         let directors = crew.filter { $0.job == CrewJob.Director.rawValue }
@@ -64,22 +64,22 @@ private extension Episode {
 
         let items = directors.map { $0.listItemCrew }
 
-        return Section(header: "directed by", items: items)
+        return ItemSection(header: "directed by", items: items)
     }
 
-    var guestStarsSection: Section? {
+    var guestStarsSection: ItemSection? {
         guard let guests = guest_stars else { return nil }
 
         let items = guests.map { $0.listItemCast }
 
         guard items.count > 0 else { return nil }
 
-        let section = Section(header: "Guest Stars", items: items)
+        let section = ItemSection(header: "Guest Stars", items: items)
 
         return section
     }
 
-    var mainSection: Section {
+    var mainSection: ItemSection {
         var items: [Item] = []
 
         if let name = name {
@@ -102,18 +102,18 @@ private extension Episode {
             items.append(item)
         }
 
-        return Section(items: items)
+        return ItemSection(items: items)
     }
 
-    var ratingSection: Section? {
+    var ratingSection: ItemSection? {
         guard let rating = ratingDisplay else { return nil }
 
         let item = Item(title: rating, subtitle: voteDisplay, color: vote_average.color)
-        let section = Section(header: "rating", items: [item])
+        let section = ItemSection(header: "rating", items: [item])
         return section
     }
 
-    var writingSection: Section? {
+    var writingSection: ItemSection? {
         guard let crew = crew else { return nil }
 
         let writers = crew.filter { $0.job == CrewJob.Teleplay.rawValue || $0.job == CrewJob.Writer.rawValue }
@@ -121,7 +121,7 @@ private extension Episode {
 
         let items = writers.map { $0.listItemCrew }
 
-        return Section(header: "written by", items: items)
+        return ItemSection(header: "written by", items: items)
     }
 
 }

@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-extension Section {
-    static func seasonSections(_ season: Season?) -> [Section] {
-        var sections: [Section] = []
+extension ItemSection {
+    static func seasonSections(_ season: Season?) -> [ItemSection] {
+        var sections: [ItemSection] = []
 
         if let section = season?.airDatesSection {
             sections.append(section)
@@ -21,7 +21,7 @@ extension Section {
             let o = season?.overview,
             o != "" {
             let item = Item(title: o)
-            let section = Section(header: "overview", items: [item])
+            let section = ItemSection(header: "overview", items: [item])
             sections.append(section)
         }
 
@@ -33,7 +33,7 @@ extension Section {
 
             let items = cast.map { $0.listItemCast }
             let topItems = Array(items.prefix(limit))
-            var section = Section(header: "cast", items: topItems)
+            var section = ItemSection(header: "cast", items: topItems)
 
             if cast.count > limit {
                 section.footer = String.allCreditsText(cast.count)
@@ -51,7 +51,7 @@ extension Section {
             let top = Array(names.prefix(limit))
             let item = Item(title: top.joined(separator: ", "))
 
-            let section = Section(header: "crew",
+            let section = ItemSection(header: "crew",
                                   items: [item],
                                   footer: crew.count > limit ? String.allCreditsText(crew.count) : String.allCreditsText(),
                                   destination: .items,
@@ -63,7 +63,7 @@ extension Section {
         if let episodes = season?.episodes,
             episodes.count > 0 {
             let items = episodes.map { $0.listItem }
-            let section = Section(header: "\(items.count) episodes", items: items)
+            let section = ItemSection(header: "\(items.count) episodes", items: items)
             sections.append(section)
         }
 
@@ -95,7 +95,7 @@ private extension Episode {
 
 private extension Season {
 
-    var airDatesSection: Section? {
+    var airDatesSection: ItemSection? {
         guard let airDate = air_date?.dateDisplay else { return nil }
         var items: [Item] = []
 
@@ -113,7 +113,7 @@ private extension Season {
             )
         }
 
-        let section = Section(header: "air dates", items: items)
+        let section = ItemSection(header: "air dates", items: items)
 
         return section
     }

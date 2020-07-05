@@ -73,7 +73,7 @@ class MainViewController: UIViewController {
         }
     }
 
-    var sections: [Section]? {
+    var sections: [ItemSection]? {
         didSet {
             updateSections(sections)
         }
@@ -94,7 +94,7 @@ class MainViewController: UIViewController {
     // Data
     var screen: ScreenType = .landing
     var kind: Tmdb.MoviesType = .popular
-    var dataSource: [Section] = []
+    var dataSource: [ItemSection] = []
     var search = TableSearch()
     var startSearch = false
 
@@ -204,7 +204,7 @@ extension MainViewController {
 
         let provider = ContentDataProvider()
         provider.get(kind) { (movie, tv, people, articles) in
-            let sections = Section.contentSections(kind: kind, movie: movie, tv: tv, people: people, articles: articles)
+            let sections = ItemSection.contentSections(kind: kind, movie: movie, tv: tv, people: people, articles: articles)
             let updater = Updater(dataSource: sections)
             self.updateScreen(updater)
         }
@@ -352,7 +352,7 @@ private extension MainViewController {
             guard let movies = movies else { return }
 
             let items = movies.map { $0.listItemCollection }
-            let sections = [ Section(items: items) ]
+            let sections = [ ItemSection(items: items) ]
             let u = Updater(image: image, dataSource: sections)
             self.updateScreen(u)
         }
@@ -383,7 +383,7 @@ private extension MainViewController {
             guard case .success(let search) = result else { return }
 
             let items = search.results.map { $0.listItem }
-            let sections = [ Section(items: items) ]
+            let sections = [ ItemSection(items: items) ]
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
@@ -398,7 +398,7 @@ private extension MainViewController {
             guard case .success(let search) = result else { return }
 
             let items = search.results.map { $0.listItem }
-            let sections = [ Section(items: items) ]
+            let sections = [ ItemSection(items: items) ]
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
@@ -407,7 +407,7 @@ private extension MainViewController {
     func updateItems(_ items: [Item]?) {
         screen = .list
 
-        let section = Section(items: items)
+        let section = ItemSection(items: items)
         let sections = [section]
         let u = Updater(dataSource: sections)
         updateScreen(u)
@@ -450,7 +450,7 @@ private extension MainViewController {
         provider.get(personId) { (credit, articles, image) in
             guard let credit = credit else { return }
 
-            let sections = Section.personSections(credit: credit, articles: articles, limit: limit)
+            let sections = ItemSection.personSections(credit: credit, articles: articles, limit: limit)
             let buttonUrl = Tmdb.castProfileUrl(path: credit.profile_path, size: .large)
             let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
             self.updateScreen(u)
@@ -463,7 +463,7 @@ private extension MainViewController {
 
         let provider = ProductionDataProvider()
         provider.get(productionId) { (movie, tv) in
-            var sections: [Section] = []
+            var sections: [ItemSection] = []
 
             if let s = movie?.productionSections {
                 sections.append(contentsOf: s)
@@ -484,7 +484,7 @@ private extension MainViewController {
 
         let provider = SeasonDataProvider()
         provider.get(seasonItem) { (season, image) in
-            let sections = Section.seasonSections(season)
+            let sections = ItemSection.seasonSections(season)
             let buttonUrl = Tmdb.mediaPosterUrl(path: season?.poster_path, size: .xxl)
             let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
             self.updateScreen(u)
@@ -500,13 +500,13 @@ private extension MainViewController {
             guard case .success(let search) = result else { return }
 
             let items = search.results.map { $0.listItem }
-            let sections = [ Section(items: items) ]
+            let sections = [ ItemSection(items: items) ]
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
     }
 
-    func updateSections(_ sections: [Section]?) {
+    func updateSections(_ sections: [ItemSection]?) {
         screen = .list
 
         let u = Updater(dataSource: sections)
@@ -577,6 +577,6 @@ struct Updater {
 
     var image: UIImage?
     var buttonUrl: URL?
-    var dataSource: [Section]?
+    var dataSource: [ItemSection]?
     
 }

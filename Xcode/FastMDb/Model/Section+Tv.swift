@@ -9,8 +9,8 @@ import Foundation
 
 extension TV {
     
-    func sections(_ articles: [Article]?) -> [Section] {
-        var list: [Section] = []
+    func sections(_ articles: [Article]?) -> [ItemSection] {
+        var list: [ItemSection] = []
 
         if let section = nextEpisodeSection {
             list.append(section)
@@ -75,46 +75,46 @@ extension TV {
 
 private extension TV {
 
-    var castSection: Section? {
+    var castSection: ItemSection? {
         guard
             let cast = credits?.cast,
             cast.count > 0 else { return nil }
 
         let items = cast.map { $0.listItemCast }
 
-        return Section(header: "cast", items: items)
+        return ItemSection(header: "cast", items: items)
     }
 
-    var createdBySection: Section? {
+    var createdBySection: ItemSection? {
         guard
             let creators = created_by,
             creators.count > 0 else { return nil }
 
         let items = creators.map { $0.creatorItem }
 
-        return Section(header: "created by", items: items)
+        return ItemSection(header: "created by", items: items)
     }
 
-    var crewSection: Section? {
+    var crewSection: ItemSection? {
         guard let crew = credits?.crew else { return nil }
 
         let items = crew.map { $0.listItemCrew }
         guard items.count > 0 else { return nil }
 
-        return Section(header: "crew", items: items)
+        return ItemSection(header: "crew", items: items)
     }
 
-    var genresSection: Section? {
+    var genresSection: ItemSection? {
         guard
             let genres = genres,
             genres.count > 0 else { return nil }
 
         let items = genres.map { Item(id: $0.id, title: $0.name, destination: .genreTv) }
 
-        return Section(header: "genres", items: items)
+        return ItemSection(header: "genres", items: items)
     }
 
-    var googleSection: Section? {
+    var googleSection: ItemSection? {
         var items: [Item] = []
 
         if name != "" {
@@ -134,10 +134,10 @@ private extension TV {
 
         guard items.count > 0 else { return nil }
 
-        return Section(header: "google", items: items)
+        return ItemSection(header: "google", items: items)
     }
 
-    var linksSection: Section? {
+    var linksSection: ItemSection? {
         var items: [Item] = []
 
         if
@@ -173,10 +173,10 @@ private extension TV {
             items.append(item)
         }
 
-        return Section(header: "links", items: items)
+        return ItemSection(header: "links", items: items)
     }
 
-    var mediaSection: Section? {
+    var mediaSection: ItemSection? {
         var items: [Item] = []
 
         if
@@ -193,23 +193,23 @@ private extension TV {
 
         guard items.count > 0 else { return nil }
 
-        return Section(header: "media", items: items)
+        return ItemSection(header: "media", items: items)
     }
 
-    var networksSection: Section? {
+    var networksSection: ItemSection? {
         guard
             let networks = networks,
             networks.count > 0 else { return nil }
 
         let items = networks.map { Item(id: $0.id, title: $0.name, destination: .network) }
 
-        return Section(header: "networks", items: items)
+        return ItemSection(header: "networks", items: items)
     }
 
-    var nextEpisodeSection: Section? {
+    var nextEpisodeSection: ItemSection? {
         guard let item = nextEpisodeItem else { return nil }
 
-        return Section(header: "next episode", items: [item])
+        return ItemSection(header: "next episode", items: [item])
     }
 
     var nextEpisodeItem: Item? {
@@ -226,7 +226,7 @@ private extension TV {
         return item
     }
 
-    var overviewSection: Section? {
+    var overviewSection: ItemSection? {
 
         var items: [Item] = []
 
@@ -289,10 +289,10 @@ private extension TV {
             items.append(Item(title: o))
         }
 
-        return Section(header: "tv", items: items)
+        return ItemSection(header: "tv", items: items)
     }
 
-    var productionSection: Section? {
+    var productionSection: ItemSection? {
         guard
             let companies = production_companies,
             companies.count > 0 else { return nil }
@@ -300,19 +300,19 @@ private extension TV {
         let names = companies.map { $0.name }
         let item = Item(title: names.joined(separator: ", "), destination: .items, destinationTitle: "Production", items: companies.map { $0.listItem })
 
-        return Section(header: "production", items: [item])
+        return ItemSection(header: "production", items: [item])
     }
 
-    var ratingSection: Section? {
+    var ratingSection: ItemSection? {
         guard let rating = ratingDisplay else { return nil }
 
         let item = Item(title: rating, subtitle: voteDisplay, color: vote_average.color)
-        let section = Section(header: "rating", items: [item])
+        let section = ItemSection(header: "rating", items: [item])
         
         return section
     }
 
-    var relatedSection: Section? {
+    var relatedSection: ItemSection? {
         var relatedItems: [Item] = []
 
         if
@@ -339,7 +339,7 @@ private extension TV {
 
         guard relatedItems.count > 0 else { return nil }
 
-        return Section(header: "related", items: relatedItems)
+        return ItemSection(header: "related", items: relatedItems)
     }
 
 }

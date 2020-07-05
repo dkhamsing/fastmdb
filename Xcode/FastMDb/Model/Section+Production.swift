@@ -10,8 +10,8 @@ import Foundation
 
 extension MediaSearch {
 
-    var productionSections: [Section]? {
-        var sections: [Section] = []
+    var productionSections: [ItemSection]? {
+        var sections: [ItemSection] = []
 
         if let section = upcoming {
             sections.append(section)
@@ -46,29 +46,29 @@ private extension MediaSearch {
         return upcoming
     }
 
-    var upcoming: Section? {
+    var upcoming: ItemSection? {
         let u = upcomingMovies
 
         guard u.count > 0 else { return nil }
 
-        return Section(header: "movies upcoming", items: u.map { $0.listItem})
+        return ItemSection(header: "movies upcoming", items: u.map { $0.listItem})
     }
 
-    var released: Section? {
+    var released: ItemSection? {
         let titles = upcomingMovies.compactMap { $0.title }
 
         let released = results
             .filter { titles.contains($0.title ?? "") == false }
             .sorted { $0.release_date ?? "" > $1.release_date ?? "" }
 
-        return Section(header: "movies released", items: released.map { $0.listItem})
+        return ItemSection(header: "movies released", items: released.map { $0.listItem})
     }
 
 }
 
 extension TvSearch {
 
-    var productionSections: [Section]? {
+    var productionSections: [ItemSection]? {
         let s = TV.networkSections(results)
         return s
     }

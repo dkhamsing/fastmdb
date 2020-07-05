@@ -10,8 +10,8 @@ import UIKit
 
 extension Media {
     
-    func sections(articles: [Article]?, limit: Int) -> [Section] {
-        var list: [Section] = []
+    func sections(articles: [Article]?, limit: Int) -> [ItemSection] {
+        var list: [ItemSection] = []
 
         if let section = metadataSection {
             list.append(section)
@@ -72,12 +72,12 @@ extension Media {
 
 private extension Media {
 
-    var boxOfficeSection: Section? {
+    var boxOfficeSection: ItemSection? {
         if let revenue = revenue,
             revenue > 0 {
 
             let item = Item(title: revenue.display, subtitle: budgetDisplay, destination: .moviesSortedBy, sortedBy: "revenue.desc", color: boxOfficeColor)
-            return Section(header: "box office", items: [item])
+            return ItemSection(header: "box office", items: [item])
         }
 
         guard
@@ -85,10 +85,10 @@ private extension Media {
             budget > 0 else { return nil }
 
         let i = Item(title: budget.display)
-        return Section(header: "budget", items: [i])
+        return ItemSection(header: "budget", items: [i])
     }
 
-    var googleSection: Section? {
+    var googleSection: ItemSection? {
         var items: [Item] = []
 
         if let name = title {
@@ -108,16 +108,16 @@ private extension Media {
 
         guard items.count > 0 else { return nil }
 
-        return Section(header: "google", items: items)
+        return ItemSection(header: "google", items: items)
     }
 
-    var languageSection: Section? {
+    var languageSection: ItemSection? {
         guard let lang = languageDisplay else { return nil }
 
-        return Section(header: "language", items: [Item(title: lang)])
+        return ItemSection(header: "language", items: [Item(title: lang)])
     }
 
-    var linksSection: Section? {
+    var linksSection: ItemSection? {
         var items: [Item] = []
 
         if
@@ -146,10 +146,10 @@ private extension Media {
 
         guard items.count > 0 else { return nil }
 
-        return Section(header: "links", items: items)
+        return ItemSection(header: "links", items: items)
     }
 
-    var mediaSection: Section? {
+    var mediaSection: ItemSection? {
         var items: [Item] = []
 
         if
@@ -166,10 +166,10 @@ private extension Media {
 
         guard items.count > 0 else { return nil }
 
-        return Section(header: "media", items: items)
+        return ItemSection(header: "media", items: items)
     }
 
-    var metadataSection: Section? {
+    var metadataSection: ItemSection? {
         var metadata: [String] = []
 
         // year
@@ -213,11 +213,11 @@ private extension Media {
             items.append(item)
         }
 
-        return Section(header: "movie", items: items)
+        return ItemSection(header: "movie", items: items)
     }
 
-    var moreSection: Section? {
-        var section = Section(header: "more")
+    var moreSection: ItemSection? {
+        var section = ItemSection(header: "more")
         var moreItems: [Item] = []
 
         // collection
@@ -269,11 +269,11 @@ private extension Media {
         return nil
     }
 
-    var ratingSection: Section? {
+    var ratingSection: ItemSection? {
         guard let rating = ratingDisplay else { return nil }
 
         let item = Item(title: rating, subtitle: voteDisplay, color: vote_average.color)
-        var section = Section(header: "rating", items: [item])
+        var section = ItemSection(header: "rating", items: [item])
 
         if reviews?.results.count ?? 0 > 0 {
             let reviewItems = reviews?.results.map { $0.listItem }
@@ -307,7 +307,7 @@ private extension Media {
 
 private extension Credits {
 
-    func castSection(limit: Int) -> Section? {
+    func castSection(limit: Int) -> ItemSection? {
         let c = Array(cast.prefix(limit))
         guard c.count > 0 else { return nil }
 
@@ -318,10 +318,10 @@ private extension Credits {
             castTotal = String.allCreditsText(cast.count)
         }
 
-        return Section(header: "starring", items: items, footer: castTotal, destination: .items, destinationItems: cast.map { $0.listItemCast }, destinationTitle: "Cast")
+        return ItemSection(header: "starring", items: items, footer: castTotal, destination: .items, destinationItems: cast.map { $0.listItemCast }, destinationTitle: "Cast")
     }
 
-    func creditsSection(limit: Int) -> Section? {
+    func creditsSection(limit: Int) -> ItemSection? {
         var filtered = crew
         for job in CrewJob.allCases {
             filtered = filtered.filter { $0.job != job.rawValue }
@@ -358,24 +358,24 @@ private extension Credits {
 
         let prefixed = Array(items.prefix(limit))
 
-        return Section(header: "credits", items: prefixed, footer: crewTotal, destination: .items, destinationItems: items, destinationTitle: "Credits")
+        return ItemSection(header: "credits", items: prefixed, footer: crewTotal, destination: .items, destinationItems: items, destinationTitle: "Credits")
     }
 
-    var directorSection: Section? {
+    var directorSection: ItemSection? {
         let director = crew.filter { $0.job == CrewJob.Director.rawValue }
         guard director.count > 0 else { return nil }
 
         let items = director.map { $0.listItemCrew }
-        return Section(header: "directed by", items: items)
+        return ItemSection(header: "directed by", items: items)
     }
 
-    var writerSection: Section? {
+    var writerSection: ItemSection? {
         let writtenBy = crew.filter { $0.job == CrewJob.Screenplay.rawValue || $0.job == CrewJob.Teleplay.rawValue || $0.job == CrewJob.Writer.rawValue }
         guard writtenBy.count > 0 else { return nil }
 
         let items = writtenBy.map { $0.listItemCrew }
 
-        return Section(header: "written by", items: items)
+        return ItemSection(header: "written by", items: items)
     }
 
 }

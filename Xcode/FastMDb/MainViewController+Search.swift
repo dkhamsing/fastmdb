@@ -10,7 +10,7 @@ import UIKit
 struct TableSearch {
 
     var query: String?
-    var savedDataSource: [Section]?
+    var savedDataSource: [ItemSection]?
     var savedHeader: UIView?
     var savedTitle: String?
     
@@ -72,7 +72,7 @@ private extension MainViewController {
 
         let provider = SearchDataProvider()
         provider.get(query) { (movie, tv, people, articles) in
-            let section = Section.searchSection(movie, tv, people, articles)
+            let section = ItemSection.searchSection(movie, tv, people, articles)
             let u = Updater(dataSource: section)
             self.updateScreen(u)
 

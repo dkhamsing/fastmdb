@@ -10,8 +10,8 @@ import Foundation
 
 extension TV {
 
-    static func networkSections(_ list: [TV]) -> [Section] {
-        var sections: [Section] = []
+    static func networkSections(_ list: [TV]) -> [ItemSection] {
+        var sections: [ItemSection] = []
 
         if let section = tvUpcomingSection(list) {
             sections.append(section)
@@ -28,7 +28,7 @@ extension TV {
 
 private extension TV {
 
-    static func tvUpcomingSection(_ list: [TV]) -> Section? {
+    static func tvUpcomingSection(_ list: [TV]) -> ItemSection? {
         let upcoming = list
             .filter {
                 let noRelease = $0.first_air_date ?? "" == ""
@@ -40,11 +40,11 @@ private extension TV {
         .map { $0.listItem }
         guard upcoming.count > 0 else { return nil }
 
-        return Section(header: "tv upcoming", items:upcoming)
+        return ItemSection(header: "tv upcoming", items:upcoming)
     }
 
-    static func tvYearSections(_ list: [TV]) -> [Section]? {
-        var sections: [Section] = []
+    static func tvYearSections(_ list: [TV]) -> [ItemSection]? {
+        var sections: [ItemSection] = []
 
         let currentByYear = list
             .filter { $0.first_air_date ?? "" != "" }
@@ -67,13 +67,13 @@ private extension TV {
 
 private extension TV {
 
-    static func tvSection(list: [TV], year: String) -> Section? {
+    static func tvSection(list: [TV], year: String) -> ItemSection? {
         let sublist = list.filter { $0.first_air_date.yearDisplay == year }
         let items = sublist.map { $0.listItemWithoutYear }
 
         guard items.count > 0 else { return nil }
 
-        return Section(header: year, items: items)
+        return ItemSection(header: year, items: items)
     }
 
 }
