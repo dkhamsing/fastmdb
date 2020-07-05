@@ -24,6 +24,7 @@ struct VideoView: View {
                 List(videoItems) { video in
                     VideoRow(video: video)
                 }
+                .listStyle(InsetGroupedListStyle())
             }
         }
         .navigationBarTitle("Video Clips")

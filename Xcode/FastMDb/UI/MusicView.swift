@@ -27,6 +27,7 @@ struct MusicView: View {
                     List(songs) { song in
                         SongRow(song: song)
                     }
+                    .listStyle(InsetGroupedListStyle())
                 }
             }
         }
