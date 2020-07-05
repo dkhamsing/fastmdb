@@ -188,6 +188,7 @@ private extension MainViewController {
 
 }
 
+// TODO: rewrite using SwiftUI
 // TODO: move to own file
 import LinkPresentation
 class VideosViewController: UIViewController {
@@ -400,6 +401,7 @@ struct SongRow: View {
     }
 }
 
+// TODO: group music by album
 class iTunesApi: ObservableObject {
     @Published var songs: [iTunes.Song] = []
     private var stream: Set<AnyCancellable> = Set()
