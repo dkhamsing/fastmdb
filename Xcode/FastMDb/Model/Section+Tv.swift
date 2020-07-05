@@ -148,7 +148,7 @@ private extension TV {
         }
 
         if name != "" {
-            let item = Item(title: "Music", url: name.googleSearchMusicUrl, destination: .url, image: Item.videoImage)
+            let item = Item(title: "Music", url: name.itunesMusicSearchUrl, destination: .music, image: Item.videoImage)
             items.append(item)
         }
 

@@ -139,6 +139,12 @@ private extension MainViewController {
             controller.title = "Highest Grossing"
             controller.sortedBy = item.sortedBy
             navigationController?.pushViewController(controller, animated: true)
+        case .music:
+            guard let url = item.url else { return }
+
+            let contentView = MusicView(url: url)
+            let controller = UIHostingController(rootView: contentView)
+            navigationController?.pushViewController(controller, animated: true)
         case .network:
             let controller = MainViewController()
             controller.title = item.title
@@ -354,4 +360,64 @@ private extension MainViewController {
 
     }
 
+}
+
+
+
+
+// TODO: move to own file
+import SwiftUI
+import Combine
+struct MusicView: View {
+    var url: URL?
+    @ObservedObject private var api = iTunesApi()
+    var body: some View {
+            List(api.songs) { song in
+                SongRow(song: song)
+            }
+            .navigationBarTitle("Music")
+        .onAppear {
+            guard let url = url else { return }
+            api.searchSongs(url: url)
+        }
+    }
+}
+
+struct SongRow: View {
+    var song: iTunes.Song
+
+    var body: some View {
+        Button(action: {
+            UIApplication.shared.open(song.trackViewUrl)
+        }, label: {
+            VStack(alignment: .leading) {
+                RemoteImage(url: song.artworkUrl100)
+                    .frame(width: 100)
+                Text(song.title)
+            }
+        })
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+class iTunesApi: ObservableObject {
+    @Published var songs: [iTunes.Song] = []
+    private var stream: Set<AnyCancellable> = Set()
+
+    func searchSongs(url: URL) {
+        print(url.absoluteString)
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map {$0.data}
+            .decode(type: iTunes.Feed.self, decoder: decoder)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { (completion) in
+                print(completion)
+            }) { (feed) in
+                self.songs = feed.results
+            }.store(in: &stream)
+    }
 }

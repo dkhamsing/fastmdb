@@ -285,6 +285,10 @@ extension String {
         return String.googleSearchUrlWithQuery("watch \(self)")
     }
 
+    var itunesMusicSearchUrl: URL? {
+        return iTunes.songSearchUrl(self)
+    }
+
     var justWatchUrl: URL? {
         let baseUrl = "https://www.justwatch.com/us/search?q="
         let item = self.replacingOccurrences(of: " ", with: "+")

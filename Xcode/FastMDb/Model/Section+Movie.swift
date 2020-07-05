@@ -123,7 +123,7 @@ private extension Media {
         }
 
         if let name = title {
-            let item = Item(title: "Music", url: name.googleSearchMusicUrl, destination: .url, image: Item.videoImage)
+            let item = Item(title: "Music", url: name.itunesMusicSearchUrl, destination: .music, image: Item.videoImage)
             items.append(item)
         }
 

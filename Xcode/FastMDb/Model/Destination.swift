@@ -16,6 +16,7 @@ enum Destination {
     genreTv,
     items,
     movie,
+    music,
     moviesSortedBy,
     person,
     network,
