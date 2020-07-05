@@ -12,6 +12,7 @@ struct MusicView: View {
     var url: URL?
     @State private var songs: [iTunes.Song] = []
     @State private var isLoading = true
+    @State private var hasNoResults = false
 
     var body: some View {
         Group {
@@ -19,8 +20,13 @@ struct MusicView: View {
                 ActivityIndicator(isAnimating: $isLoading)
             }
             else {
-                List(songs) { song in
-                    SongRow(song: song)
+                if self.hasNoResults {
+                    Text("No results 😅")
+                }
+                else {
+                    List(songs) { song in
+                        SongRow(song: song)
+                    }
                 }
             }
         }
@@ -39,7 +45,15 @@ struct MusicView: View {
             guard let data = data else { return }
             
             if let feed = try? iTunes.decoder.decode(iTunes.Feed.self, from: data) {
-                self.songs = feed.results
+                let results = feed.results
+
+                if results.count == 0 {
+                    self.hasNoResults = true
+                }
+                else {
+                    self.songs = feed.results
+                }
+
                 self.isLoading = false
             }
         }.resume()
