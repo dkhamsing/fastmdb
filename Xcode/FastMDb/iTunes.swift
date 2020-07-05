@@ -30,9 +30,10 @@ struct iTunes {
 
         var trackViewUrl: URL
         var releaseDate: Date
+        var collectionName: String
 
         private enum CodingKeys: String, CodingKey {
-            case artistName, name, trackName, artworkUrl100, trackViewUrl, releaseDate
+            case artistName, name, trackName, artworkUrl100, trackViewUrl, releaseDate, collectionName
         }
     }
 }

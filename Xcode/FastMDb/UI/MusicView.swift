@@ -10,7 +10,8 @@ import SwiftUI
 
 struct MusicView: View {
     var url: URL?
-    @State private var songs: [iTunes.Song] = []
+//    @State private var songs: [iTunes.Song] = []
+        @State private var albums: [iTunes.Album] = []
     @State private var isLoading = true
     @State private var hasNoResults = false
 
@@ -24,9 +25,12 @@ struct MusicView: View {
                     Text("No results 😅")
                 }
                 else {
-                    List(songs) { song in
-                        SongRow(song: song)
+                    List(albums) { album in
+                        AlbumRow(album: album)
                     }
+//                    List(songs) { song in
+//                        SongRow(song: song)
+//                    }
                     .listStyle(InsetGroupedListStyle())
                 }
             }
@@ -52,12 +56,33 @@ struct MusicView: View {
                     self.hasNoResults = true
                 }
                 else {
-                    self.songs = feed.results
+//                    self.songs = feed.results
+                    self.albums = feed.albums
                 }
 
                 self.isLoading = false
             }
         }.resume()
+    }
+}
+
+struct AlbumRow: View {
+    var album: iTunes.Album
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                RemoteImage(url: album.artUrl)
+                    .frame(width: 100)
+                Text(album.name)
+                Text(album.year)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            ForEach(album.songs) { song in
+                SongRow(song: song)
+            }
+        }
     }
 }
 
@@ -68,19 +93,39 @@ struct SongRow: View {
         Button(action: {
             UIApplication.shared.open(self.song.trackViewUrl)
         }, label: {
-            HStack {
-                RemoteImage(url: song.artworkUrl100)
-                    .frame(width: 100)
-                VStack(alignment: .leading) {
-                    Text(song.name ?? song.trackName ?? "")
-                    Text("By " + song.artistName)
-                        .font(.caption)
-                    Text(song.releaseDisplay)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+            VStack(alignment: .leading) {
+                Text(song.name ?? song.trackName ?? "")
+                Text("By " + song.artistName)
+                    .font(.caption)
             }
         })
         .buttonStyle(PlainButtonStyle())
+    }
+}
+
+extension iTunes {
+    struct Album: Identifiable {
+        let id = UUID()
+
+        var name: String
+        var year: String
+        var artUrl: URL?
+        var songs: [Song] = []
+    }
+}
+
+extension iTunes.Feed {
+    var albums: [iTunes.Album] {
+        let names = results.map { $0.collectionName }.unique
+
+        var albums: [iTunes.Album] = []
+        for n in names {
+            let songs = results.filter { $0.collectionName == n }
+            let song = songs.first
+            let album = iTunes.Album(name: n, year: song?.releaseDisplay ?? "", artUrl: song?.artworkUrl100, songs: songs)
+            albums.append(album)
+        }
+
+        return albums
     }
 }
