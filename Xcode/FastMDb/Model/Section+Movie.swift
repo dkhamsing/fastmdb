@@ -92,6 +92,11 @@ private extension Media {
         var items: [Item] = []
 
         if let name = title {
+            let item = Item(title: "Awards & Nominations", url: name.googleSearchAwardsUrl, destination: .url, image: Item.linkImage)
+            items.append(item)
+        }
+
+        if let name = title {
             let item = Item(title: "Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
             items.append(item)
         }

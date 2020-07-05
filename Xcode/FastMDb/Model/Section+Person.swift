@@ -24,6 +24,10 @@ extension Section {
             sections.append(section)
         }
 
+        if let section = credit?.googleSection {
+            sections.append(section)
+        }
+
         if let section = credit?.knownForSection {
             sections.append(section)
         }
@@ -171,6 +175,19 @@ private extension Credit {
         bioSection.items = bioItems
 
         return bioSection
+    }
+
+    var googleSection: Section? {
+        var items: [Item] = []
+
+        if let name = name {
+            let item = Item(title: "Awards & Nominations", url: name.googleSearchAwardsUrl, destination: .url, image: Item.linkImage)
+            items.append(item)
+        }
+
+        guard items.count > 0 else { return nil }
+
+        return Section(header: "google", items: items)
     }
 
     var knownForSection: Section? {

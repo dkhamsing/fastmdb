@@ -118,6 +118,11 @@ private extension TV {
         var items: [Item] = []
 
         if name != "" {
+            let item = Item(title: "Awards & Nominations", url: name.googleSearchAwardsUrl, destination: .url, image: Item.linkImage)
+            items.append(item)
+        }
+
+        if name != "" {
             let item = Item(title: "Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
             items.append(item)
         }
