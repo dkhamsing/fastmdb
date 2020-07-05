@@ -36,11 +36,9 @@ struct MusicView: View {
         print(url.absoluteString)
 
         URLSession.shared.dataTask(with: url) { (data, response, error) in
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-
             guard let data = data else { return }
-            if let feed = try? decoder.decode(iTunes.Feed.self, from: data) {
+            
+            if let feed = try? iTunes.decoder.decode(iTunes.Feed.self, from: data) {
                 self.songs = feed.results
                 self.isLoading = false
             }

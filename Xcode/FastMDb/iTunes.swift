@@ -38,6 +38,13 @@ struct iTunes {
 }
 
 extension iTunes {
+    static var decoder: JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+
+        return decoder
+    }
+
     static func songSearchUrl(_ query: String) -> URL? {
         let string = "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=20&term=\(query.replacingOccurrences(of: " ", with: "+"))"
         let url = URL(string: string)
