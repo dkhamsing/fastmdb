@@ -28,7 +28,7 @@ struct VideoView: View {
         }
         .navigationBarTitle("Video Clips")
         .onAppear {
-            fetchImages(items)
+            self.fetchImages(self.items)
         }
     }
 
@@ -46,7 +46,6 @@ struct VideoView: View {
                         let imageProvider = metadata.imageProvider {
                         imageProvider.loadObject(ofClass: UIImage.self) { image, _ in
                             if let image = image as? UIImage {
-//                                print("\(url.absoluteString): got image with size \(image.size)")
                                 var vi = item.videoItem
                                 vi.image = image
                                 videoItems.append(vi)
@@ -85,11 +84,11 @@ struct VideoRow: View {
     var video: VideoItem
 
     var body: some View {
-        Button {
-            video.url.map {
+        Button(action: {
+            self.video.url.map {
                 UIApplication.shared.open($0)
             }
-        } label: {
+        }, label: {
             HStack {
                 video.image.map {
                     Image(uiImage: $0)
@@ -106,8 +105,8 @@ struct VideoRow: View {
                     }
                 }
             }
-        }
-        .buttonStyle(PlainButtonStyle())
+        })
+            .buttonStyle(PlainButtonStyle())
     }
 }
 

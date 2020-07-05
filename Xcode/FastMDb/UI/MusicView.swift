@@ -26,8 +26,8 @@ struct MusicView: View {
         }
         .navigationBarTitle("Music")
         .onAppear {
-            guard let url = url else { return }
-            searchSongs(url: url)
+            guard let url = self.url else { return }
+            self.searchSongs(url: url)
         }
     }
 
@@ -53,7 +53,7 @@ struct SongRow: View {
 
     var body: some View {
         Button(action: {
-            UIApplication.shared.open(song.trackViewUrl)
+            UIApplication.shared.open(self.song.trackViewUrl)
         }, label: {
             HStack {
                 RemoteImage(url: song.artworkUrl100)
