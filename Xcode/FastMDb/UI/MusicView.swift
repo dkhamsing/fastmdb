@@ -47,13 +47,10 @@ struct MusicView: View {
             guard let data = data else { return }
             
             if let feed = try? iTunes.decoder.decode(iTunes.Feed.self, from: data) {
-                let results = feed.results
-                
-                if results.count == 0 {
+                if feed.albums.count == 0 {
                     self.hasNoResults = true
                 }
                 else {
-                    //                    self.songs = feed.results
                     self.albums = feed.albums
                 }
                 
@@ -82,6 +79,8 @@ struct AlbumHeader: View {
         HStack {
             RemoteImage(url: album.artUrl)
                 .frame(width: 100, height: 100)
+                .cornerRadius(8)
+                .padding(.bottom, 5)
             VStack(alignment: .leading) {
                 Text(album.name)
                 Text(album.year)
@@ -103,6 +102,7 @@ struct SongRow: View {
                 Text(song.name ?? song.trackName ?? "")
                 Text("By " + song.artistName)
                     .font(.caption)
+                    .foregroundColor(.secondary)
             }
         })
         .buttonStyle(PlainButtonStyle())
@@ -122,7 +122,9 @@ extension iTunes {
 
 extension iTunes.Feed {
     var albums: [iTunes.Album] {
-        let names = results.map { $0.collectionName }.unique
+        let names = results
+            .filter { $0.primaryGenreName.lowercased().contains("soundtrack") }
+            .map { $0.collectionName }.unique
         
         var albums: [iTunes.Album] = []
         for n in names {
