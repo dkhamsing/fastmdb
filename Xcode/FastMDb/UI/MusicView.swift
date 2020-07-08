@@ -33,7 +33,7 @@ struct MusicView: View {
                 }
             }
         }
-        .navigationBarTitle("Music")
+        .navigationBarTitle("Apple Music")
         .onAppear {
             guard let url = self.url else { return }
             self.searchSongs(url: url)
