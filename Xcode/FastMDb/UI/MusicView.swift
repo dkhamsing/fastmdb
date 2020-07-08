@@ -135,3 +135,24 @@ extension iTunes.Feed {
         return albums
     }
 }
+
+struct MusicView_Previews: PreviewProvider {
+    static let url = URL(string: "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=10&term=Hamilton")!
+    static let url2 = URL(string: "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=50&term=aladdin")!
+    static let urlNoResults = URL(string: "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=50&term=master+commander")!
+
+    static var previews: some View {
+        Group {
+            NavigationView {
+                MusicView(url: url)
+                    .preferredColorScheme(.dark)
+            }
+            NavigationView {
+                MusicView(url: url2)
+            }
+            NavigationView {
+                MusicView(url: urlNoResults)
+            }
+        }
+    }
+}
