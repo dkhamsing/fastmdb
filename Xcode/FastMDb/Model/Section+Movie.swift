@@ -10,7 +10,9 @@ import UIKit
 
 extension Media {
     
-    func sections(articles: [Article]?, limit: Int) -> [ItemSection] {
+    func sections(articles: [Article]?,
+                  albums: [iTunes.Album]?,
+                  limit: Int) -> [ItemSection] {
         var list: [ItemSection] = []
 
         if let section = metadataSection {
@@ -33,7 +35,7 @@ extension Media {
             list.append(section)
         }
 
-        if let section = mediaSection {
+        if let section = mediaSection(albums: albums) {
             list.append(section)
         }
 
@@ -149,7 +151,7 @@ private extension Media {
         return ItemSection(header: "links", items: items)
     }
 
-    var mediaSection: ItemSection? {
+    func mediaSection(albums: [iTunes.Album]?) -> ItemSection? {
         var items: [Item] = []
 
         if
@@ -159,7 +161,8 @@ private extension Media {
             items.append(item)
         }
 
-        if let name = title {
+        if let albums = albums,
+           let name = title {
             let item = Item(title: "Apple Music", url: name.itunesMusicSearchUrl, destination: .music, image: Item.videoImage)
             items.append(item)
         }

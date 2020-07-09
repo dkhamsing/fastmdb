@@ -14,6 +14,10 @@ class DataProvider {
 
 private extension DataProvider {
 
+    func fetchiTunesAlbums() {
+        
+    }
+
     func fetchArticles(url: URL?, completion: @escaping ([Article]?) -> Void) {
         guard let url = url else { return }
 
@@ -43,6 +47,9 @@ private extension DataProvider {
         url?.apiGet { (result: Result<T,NetError>) in
             if case .success(let item) = result {
                 completion(item)
+            }
+            else {
+                print(result)
             }
             self.group.leave()
         }
@@ -135,10 +142,11 @@ final class ImageDataProvider: DataProvider {
 
 final class MovieDataProvider: DataProvider {
 
-    func get(_ id: Int?, completion: @escaping (Media?, [Article]?, UIImage?) -> Void) {
+    func get(_ id: Int?, completion: @escaping (Media?, [Article]?, UIImage?, [iTunes.Album]?) -> Void) {
         var movie: Media?
         var articles: [Article]?
         var image: UIImage?
+        var albums: [iTunes.Album]?
 
         let url = Tmdb.movieURL(movieId: id)
         fetchItem(url: url) { (item: Media?) in
@@ -156,10 +164,25 @@ final class MovieDataProvider: DataProvider {
             self.fetchImage(url: url) { i in
                 image = i
             }
+
+            if let name = item?.title,
+               let url = name.itunesMusicSearchUrl {
+                self.group.enter()
+                URLSession.shared.dataTask(with: url) { (data, response, error) in
+                    guard let data = data else { return }
+
+                    if let feed = try? iTunes.decoder.decode(iTunes.Feed.self, from: data) {
+                        if feed.albums.count > 0 {
+                            albums = feed.albums
+                        }
+                    }
+                    self.group.leave()
+                }.resume()
+            }
         }
 
         group.notify(queue: .main) {
-            completion(movie, articles, image)
+            completion(movie, articles, image, albums)
         }
     }
 
