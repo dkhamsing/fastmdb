@@ -9,7 +9,7 @@
 import SwiftUI
 import LinkPresentation
 
-// TODO: show spinner
+// TODO: check out leaks instrument
 struct VideoView: View {
     var items: [Item]
     @State var videoItems: [VideoItem] = []
