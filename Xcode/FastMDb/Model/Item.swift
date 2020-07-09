@@ -24,6 +24,8 @@ struct Item {
     var image: UIImage?
 
     var color: UIColor?
+
+    var albums: [iTunes.Album]?
 }
 
 extension Item {

@@ -9,54 +9,19 @@
 import SwiftUI
 
 struct MusicView: View {
-    var url: URL?
-    @State private var albums: [iTunes.Album] = []
-    @State private var isLoading = true
-    @State private var hasNoResults = false
-    
+    var albums: [iTunes.Album]
+
     var body: some View {
         Group {
-            if self.isLoading {
-                ActivityIndicator(isAnimating: $isLoading)
-            }
-            else {
-                if self.hasNoResults {
-                    Text("No results 😅")
-                }
-                else {
-                    List {
-                        ForEach(albums) { album in
-                            AlbumRow(album: album)
-                        }
-                    }
-                    .listStyle(InsetGroupedListStyle())
+            List {
+                ForEach(albums) { album in
+                    AlbumRow(album: album)
                 }
             }
+            .listStyle(InsetGroupedListStyle())
+
         }
         .navigationBarTitle("Apple Music")
-        .onAppear {
-            guard let url = self.url else { return }
-            self.searchSongs(url: url)
-        }
-    }
-    
-    func searchSongs(url: URL) {
-        print(url.absoluteString)
-        
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data else { return }
-            
-            if let feed = try? iTunes.decoder.decode(iTunes.Feed.self, from: data) {
-                if feed.albums.count == 0 {
-                    self.hasNoResults = true
-                }
-                else {
-                    self.albums = feed.albums
-                }
-                
-                self.isLoading = false
-            }
-        }.resume()
     }
 }
 
@@ -120,41 +85,23 @@ extension iTunes {
     }
 }
 
-extension iTunes.Feed {
-    var albums: [iTunes.Album] {
-        let names = results
-            .filter { $0.primaryGenreName.lowercased().contains("soundtrack") }
-            .map { $0.collectionName }.unique
-        
-        var albums: [iTunes.Album] = []
-        for n in names {
-            let songs = results.filter { $0.collectionName == n }
-            let song = songs.first
-            let album = iTunes.Album(name: n, year: song?.releaseDisplay ?? "", artUrl: song?.artworkUrl100, songs: songs)
-            albums.append(album)
-        }
-        
-        return albums
-    }
-}
-
-struct MusicView_Previews: PreviewProvider {
-    static let url = URL(string: "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=10&term=Hamilton")!
-    static let url2 = URL(string: "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=50&term=aladdin")!
-    static let urlNoResults = URL(string: "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=50&term=master+commander")!
-
-    static var previews: some View {
-        Group {
-            NavigationView {
-                MusicView(url: url)
-                    .preferredColorScheme(.dark)
-            }
-            NavigationView {
-                MusicView(url: url2)
-            }
-            NavigationView {
-                MusicView(url: urlNoResults)
-            }
-        }
-    }
-}
+//struct MusicView_Previews: PreviewProvider {
+//    static let url = URL(string: "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=10&term=Hamilton")!
+//    static let url2 = URL(string: "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=50&term=aladdin")!
+//    static let urlNoResults = URL(string: "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=50&term=master+commander")!
+//
+//    static var previews: some View {
+//        Group {
+//            NavigationView {
+//                MusicView(url: url)
+//                    .preferredColorScheme(.dark)
+//            }
+//            NavigationView {
+//                MusicView(url: url2)
+//            }
+//            NavigationView {
+//                MusicView(url: urlNoResults)
+//            }
+//        }
+//    }
+//}

@@ -15,7 +15,7 @@ class DataProvider {
 private extension DataProvider {
 
     func fetchiTunesAlbums() {
-        
+
     }
 
     func fetchArticles(url: URL?, completion: @escaping ([Article]?) -> Void) {
@@ -328,6 +328,26 @@ final class SearchDataProvider: DataProvider {
         }
     }
 
+}
+
+private extension iTunes.Feed {
+
+    var albums: [iTunes.Album] {
+        let names = results
+            .filter { $0.primaryGenreName.lowercased().contains("soundtrack") }
+            .map { $0.collectionName }.unique
+
+        var albums: [iTunes.Album] = []
+        for n in names {
+            let songs = results.filter { $0.collectionName == n }
+            let song = songs.first
+            let album = iTunes.Album(name: n, year: song?.releaseDisplay ?? "", artUrl: song?.artworkUrl100, songs: songs)
+            albums.append(album)
+        }
+
+        return albums
+    }
+    
 }
 
 extension URL {

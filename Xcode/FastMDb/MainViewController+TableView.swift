@@ -141,9 +141,9 @@ private extension MainViewController {
             controller.sortedBy = item.sortedBy
             navigationController?.pushViewController(controller, animated: true)
         case .music:
-            guard let url = item.url else { return }
+            guard let albums = item.albums else { return }
 
-            let contentView = MusicView(url: url)
+            let contentView = MusicView(albums: albums)
             let controller = UIHostingController(rootView: contentView)
             navigationController?.pushViewController(controller, animated: true)
         case .network:

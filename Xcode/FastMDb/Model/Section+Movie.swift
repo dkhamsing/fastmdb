@@ -161,9 +161,8 @@ private extension Media {
             items.append(item)
         }
 
-        if let albums = albums,
-           let name = title {
-            let item = Item(title: "Apple Music", url: name.itunesMusicSearchUrl, destination: .music, image: Item.videoImage)
+        if let albums = albums {
+            let item = Item(title: "Apple Music",  destination: .music, image: Item.videoImage, albums: albums)
             items.append(item)
         }
 
