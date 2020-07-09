@@ -14,10 +14,6 @@ class DataProvider {
 
 private extension DataProvider {
 
-    func fetchiTunesAlbums() {
-
-    }
-
     func fetchArticles(url: URL?, completion: @escaping ([Article]?) -> Void) {
         guard let url = url else { return }
 
@@ -32,8 +28,8 @@ private extension DataProvider {
         guard
             let url = url,
             let data = try? Data(contentsOf: url) else {
-                completion(nil)
-                return
+            completion(nil)
+            return
         }
 
         group.enter()
@@ -42,9 +38,11 @@ private extension DataProvider {
         self.group.leave()
     }
 
-    func fetchItem<T:Codable>(url: URL?, completion: @escaping (T?) -> Void) {
+    func fetchItem<T:Codable>(url: URL?,
+                              decoder: JSONDecoder = JSONDecoder(),
+                              completion: @escaping (T?) -> Void) {
         group.enter()
-        url?.apiGet { (result: Result<T,NetError>) in
+        url?.apiGet(decoder: decoder) { (result: Result<T,NetError>) in
             if case .success(let item) = result {
                 completion(item)
             }
@@ -167,17 +165,13 @@ final class MovieDataProvider: DataProvider {
 
             if let name = item?.title,
                let url = name.itunesMusicSearchUrl {
-                self.group.enter()
-                URLSession.shared.dataTask(with: url) { (data, response, error) in
-                    guard let data = data else { return }
-
-                    if let feed = try? iTunes.decoder.decode(iTunes.Feed.self, from: data) {
-                        if feed.albums.count > 0 {
-                            albums = feed.albums
-                        }
+                self.fetchItem(url: url, decoder: iTunes.decoder) { (item: iTunes.Feed?) in
+                    if
+                        let count = item?.albums.count,
+                        count > 0 {
+                        albums = item?.albums
                     }
-                    self.group.leave()
-                }.resume()
+                }
             }
         }
 
@@ -292,19 +286,13 @@ final class TvDataProvider: DataProvider {
 
             if let name = item?.name,
                let url = name.itunesMusicSearchUrl {
-
-                // TODO: isolate this, it is duplicated here and in movie data source
-                self.group.enter()
-                URLSession.shared.dataTask(with: url) { (data, response, error) in
-                    guard let data = data else { return }
-
-                    if let feed = try? iTunes.decoder.decode(iTunes.Feed.self, from: data) {
-                        if feed.albums.count > 0 {
-                            albums = feed.albums
-                        }
+                self.fetchItem(url: url, decoder: iTunes.decoder) { (item: iTunes.Feed?) in
+                    if
+                        let count = item?.albums.count,
+                        count > 0 {
+                        albums = item?.albums
                     }
-                    self.group.leave()
-                }.resume()
+                }
             }
         }
 
@@ -370,7 +358,7 @@ private extension iTunes.Feed {
 
 extension URL {
 
-    func apiGet<T: Codable>(completion: @escaping (Result<T, NetError>) -> Void) {
+    func apiGet<T: Codable>(decoder: JSONDecoder = JSONDecoder(), completion: @escaping (Result<T, NetError>) -> Void) {
         print("get: \(self.absoluteString)")
 
         let session = URLSession.shared
@@ -391,7 +379,7 @@ extension URL {
                 return
             }
 
-            guard let result = try? JSONDecoder().decode(T.self, from: unwrapped) else {
+            guard let result = try? decoder.decode(T.self, from: unwrapped) else {
                 DispatchQueue.main.async {
                     completion(.failure(.json))
                 }
