@@ -266,10 +266,11 @@ final class SeasonDataProvider: DataProvider {
 
 final class TvDataProvider: DataProvider {
 
-    func get(_ id: Int?, completion: @escaping (TV?, UIImage?, [Article]?) -> Void) {
+    func get(_ id: Int?, completion: @escaping (TV?, UIImage?, [Article]?, [iTunes.Album]?) -> Void) {
         var tv: TV?
         var articles: [Article]?
         var image: UIImage?
+        var albums: [iTunes.Album]?
 
         let url = Tmdb.tvURL(tvId: id)
         fetchItem(url: url) { (item: TV?) in
@@ -288,10 +289,27 @@ final class TvDataProvider: DataProvider {
                     articles = a
                 }
             }
+
+            if let name = item?.name,
+               let url = name.itunesMusicSearchUrl {
+
+                // TODO: isolate this, it is duplicated here and in movie data source
+                self.group.enter()
+                URLSession.shared.dataTask(with: url) { (data, response, error) in
+                    guard let data = data else { return }
+
+                    if let feed = try? iTunes.decoder.decode(iTunes.Feed.self, from: data) {
+                        if feed.albums.count > 0 {
+                            albums = feed.albums
+                        }
+                    }
+                    self.group.leave()
+                }.resume()
+            }
         }
 
         group.notify(queue: .main) {
-            completion(tv, image, articles)
+            completion(tv, image, articles, albums)
         }
     }
 
@@ -347,7 +365,7 @@ private extension iTunes.Feed {
 
         return albums
     }
-    
+
 }
 
 extension URL {

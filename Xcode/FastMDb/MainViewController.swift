@@ -518,10 +518,10 @@ private extension MainViewController {
         spinner.startAnimating()
 
         let provider = TvDataProvider()
-        provider.get(id) { (tv, image, articles) in
+        provider.get(id) { (tv, image, articles, albums) in
             guard let tv = tv else { return }
 
-            let sections = tv.sections(articles)
+            let sections = tv.sections(articles: articles, albums: albums)
             let buttonUrl = Tmdb.mediaPosterUrl(path: tv.poster_path, size: .xxl)
             let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
             self.updateScreen(u)

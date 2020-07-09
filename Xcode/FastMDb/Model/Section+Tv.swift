@@ -9,7 +9,7 @@ import Foundation
 
 extension TV {
     
-    func sections(_ articles: [Article]?) -> [ItemSection] {
+    func sections(articles: [Article]?, albums: [iTunes.Album]?) -> [ItemSection] {
         var list: [ItemSection] = []
 
         if let section = nextEpisodeSection {
@@ -28,7 +28,7 @@ extension TV {
             list.append(section)
         }
 
-        if let section = mediaSection {
+        if let section = mediaSection(albums: albums) {
             list.append(section)
         }
 
@@ -176,7 +176,7 @@ private extension TV {
         return ItemSection(header: "links", items: items)
     }
 
-    var mediaSection: ItemSection? {
+    func mediaSection(albums: [iTunes.Album]?) -> ItemSection? {
         var items: [Item] = []
 
         if
@@ -186,8 +186,8 @@ private extension TV {
             items.append(item)
         }
 
-        if name != "" {
-            let item = Item(title: "Apple Music", url: name.itunesMusicSearchUrl, destination: .music, image: Item.videoImage)
+        if let albums = albums {
+            let item = Item(title: "Apple Music", destination: .music, image: Item.videoImage, albums: albums)
             items.append(item)
         }
 
