@@ -48,10 +48,37 @@ extension iTunes {
     }
 
     static func songSearchUrl(_ query: String) -> URL? {
-        let string = "https://itunes.apple.com/search?media=music&attribute=albumTerm&country=us&limit=50&term=\(query.replacingOccurrences(of: " ", with: "+"))"
-        let url = URL(string: string)
-
+        let url = searchUrl(query: query, limit: 50, media: "music", attribute: "albumTerm")
         return url
+    }
+
+    static func searchUrl(query: String, country: String = "us", limit: Int = 100, media: String?, attribute: String?) -> URL? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "itunes.apple.com"
+        components.path = "/search"
+
+        var queryItems = [
+            URLQueryItem(name: "term", value: query),
+            URLQueryItem(name: "country", value: country),
+            URLQueryItem(name: "limit", value: "\(limit)"),
+        ]
+
+        if let attribute = attribute {
+            queryItems.append(
+                URLQueryItem(name: "attribute", value: attribute)
+            )
+        }
+
+        if let media = media {
+            queryItems.append(
+                URLQueryItem(name: "media", value: media)
+            )
+        }
+
+        components.queryItems = queryItems
+
+        return components.url
     }
 
 //    static var topSongsUrl: URL? {
