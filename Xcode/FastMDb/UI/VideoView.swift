@@ -18,7 +18,7 @@ struct VideoView: View {
     var body: some View {
         Group {
             if self.isLoading {
-                ActivityIndicator(isAnimating: $isLoading)
+                ProgressView()
             }
             else {
                 List(videoItems) { video in
