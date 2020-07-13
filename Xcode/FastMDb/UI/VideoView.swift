@@ -44,7 +44,7 @@ struct VideoView: View {
                 let provider = LPMetadataProvider()
                 provider.startFetchingMetadata(for: url) { (metadata, error) in
                     if let metadata = metadata,
-                        let imageProvider = metadata.imageProvider {
+                       let imageProvider = metadata.imageProvider {
                         imageProvider.loadObject(ofClass: UIImage.self) { image, _ in
                             if let image = image as? UIImage {
                                 var vi = item.videoItem
@@ -81,6 +81,7 @@ struct VideoView: View {
     }
 }
 
+// TODO: display disclosure indicator (>)
 struct VideoRow: View {
     var video: VideoItem
 
@@ -107,7 +108,7 @@ struct VideoRow: View {
                 }
             }
         })
-            .buttonStyle(PlainButtonStyle())
+        .buttonStyle(PlainButtonStyle())
     }
 }
 

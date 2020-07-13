@@ -10,17 +10,14 @@ import SwiftUI
 
 struct MusicView: View {
     var albums: [iTunes.Album]
-
+    
     var body: some View {
-        Group {
-            List {
-                ForEach(albums) { album in
-                    AlbumRow(album: album)
-                }
+        List {
+            ForEach(albums) { album in
+                AlbumRow(album: album)
             }
-            .listStyle(InsetGroupedListStyle())
-
         }
+        .listStyle(InsetGroupedListStyle())
         .navigationBarTitle("Apple Music")
     }
 }
@@ -56,6 +53,7 @@ struct AlbumHeader: View {
     }
 }
 
+// TODO: display disclosure indicator (>)
 struct SongRow: View {
     var song: iTunes.Song
     
