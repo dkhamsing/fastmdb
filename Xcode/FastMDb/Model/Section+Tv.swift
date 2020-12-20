@@ -24,6 +24,10 @@ extension TV {
             list.append(section)
         }
 
+        if let section = networksSection {
+            list.append(section)
+        }
+
         if let section = ratingSection {
             list.append(section)
         }
@@ -45,10 +49,6 @@ extension TV {
         }
 
         if let section = createdBySection {
-            list.append(section)
-        }
-
-        if let section = networksSection {
             list.append(section)
         }
 
