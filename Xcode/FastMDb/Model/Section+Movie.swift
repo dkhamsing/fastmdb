@@ -142,6 +142,16 @@ private extension Media {
         }
 
         if let name = title {
+            let item = Item(title: "Rotten Tomatoes", url: name.rottenTomatoestUrl, destination: .url, image: Item.linkImage)
+            items.append(item)
+        }
+
+        if let name = title {
+            let item = Item(title: "Letterboxd", url: name.letterboxdUrl, destination: .url, image: Item.linkImage)
+            items.append(item)
+        }
+
+        if let name = title {
             let item = Item(title: "JustWatch", url: name.justWatchUrl, destination: .url, image: Item.linkImage)
             items.append(item)
         }
@@ -277,12 +287,13 @@ private extension Media {
         let item = Item(title: rating, subtitle: voteDisplay, color: vote_average.color)
         var section = ItemSection(header: "rating", items: [item])
 
-        if reviews?.results.count ?? 0 > 0 {
+        if let count = reviews?.results.count,
+           count > 1 {
             let reviewItems = reviews?.results.map { $0.listItem }
             section.destinationItems = reviewItems
             section.destinationTitle = "Reviews"
             section.destination = .items
-            section.footer = "See reviews"
+            section.footer = "\(count) reviews"
         }
 
         return section
@@ -302,7 +313,7 @@ private extension Media {
             return year
         }
 
-        return "Release date n/a"
+        return "Release date not available"
     }
 
 }

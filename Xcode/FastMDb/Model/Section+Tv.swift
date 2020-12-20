@@ -52,11 +52,11 @@ extension TV {
             list.append(section)
         }
 
-        if let section = genresSection {
+        if let section = productionSection {
             list.append(section)
         }
 
-        if let section = productionSection {
+        if let section = genresSection {
             list.append(section)
         }
 

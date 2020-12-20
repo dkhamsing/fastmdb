@@ -293,8 +293,22 @@ extension String {
         return iTunes.songSearchUrl(self)
     }
 
+    var letterboxdUrl: URL? {
+        let baseUrl = "https://letterboxd.com/search/"
+        let item = self.replacingOccurrences(of: " ", with: "+")
+
+        return URL(string: "\(baseUrl)\(item)")
+    }
+
     var justWatchUrl: URL? {
         let baseUrl = "https://www.justwatch.com/us/search?q="
+        let item = self.replacingOccurrences(of: " ", with: "+")
+
+        return URL(string: "\(baseUrl)\(item)")
+    }
+
+    var rottenTomatoestUrl: URL? {
+        let baseUrl = "https://www.rottentomatoes.com/search?search="
         let item = self.replacingOccurrences(of: " ", with: "+")
 
         return URL(string: "\(baseUrl)\(item)")
