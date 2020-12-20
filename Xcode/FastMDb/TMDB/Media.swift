@@ -50,11 +50,24 @@ struct ReviewSearch: Codable {
 
 struct Review: Codable {
     var author, content: String
+    var author_details: Author
+}
+
+struct Author: Codable {
+    var rating: Double?
 }
 
 extension Review {
     var listItem: Item {
-        return Item.init(title: content, subtitle: author)
+        var sub: [String] = []
+
+        if let rating = author_details.rating {
+            sub.append("\(rating)/10")
+        }
+
+        sub.append(author)
+
+        return Item(title: content, subtitle: sub.joined(separator: Tmdb.separator))
     }
 }
 
