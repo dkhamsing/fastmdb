@@ -44,6 +44,8 @@ struct TV: Codable {
 
     var credits: Credits?
 
+    var aggregate_credits: Credits?
+
     var external_ids: ExternalIds?
 
     var videos: VideoSearch?

@@ -77,10 +77,11 @@ private extension TV {
 
     var castSection: ItemSection? {
         guard
-            let cast = credits?.cast,
+            let cast = aggregate_credits?.cast,
             cast.count > 0 else { return nil }
 
-        let items = cast.map { $0.listItemCast }
+        let prefix = cast.map { $0.listItemCastAggregated }.prefix(15)
+        let items = Array(prefix)
 
         return ItemSection(header: "cast", items: items)
     }

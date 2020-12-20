@@ -45,12 +45,92 @@ struct Credit: Codable {
 
     // Crew
     var job: String?
+
+    // Aggregate Credits
+    var roles: [Role]?
+}
+
+struct Role: Codable {
+    var character: String?
+    var episode_count: Int?
 }
 
 extension Credit {
 
+    var aggregatedRole: String? {
+        guard let roles = roles else { return nil }
+
+        let role = roles.first { (role) -> Bool in
+            !(role.character ?? "").isEmpty
+        }
+
+        return role?.character
+    }
+
+    var aggregated: [String] {
+
+        if roles?.count == 1,
+           let first = roles?.first {
+
+            return [
+                first.character ?? "",
+                "\(first.episode_count ?? 0) episode\((first.episode_count ?? 0).pluralized)"
+            ]
+
+        } else if let roles = roles,
+                  roles.count > 1 {
+
+            let count = roles
+                .map { $0.episode_count ?? 0 }
+                .reduce(0, +)
+
+            var role = "\(roles.count) roles"
+            if let agRole = aggregatedRole {
+                let oneLess = roles.count - 1
+                role = "\(agRole) and \(oneLess) other role\(oneLess.pluralized)"
+            }
+
+            return [
+                role,
+                "\(count) episode\(count.pluralized)"
+            ]
+        }
+
+        return []
+//
+//        let characters = roles?.compactMap { $0.character }
+//        let count = roles?
+//            .map { $0.episode_count ?? 0 }
+//            .reduce(0, +)
+//
+////        let orderedRoles = roles?.sorted { $0.episode_count ?? 0 > $1.episode_count ?? 0 }
+////        if let role = orderedRoles?.first {
+////            if let character = role.character,
+////               !character.isEmpty {
+////                sub.append(character)
+////            }
+////            if let episodes = role.episode_count {
+////                sub.append("\(episodes) episode\(episodes.pluralized)")
+////            }
+////        }
+//
+//
+//        guard let c = characters else { return [] }
+//        return c
+    }
+
     var listItemCast: Item {
         return Item(id: id, title: titleDisplay, subtitle: character, destination: .person)
+    }
+
+    var listItemCastAggregated: Item {
+        var sub: [String] = []
+
+        if aggregated.count > 0 {
+            sub = aggregated
+        }
+
+        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .person)
     }
 
     var listItemCrew: Item {
