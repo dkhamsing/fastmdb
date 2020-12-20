@@ -225,6 +225,11 @@ private extension MainViewController {
             controller.title = section.destinationTitle
             controller.sections = section.destinationSections
             navigationController?.pushViewController(controller, animated: true)
+        case .moviesSortedBy:
+            let controller = MainViewController()
+            controller.title = "Highest Grossing"
+            controller.sortedBy = "revenue.desc"
+            navigationController?.pushViewController(controller, animated: true)
         default:
             print("handle button not implemented for \(s)")
         }

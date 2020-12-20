@@ -512,7 +512,13 @@ private extension MainViewController {
             guard case .success(let search) = result else { return }
 
             let items = search.results.map { $0.listItem }
-            let sections = [ ItemSection(items: items) ]
+
+            var footer: String?
+            if let _ = releaseYear {
+                footer = "See all time highest grossing"
+            }
+
+            let sections = [ ItemSection(items: items, footer: footer, destination: .moviesSortedBy) ]
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
