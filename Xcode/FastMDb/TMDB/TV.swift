@@ -37,6 +37,7 @@ struct TV: Codable {
     var production_countries: [ProductionCountry]?
     var tagline: String?
 
+    var content_ratings: ContentRatingSearch?
     var recommendations: TvSearch?
     var similar: TvSearch?
 

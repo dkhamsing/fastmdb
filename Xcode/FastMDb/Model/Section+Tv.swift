@@ -278,6 +278,11 @@ private extension TV {
                 subt += "\n" + countries.map { $0.name }.joined(separator: ", ")
             }
 
+            // content rating
+            if let contentRating = content_ratings?.rating("US") {
+                subt += "\nRated " + contentRating
+            }
+
             var item = Item(title: displayName, subtitle: subt)
 
             if

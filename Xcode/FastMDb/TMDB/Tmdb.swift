@@ -140,7 +140,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.tv)/\(tvId)"
 
-        let appendQueryItem = URLQueryItem(name: "append_to_response", value: "aggregate_credits,credits,external_ids,recommendations,similar,videos")
+        let appendQueryItem = URLQueryItem(name: "append_to_response", value: "aggregate_credits,credits,external_ids,recommendations,similar,videos,content_ratings")
         urlComponents.queryItems = [ Tmdb.keyQueryItem, appendQueryItem ]
 
         return urlComponents.url
