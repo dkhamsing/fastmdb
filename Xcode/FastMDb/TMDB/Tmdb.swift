@@ -5,7 +5,7 @@
 //  Copyright © 2020 dk. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 private extension Tmdb {
 
@@ -256,6 +256,22 @@ extension Tmdb {
             case .top_rated:
                 return "Top Rated"
             }
+        }
+
+        var systemImage: UIImage? {
+            var string: String = ""
+            switch self {
+            case .popular:
+                string = "star"
+            case .now_playing:
+                string = "play"
+            case .top_rated:
+                string = "hand.thumbsup"
+            case .upcoming:
+                string = "calendar"
+            }
+
+            return UIImage(systemName: string)
         }
 
         var tv: TvType {

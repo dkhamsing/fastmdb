@@ -288,10 +288,8 @@ private extension MainViewController {
     }
 
     var barMenu: UIMenu {
-
-        let list = Tmdb.MoviesType.allCases
-        let menuActions = list.map { (kind) -> UIAction in
-            return UIAction(title: kind.title, image: nil) { (_) in
+        let menuActions = Tmdb.MoviesType.allCases.map { (kind) -> UIAction in
+            return UIAction(title: kind.title, image: kind.systemImage) { (_) in
                 self.loadContent(kind)
             }
         }
