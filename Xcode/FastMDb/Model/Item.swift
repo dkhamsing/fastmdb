@@ -18,6 +18,8 @@ struct Item {
     var destinationTitle: String?
 
     var sortedBy: String?
+    var releaseYear: String?
+
     var episode: Episode?
     var seasonNumber: Int?
     var items: [Item]?

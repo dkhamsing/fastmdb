@@ -62,14 +62,24 @@ struct Tmdb {
         return urlComponents.url
     }
 
-    static func moviesURL(sortedBy: String?) -> URL? {
+    static func moviesURL(sortedBy: String?,
+                          releaseYear: String? = nil) -> URL? {
         guard let sortedBy = sortedBy else { return nil }
 
         var urlComponents = baseComponents
         urlComponents.path = Path.discover
 
         let genreQueryItem = URLQueryItem(name: "sort_by", value: sortedBy)
-        urlComponents.queryItems = [ Tmdb.keyQueryItem, genreQueryItem ]
+
+        var qi = [ Tmdb.keyQueryItem, genreQueryItem ]
+
+        if let releaseYear = releaseYear {
+            qi.append(
+                URLQueryItem(name: "primary_release_year", value: releaseYear)
+            )
+        }
+
+        urlComponents.queryItems = qi
 
         return urlComponents.url
     }

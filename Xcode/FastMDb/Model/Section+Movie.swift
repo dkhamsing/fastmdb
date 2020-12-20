@@ -78,7 +78,7 @@ private extension Media {
         if let revenue = revenue,
             revenue > 0 {
 
-            let item = Item(title: revenue.display, subtitle: budgetDisplay, destination: .moviesSortedBy, sortedBy: "revenue.desc", color: boxOfficeColor)
+            let item = Item(title: revenue.display, subtitle: budgetDisplay, destination: .moviesSortedBy, sortedBy: "revenue.desc", releaseYear: releaseYear, color: boxOfficeColor)
             return ItemSection(header: "box office", items: [item])
         }
 

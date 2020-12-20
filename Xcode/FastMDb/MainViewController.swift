@@ -79,9 +79,11 @@ class MainViewController: UIViewController {
         }
     }
 
+    var releaseYear: String?
+
     var sortedBy: String? {
         didSet {
-            updateSortedBy(sortedBy)
+            updateSortedBy(sortedBy, releaseYear)
         }
     }
 
@@ -501,11 +503,11 @@ private extension MainViewController {
         }
     }
 
-    func updateSortedBy(_ sortedBy: String?) {
+    func updateSortedBy(_ sortedBy: String?, _ releaseYear: String?) {
         screen = .list
         spinner.startAnimating()
 
-        let url = Tmdb.moviesURL(sortedBy: sortedBy)
+        let url = Tmdb.moviesURL(sortedBy: sortedBy, releaseYear: releaseYear)
         url?.apiGet { (result: Result<MediaSearch, NetError>) in
             guard case .success(let search) = result else { return }
 

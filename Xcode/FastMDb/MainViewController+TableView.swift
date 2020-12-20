@@ -137,7 +137,15 @@ private extension MainViewController {
         case .moviesSortedBy:
             // TODO: able to load more than one page of highest grossing
             let controller = MainViewController()
-            controller.title = "Highest Grossing"
+
+            var thisTitle = "Highest Grossing"
+
+            if let releaseYear = item.releaseYear {
+                thisTitle += " (\(releaseYear))"
+            }
+
+            controller.title = thisTitle
+            controller.releaseYear = item.releaseYear
             controller.sortedBy = item.sortedBy
             navigationController?.pushViewController(controller, animated: true)
         case .music:
