@@ -279,7 +279,7 @@ private extension TV {
             }
 
             // content rating
-            if let contentRating = content_ratings?.rating("US") {
+            if let contentRating = content_ratings?.contentRating("US") {
                 subt += "\nRated " + contentRating
             }
 

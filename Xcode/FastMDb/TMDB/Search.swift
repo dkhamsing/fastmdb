@@ -33,7 +33,7 @@ struct ReleaseSearch: Codable {
 }
 
 extension ReleaseSearch {
-    func certificationRating(_ countryCode: String) -> String? {
+    func contentRating(_ countryCode: String) -> String? {
         let country = results.filter { $0.iso_3166_1 == countryCode }
         if let first = country.first?.release_dates.first {
             return first.certification
@@ -57,7 +57,7 @@ struct ContentRatingSearch: Codable {
 }
 
 extension ContentRatingSearch {
-    func rating(_ countryCode: String) -> String? {
+    func contentRating(_ countryCode: String) -> String? {
         let country = results.filter { $0.iso_3166_1 == countryCode }
         if let first = country.first {
             return first.rating
