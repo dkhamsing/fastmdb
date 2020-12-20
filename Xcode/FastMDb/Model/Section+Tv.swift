@@ -294,6 +294,12 @@ private extension TV {
         }
 
         if
+            let tagline = tagline,
+            tagline.isEmpty == false {
+            items.append(Item(title: tagline))
+        }
+
+        if
             let o = overview,
             o != "" {
             items.append(Item(title: o))
