@@ -61,6 +61,8 @@ private extension MediaSearch {
             .filter { titles.contains($0.title ?? "") == false }
             .sorted { $0.release_date ?? "" > $1.release_date ?? "" }
 
+        guard released.count > 0 else { return nil }
+        
         return ItemSection(header: "movies released", items: released.map { $0.listItem})
     }
 
