@@ -278,13 +278,25 @@ private extension MainViewController {
 
     func barButtonItem(_ screen: ScreenType) -> UIBarButtonItem {
         if screen == .landing {
-            let image = UIImage(systemName: "shuffle")
-            return UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(loadRandom))
+            let image = UIImage(systemName: "ellipsis")
+            return UIBarButtonItem(title: nil, image: image, primaryAction: nil, menu: barMenu)
         }
         else {
             let image = UIImage(systemName: "house")
             return  UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(goHome))
         }
+    }
+
+    var barMenu: UIMenu {
+
+        let list = Tmdb.MoviesType.allCases
+        let menuActions = list.map { (kind) -> UIAction in
+            return UIAction(title: kind.title, image: nil) { (_) in
+                self.loadContent(kind)
+            }
+        }
+
+        return UIMenu(title: "", children: menuActions)
     }
 
     var header: UIView {
