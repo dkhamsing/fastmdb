@@ -272,7 +272,7 @@ private extension TV {
             var subt = sub.joined(separator: Tmdb.separator)
 
             // countries
-            if
+            if countryDisplay == nil,
                 let countries = production_countries,
                 countries.count > 0 {
                 subt += "\n" + countries.map { $0.name }.joined(separator: ", ")
