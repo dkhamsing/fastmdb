@@ -110,7 +110,7 @@ struct Tmdb {
         return urlComponents.url
     }
 
-    static func movieURL(movieId: Int?, append: String = "credits,videos,external_ids,recommendations,similar,reviews") -> URL? {
+    static func movieURL(movieId: Int?, append: String = "credits,videos,external_ids,recommendations,similar,reviews,release_dates") -> URL? {
         guard let movieId = movieId else { return nil }
 
         var urlComponents = baseComponents

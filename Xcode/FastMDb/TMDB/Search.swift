@@ -27,3 +27,27 @@ struct TvSearch: Codable {
 struct VideoSearch: Codable {
     var results: [Video]
 }
+
+struct ReleaseSearch: Codable {
+    var results: [ReleaseInfo]
+}
+
+extension ReleaseSearch {
+    func usCertificationRating(_ countryCode: String) -> String? {
+        let usa = results.filter { $0.iso_3166_1 == countryCode }
+        if let first = usa.first?.release_dates.first {
+            return first.certification
+        }
+
+        return nil
+    }
+}
+
+struct ReleaseInfo: Codable {
+    var iso_3166_1: String
+    var release_dates: [Release]
+}
+
+struct Release: Codable {
+    var certification: String
+}

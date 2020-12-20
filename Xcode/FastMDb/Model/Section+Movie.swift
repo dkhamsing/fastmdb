@@ -203,8 +203,14 @@ private extension Media {
 
         var items: [Item] = []
 
+        var metString = metadata.joined(separator: Tmdb.separator)
+
+        if let usCertificationRating = release_dates?.usCertificationRating("US") {
+            metString += "\nRated " + usCertificationRating
+        }
+
         items.append(
-            Item(title:titleDisplay, subtitle: metadata.joined(separator: Tmdb.separator))
+            Item(title:titleDisplay, subtitle: metString)
         )
 
         if let release = releaseDateDisplay {

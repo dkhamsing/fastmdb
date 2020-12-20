@@ -33,6 +33,7 @@ struct Media: Codable {
     var recommendations: MediaSearch?
     var reviews: ReviewSearch?
     var release_date: String?
+    var release_dates: ReleaseSearch?
     var runtime: Int?
     var similar: MediaSearch?
     var status: String?
