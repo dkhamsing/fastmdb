@@ -268,7 +268,16 @@ private extension TV {
                 sub.append(item)
             }
 
-            var item = Item(title: displayName, subtitle: sub.joined(separator: Tmdb.separator))
+            var subt = sub.joined(separator: Tmdb.separator)
+
+            // countries
+            if
+                let countries = production_countries,
+                countries.count > 0 {
+                subt += "\n" + countries.map { $0.name }.joined(separator: ", ")
+            }
+
+            var item = Item(title: displayName, subtitle: subt)
 
             if
                 let s = seasons?.first,
