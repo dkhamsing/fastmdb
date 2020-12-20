@@ -205,8 +205,8 @@ private extension Media {
 
         var metString = metadata.joined(separator: Tmdb.separator)
 
-        if let usCertificationRating = release_dates?.contentRating("US") {
-            metString += "\nRated " + usCertificationRating
+        if let contentRating = release_dates?.contentRating("US") {
+            metString += "\nRated " + contentRating
         }
 
         items.append(
