@@ -20,7 +20,7 @@ class MainListCell: UITableViewCell {
                 backgroundColor = c
             }
             else {
-                detailTextLabel?.textColor = .secondaryLabel
+                backgroundColor = .white
             }
         }
     }
@@ -49,6 +49,8 @@ private extension MainListCell {
     func setup() {
         imageView?.tintColor = .secondaryLabel
         textLabel?.numberOfLines = 0
+
         detailTextLabel?.numberOfLines = 0
+        detailTextLabel?.textColor = .secondaryLabel
     }
 }
