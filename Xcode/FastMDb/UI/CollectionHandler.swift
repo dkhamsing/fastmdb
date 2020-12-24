@@ -21,8 +21,7 @@ class CollectionHandler: NSObject, UICollectionViewDataSource, UICollectionViewD
         let c = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewCell.identifier, for: indexPath) as! ImageCollectionViewCell
 
         let item = items[indexPath.row]
-        let size = ImageCollectionViewCell.size
-        c.imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
+        c.load(item)
 
         return c
     }
