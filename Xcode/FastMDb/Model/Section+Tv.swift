@@ -128,11 +128,6 @@ private extension TV {
         }
 
         if name != "" {
-            let item = Item(title: "Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
-            items.append(item)
-        }
-
-        if name != "" {
             let item = Item(title: "Music", url: name.googleSearchMusicUrl, destination: .url, image: Item.linkImage)
             items.append(item)
         }
@@ -363,7 +358,7 @@ private extension TV {
     }
 
     var watchSection: ItemSection? {
-        return watch?.watchSection
+        return watch?.watchSection(name)
     }
 
 }

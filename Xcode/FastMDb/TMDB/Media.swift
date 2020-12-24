@@ -82,15 +82,23 @@ struct WatchSearch: Codable {
 }
 
 extension WatchSearch {
-    var watchSection: ItemSection? {
-        guard let country = results["US"] else { return nil }
-        guard let providers = country.flatrate else { return nil }
+    func watchSection(_ name: String?) -> ItemSection? {
+        guard let country = results["US"] else { return watchSectionGoogle(name) }
+        guard let providers = country.flatrate else { return watchSectionGoogle(name) }
 
         let items: [Item] = providers
             .sorted { $0.provider_name < $1.provider_name }
             .map { Item(title: $0.provider_name, url: country.link, destination: .url, image: Item.linkImage) }
 
         return ItemSection(header: "Watch", items: items)
+    }
+
+    func watchSectionGoogle(_ name: String?) -> ItemSection? {
+        guard let name = name,
+              name != "" else { return nil }
+
+        let item = Item(title: "Google", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
+        return ItemSection(header: "Watch", items: [item])
     }
 }
 

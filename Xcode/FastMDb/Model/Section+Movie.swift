@@ -103,11 +103,6 @@ private extension Media {
         }
 
         if let name = title {
-            let item = Item(title: "Watch Options", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
-            items.append(item)
-        }
-
-        if let name = title {
             let item = Item(title: "Music", url: name.googleSearchMusicUrl, destination: .url, image: Item.linkImage)
             items.append(item)
         }
@@ -305,7 +300,7 @@ private extension Media {
     }
 
     var watchSection: ItemSection? {
-        return watch?.watchSection
+        return watch?.watchSection(title)
     }
 
     var statusDisplay: String? {
