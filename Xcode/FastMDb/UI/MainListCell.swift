@@ -90,7 +90,7 @@ private extension MainListCollectionCell {
 
 class ImageCell: UICollectionViewCell {
     static let identifier = "ImageCell"
-    static let height: CGFloat = 100
+    static let size: CGSize = CGSize(width: 100, height: 150)
 
     var imageView = UIImageView()
 
@@ -177,16 +177,14 @@ class CollectionHandler: NSObject, UICollectionViewDataSource, UICollectionViewD
         let c = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCell.identifier, for: indexPath) as! ImageCell
 
         let item = items[indexPath.row]
-
-        let size = CGSize(width: 70, height: ImageCell.height)
+        let size = ImageCell.size
         c.imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
 
         return c
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = CGSize(width: 70, height: ImageCell.height)
-        return size
+        return ImageCell.size
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

@@ -87,7 +87,7 @@ private extension TV {
         let prefix = cast.map { $0.listItemCastAggregated }.prefix(15)
         let items = Array(prefix)
 
-        return ItemSection(header: "cast", items: items)
+        return ItemSection(header: "cast", items: items, display: .collection)
     }
 
     var createdBySection: ItemSection? {

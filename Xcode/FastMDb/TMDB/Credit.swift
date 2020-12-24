@@ -112,7 +112,8 @@ extension Credit {
             sub = aggregated
         }
 
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .person)
+        let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
+        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .person, imageUrl: url)
     }
 
     var listItemCrew: Item {
