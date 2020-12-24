@@ -101,7 +101,8 @@ extension Credit {
     }
 
     var listItemCast: Item {
-        return Item(id: id, title: titleDisplay, subtitle: character, destination: .person)
+        let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
+        return Item(id: id, title: titleDisplay, subtitle: character, destination: .person, imageUrl: url)
     }
 
     var listItemCastAggregated: Item {

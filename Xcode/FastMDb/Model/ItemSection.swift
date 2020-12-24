@@ -16,4 +16,10 @@ struct ItemSection {
     var destinationItems: [Item]?
     var destinationSections: [ItemSection]?
     var destinationTitle: String?
+
+    var display: Display = .table
+}
+
+enum Display {
+    case table, collection
 }

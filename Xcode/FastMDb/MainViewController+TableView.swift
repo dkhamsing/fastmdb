@@ -21,27 +21,57 @@ extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let s = dataSource[section]
-        return s.items?.count ?? 0
+
+        switch s.display {
+        case .table:
+            return s.items?.count ?? 0
+        case .collection:
+            return 1
+        }
+
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let section = dataSource[indexPath.section]
-        guard let items = section.items else { return UITableViewCell() }
 
-        let item = items[indexPath.row]
+        switch section.display {
+        case .table:
+            guard let items = section.items else { return UITableViewCell() }
 
-        if let _ = item.color {
-            let c = tableView.dequeueReusableCell(withIdentifier: CellType.color.rawValue, for: indexPath) as! MainListCell
-            c.item = item
-            return c
+            let item = items[indexPath.row]
+
+            if let _ = item.color {
+                let c = tableView.dequeueReusableCell(withIdentifier: CellType.color.rawValue, for: indexPath) as! MainListCell
+                c.item = item
+                return c
+            }
+            else {
+                let c = tableView.dequeueReusableCell(withIdentifier: CellType.regular.rawValue, for: indexPath) as! MainListCell
+                c.item = item
+                return c
+            }
+        case .collection:
+            let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
+
+            if let items = section.items {
+                c.handler.items = items
+                c.collection.reloadData()
+            }
+            
+            return c 
         }
-        else {
-            let c = tableView.dequeueReusableCell(withIdentifier: CellType.regular.rawValue, for: indexPath) as! MainListCell
-            c.item = item
-            return c
-        }
 
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let section = dataSource[indexPath.section]
+        switch section.display {
+        case .collection:
+            return ImageCell.height
+        case .table:
+            return UITableView.automaticDimension
+        }
     }
 
 }

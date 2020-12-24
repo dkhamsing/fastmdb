@@ -140,6 +140,7 @@ private extension MainViewController {
         // table
         tableView.register(MainListCell.self, forCellReuseIdentifier: CellType.regular.rawValue)
         tableView.register(MainListCell.self, forCellReuseIdentifier: CellType.color.rawValue)
+        tableView.register(MainListCollectionCell.self, forCellReuseIdentifier: MainListCollectionCell.identifier)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
         tableView.dataSource = self

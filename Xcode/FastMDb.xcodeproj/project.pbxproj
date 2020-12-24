@@ -58,6 +58,7 @@
 		65883AD02472F39600C1A55A /* Section+Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883ACF2472F39600C1A55A /* Section+Season.swift */; };
 		65883AD2247348E100C1A55A /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883AD1247348E100C1A55A /* Destination.swift */; };
 		65B7496024B18DA600C8997C /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B7495F24B18DA600C8997C /* ImageCache.swift */; };
+		65D47DB325954EEB009701BB /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D47DB225954EEB009701BB /* ImageDownloader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +127,7 @@
 		65883ACF2472F39600C1A55A /* Section+Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Season.swift"; sourceTree = "<group>"; };
 		65883AD1247348E100C1A55A /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
 		65B7495F24B18DA600C8997C /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		65D47DB225954EEB009701BB /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +184,7 @@
 			children = (
 				654D0F66246B169A00B2A968 /* Info.plist */,
 				654D0F58246B169800B2A968 /* AppDelegate.swift */,
+				65D47DB225954EEB009701BB /* ImageDownloader.swift */,
 				655B0F4124B1478A00E587E9 /* iTunes.swift */,
 				654D0F73246B16BA00B2A968 /* MainViewController.swift */,
 				654D0F74246B16BA00B2A968 /* MainViewController+Search.swift */,
@@ -406,6 +409,7 @@
 				654D0F7A246B16BA00B2A968 /* MainListCell.swift in Sources */,
 				654D0F77246B16BA00B2A968 /* Section+Person.swift in Sources */,
 				654D0F93246B16C900B2A968 /* Extensions.swift in Sources */,
+				65D47DB325954EEB009701BB /* ImageDownloader.swift in Sources */,
 				654D0F80246B16BA00B2A968 /* Section+Episode.swift in Sources */,
 				65883AD02472F39600C1A55A /* Section+Season.swift in Sources */,
 				655B0F4224B1478A00E587E9 /* iTunes.swift in Sources */,

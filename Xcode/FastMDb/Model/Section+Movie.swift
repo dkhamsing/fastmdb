@@ -335,7 +335,7 @@ private extension Credits {
             castTotal = String.allCreditsText(cast.count)
         }
 
-        return ItemSection(header: "starring", items: items, footer: castTotal, destination: .items, destinationItems: cast.map { $0.listItemCast }, destinationTitle: "Cast")
+        return ItemSection(header: "starring", items: items, footer: castTotal, destination: .items, destinationItems: cast.map { $0.listItemCast }, destinationTitle: "Cast", display: .collection)
     }
 
     func creditsSection(limit: Int) -> ItemSection? {
