@@ -88,7 +88,7 @@ extension WatchSearch {
 
         let items: [Item] = providers
             .sorted { $0.provider_name < $1.provider_name }
-            .map { Item(title: $0.provider_name, url: country.link, destination: .url) }
+            .map { Item(title: $0.provider_name, url: country.link, destination: .url, image: Item.linkImage) }
 
         return ItemSection(header: "Watch", items: items)
     }
