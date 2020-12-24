@@ -77,9 +77,6 @@ extension Media {
     }
 }
 
-struct WatchSearch: Codable {
-    var results: [String: Watch]
-}
 
 extension WatchSearch {
     func watchItems(_ name: String?) -> [Item]? {
@@ -115,34 +112,6 @@ struct Watch: Codable {
 
 struct Provider: Codable {
     var provider_name: String
-}
-
-// TODO: move to Review.swift file
-struct ReviewSearch: Codable {
-    var results: [Review]
-}
-
-struct Review: Codable {
-    var author, content: String
-    var author_details: Author
-}
-
-struct Author: Codable {
-    var rating: Double?
-}
-
-extension Review {
-    var listItem: Item {
-        var sub: [String] = []
-
-        if let rating = author_details.rating {
-            sub.append("\(rating)/10")
-        }
-
-        sub.append(author)
-
-        return Item(title: content, subtitle: sub.joined(separator: Tmdb.separator))
-    }
 }
 
 extension Media {
