@@ -11,7 +11,7 @@ import UIKit
 class ImageCollectionViewCell: UICollectionViewCell {
 
     static let identifier = "ImageCollectionViewCell"
-    static let size: CGSize = CGSize(width: 90, height: 140)
+    static let size: CGSize = CGSize(width: 90, height: 150)
 
     var imageView = UIImageView()
     var label = UILabel()
@@ -40,6 +40,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
     }
 
     func setup() {
+        imageView.backgroundColor = .systemGray5
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
