@@ -51,9 +51,45 @@ struct TV: Codable {
     var external_ids: ExternalIds?
 
     var videos: VideoSearch?
+
+    var watch: WatchSearch?
 }
 
 extension TV {
+    enum CodingKeys: String, CodingKey {
+        case watch = "watch/providers"
+        case id,
+             name,
+             original_name,
+             first_air_date,
+             last_air_date,
+             next_episode_to_air,
+             number_of_episodes,
+             number_of_seasons,
+             vote_average,
+             vote_count,
+             created_by,
+             episode_run_time,
+             genres,
+             homepage,
+             origin_country,
+             original_language,
+             overview,
+             networks,
+             poster_path,
+             production_companies,
+             production_countries,
+             tagline,
+             content_ratings,
+             recommendations,
+             similar,
+             seasons,
+             status,
+             credits,
+             aggregate_credits,
+             external_ids,
+             videos
+    }
 
     var countryDisplay: String? {
         guard
