@@ -368,15 +368,7 @@ private extension TV {
     }
 
     var watchSection: ItemSection? {
-        guard let results = watch?.results,
-              let country = results["US"] else { return nil }
-        guard let providers = country.flatrate else { return nil }
-
-        let items: [Item] = providers
-            .sorted { $0.provider_name < $1.provider_name }
-            .map { Item(title: $0.provider_name, url: country.link, destination: .url) }
-
-        return ItemSection(header: "Watch", items: items)
+        return watch?.watchSection
     }
 
 }
