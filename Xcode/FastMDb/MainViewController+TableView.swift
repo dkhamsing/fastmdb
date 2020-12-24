@@ -69,7 +69,7 @@ extension MainViewController: UITableViewDataSource {
         let section = dataSource[indexPath.section]
         switch section.display {
         case .collection:
-            return ImageCell.size.height
+            return ImageCollectionViewCell.size.height
         case .table:
             return UITableView.automaticDimension
         }
