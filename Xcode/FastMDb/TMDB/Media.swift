@@ -97,7 +97,7 @@ extension WatchSearch {
         guard let name = name,
               name != "" else { return nil }
 
-        let item = Item(title: "Google", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
+        let item = Item(title: "Google Search", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
         return [item]
     }
 
