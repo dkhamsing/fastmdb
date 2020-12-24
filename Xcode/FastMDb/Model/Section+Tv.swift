@@ -173,11 +173,6 @@ private extension TV {
             items.append(item)
         }
 
-        if name != "" {
-            let item = Item(title: "JustWatch", url: name.justWatchUrl, destination: .url, image: Item.linkImage)
-            items.append(item)
-        }
-
         return ItemSection(header: "links", items: items)
     }
 
