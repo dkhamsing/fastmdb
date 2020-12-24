@@ -31,6 +31,10 @@ extension Media {
             list.append(section)
         }
 
+        if let section = watchSection {
+            list.append(section)
+        }
+
         if let section = languageSection {
             list.append(section)
         }
@@ -148,11 +152,6 @@ private extension Media {
 
         if let name = title {
             let item = Item(title: "Letterboxd", url: name.letterboxdUrl, destination: .url, image: Item.linkImage)
-            items.append(item)
-        }
-
-        if let name = title {
-            let item = Item(title: "JustWatch", url: name.justWatchUrl, destination: .url, image: Item.linkImage)
             items.append(item)
         }
 
@@ -303,6 +302,17 @@ private extension Media {
         }
 
         return section
+    }
+
+    var watchSection: ItemSection? {
+        guard let results = watch?.results,
+              let country = results["US"] else { return nil }
+        guard let provider = country.flatrate?.first else { return nil }
+
+        let item = Item(title: provider.provider_name,
+                        url: country.link,
+                        destination: .url)
+        return ItemSection(header: "Watch", items: [item])
     }
 
     var statusDisplay: String? {

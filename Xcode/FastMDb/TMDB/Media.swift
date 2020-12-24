@@ -39,9 +39,55 @@ struct Media: Codable {
     var status: String?
     var tagline: String?
     var videos: VideoSearch?
+    var watch: WatchSearch?
 
     // TV
     var original_name: String?
+}
+
+extension Media {
+    enum CodingKeys: String, CodingKey {
+        case watch = "watch/providers"
+        case id,
+             title,
+             original_title,
+             budget, revenue,
+             vote_average,
+             vote_count,
+             original_name,
+             belongs_to_collection,
+             credits,
+             external_ids,
+             genres,
+             homepage,
+             original_language,
+             overview,
+             production_companies,
+             production_countries,
+             poster_path,
+             recommendations,
+             reviews,
+             release_date,
+             release_dates,
+             runtime,
+             similar,
+             status,
+             tagline,
+             videos
+    }
+}
+
+struct WatchSearch: Codable {
+    var results: [String: Watch]
+}
+
+struct Watch: Codable {
+    var link: URL?
+    var flatrate: [Provider]?
+}
+
+struct Provider: Codable {
+    var provider_name: String
 }
 
 // TODO: move to Review.swift file
