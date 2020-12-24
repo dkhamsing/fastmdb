@@ -167,6 +167,7 @@ extension Bundle {
 class CollectionHandler: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     var items: [Item] = []
+    weak var listener: CollectionListener?
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
@@ -193,8 +194,8 @@ class CollectionHandler: NSObject, UICollectionViewDataSource, UICollectionViewD
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("todo")
-//        let item = items[indexPath.row]
+        let item = items[indexPath.row]
+        listener?.doTapItem(item )
     }
 
 }

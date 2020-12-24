@@ -27,7 +27,7 @@ extension ItemSection {
 
         if let people = people {
             let items = people.results.map { $0.listItemPopular }
-            let section = ItemSection(header: "people\(Tmdb.separator)\(kind.title)", items: items)
+            let section = ItemSection(header: "people\(Tmdb.separator)\(kind.title)", items: items, display: .collection)
             sections.append(section)
         }
 
@@ -102,7 +102,8 @@ private extension Credit {
             }
         }
 
-        return Item(id: id, title: name, subtitle: sub.joined(separator: ": "), destination: .person)
+        let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
+        return Item(id: id, title: name, subtitle: sub.joined(separator: ": "), destination: .person, imageUrl: url)
     }
 
 }

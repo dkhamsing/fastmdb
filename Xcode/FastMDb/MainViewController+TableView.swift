@@ -56,6 +56,7 @@ extension MainViewController: UITableViewDataSource {
 
             if let items = section.items {
                 c.handler.items = items
+                c.handler.listener = self
                 c.collection.reloadData()
             }
             
@@ -266,4 +267,19 @@ private extension MainViewController {
 
     }
 
+}
+
+
+
+protocol CollectionListener: class {
+
+    func doTapItem(_ item: Item)
+
+}
+
+
+extension MainViewController: CollectionListener {
+    func doTapItem(_ item: Item) {
+        loadDestination(item)
+    }
 }
