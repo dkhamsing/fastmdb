@@ -71,15 +71,16 @@ extension Credit {
 
         if roles?.count == 1,
            let first = roles?.first {
+            var strings = [first.character ?? ""]
 
-            return [
-                first.character ?? "",
-                "\(first.episode_count ?? 0) episode\((first.episode_count ?? 0).pluralized)"
-            ]
+            if let count = first.episode_count,
+               count > 0 {
+                strings.append("\(count) episode\(count.pluralized)")
+            }
 
+            return strings
         } else if let roles = roles,
                   roles.count > 1 {
-
             let count = roles
                 .map { $0.episode_count ?? 0 }
                 .reduce(0, +)
@@ -97,26 +98,6 @@ extension Credit {
         }
 
         return []
-//
-//        let characters = roles?.compactMap { $0.character }
-//        let count = roles?
-//            .map { $0.episode_count ?? 0 }
-//            .reduce(0, +)
-//
-////        let orderedRoles = roles?.sorted { $0.episode_count ?? 0 > $1.episode_count ?? 0 }
-////        if let role = orderedRoles?.first {
-////            if let character = role.character,
-////               !character.isEmpty {
-////                sub.append(character)
-////            }
-////            if let episodes = role.episode_count {
-////                sub.append("\(episodes) episode\(episodes.pluralized)")
-////            }
-////        }
-//
-//
-//        guard let c = characters else { return [] }
-//        return c
     }
 
     var listItemCast: Item {
