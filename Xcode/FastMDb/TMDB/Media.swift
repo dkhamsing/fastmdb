@@ -79,13 +79,27 @@ extension Media {
 
 
 extension WatchSearch {
+
+    static let providersNotInterested = [
+        "directv",
+        "fubotv",
+        "sling tv",
+        "spectrum on demand",
+        "hbo now amazon channel",
+        "showtime amazon channel",
+        "starz play amazon channel"
+    ]
+
     func watchItems(_ name: String?) -> [Item]? {
         guard let country = results["US"] else { return watchItemsGoogle(name) }
         guard let providers = country.flatrate else { return watchItemsGoogle(name) }
 
         let items: [Item] = providers
+            .filter { !WatchSearch.providersNotInterested.contains($0.provider_name.lowercased()) }
             .sorted { $0.provider_name < $1.provider_name }
             .map { Item(title: $0.provider_name, url: country.link, destination: .url, image: Item.linkImage) }
+
+        guard items.count > 0 else { return watchItemsGoogle(name) }
 
         return items
     }
