@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct ContentRatingSearch: Codable {
+    var results: [ContentRating]
+}
+
 struct MediaSearch: Codable {
 //    var page: Int
 //    var total_pages: Int
@@ -17,6 +21,10 @@ struct MediaSearch: Codable {
 struct PeopleSearch: Codable {
     var total_results: Int
     var results: [Credit]
+}
+
+struct ReleaseSearch: Codable {
+    var results: [ReleaseInfo]
 }
 
 struct ReviewSearch: Codable {
@@ -30,10 +38,6 @@ struct TvSearch: Codable {
 
 struct VideoSearch: Codable {
     var results: [Video]
-}
-
-struct ReleaseSearch: Codable {
-    var results: [ReleaseInfo]
 }
 
 struct WatchSearch: Codable {

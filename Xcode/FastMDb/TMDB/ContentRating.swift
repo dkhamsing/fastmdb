@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: Movie
+
 extension ReleaseSearch {
     func contentRating(_ countryCode: String) -> String? {
         let countries = results.filter { $0.iso_3166_1 == countryCode }
@@ -26,9 +28,7 @@ struct Release: Codable {
     var certification: String
 }
 
-struct ContentRatingSearch: Codable {
-    var results: [ContentRating]
-}
+// MARK: TV
 
 extension ContentRatingSearch {
     func contentRating(_ countryCode: String) -> String? {
