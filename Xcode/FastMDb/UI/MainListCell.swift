@@ -19,9 +19,6 @@ class MainListCell: UITableViewCell {
             if let c = item?.color {
                 backgroundColor = c
             }
-            else {
-                backgroundColor = .white
-            }
         }
     }
 
