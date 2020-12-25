@@ -43,11 +43,26 @@ struct Credit: Codable {
     var popularity: Double?
     var release_date: String?
 
+    var tagged_images: ImageSearch?
+
     // Crew
     var job: String?
 
     // Aggregate Credits
     var roles: [Role]?
+}
+
+struct ImageSearch: Codable {
+    var results: [Media2]
+}
+
+struct Media2: Codable {
+    var media: Media3
+
+}
+
+struct Media3: Codable {
+    var backdrop_path: String?
 }
 
 struct Role: Codable {
@@ -98,6 +113,15 @@ extension Credit {
         }
 
         return []
+    }
+
+    var imageSection: ItemSection? {
+        guard let results = tagged_images?.results else { return nil }
+        let items: [Item] = results.map { item in
+            let url = Tmdb.backdropImageUrl(path: item.media.backdrop_path, size: .medium)
+            return Item(imageUrl: url)
+        }
+        return ItemSection(items: items, display: .collection)
     }
 
     var listItemCast: Item {

@@ -16,6 +16,10 @@ extension ItemSection {
             sections.append(section)
         }
 
+        if let section = credit?.imageSection {
+            sections.append(section)
+        }
+
         if let section = Article.newsSection(articles) {
             sections.append(section)
         }
