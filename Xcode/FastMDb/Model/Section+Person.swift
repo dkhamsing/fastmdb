@@ -126,7 +126,7 @@ private extension Credit {
               sub.append(pob.trimmingCharacters(in: .whitespacesAndNewlines))
           }
 
-          var item = Item(title: birthday.age, subtitle: sub.joined(separator: Tmdb.separator))
+          var item = Item(title: birthday.age, subtitle: sub.joined(separator: "\n"))
 
           if let url = place_of_birth?.mapUrl {
               item.url = url
