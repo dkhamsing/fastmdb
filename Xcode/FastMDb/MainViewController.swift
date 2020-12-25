@@ -303,11 +303,14 @@ private extension MainViewController {
     var header: UIView {
         let headerView = UIView()
 
-        var frame = view.bounds
-        frame.size.height = 300
+        let size = CGSize(width: 150, height: 260)
+        let frame = CGRect.init(origin: .zero, size: size)
         headerView.frame = frame
 
-        imageButton.imageView?.contentMode = .scaleAspectFit
+        imageButton.layer.cornerRadius = 8
+        imageButton.layer.masksToBounds = true
+        imageButton.imageView?.contentMode = .scaleAspectFill
+        imageButton.imageView?.clipsToBounds = true
         imageButton.addTarget(self, action: #selector(imageTap), for: .touchUpInside)
 
         headerView.addSubview(imageButton)
@@ -316,9 +319,9 @@ private extension MainViewController {
         let inset: CGFloat = 20
         NSLayoutConstraint.activate([
             imageButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: inset),
-            imageButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: inset),
+            imageButton.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            imageButton.widthAnchor.constraint(equalToConstant: size.width),
             imageButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -inset),
-            imageButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -inset),
         ])
 
         return headerView
@@ -328,24 +331,7 @@ private extension MainViewController {
         // TODO: show banner instead? looks better on ipad
         guard let image = image else { return }
 
-        let h = header
-        var frame = h.frame
-
-        let ratio: CGFloat = image.size.height / image.size.width
-
-        if ratio > 1 {
-            let fixedHeight: CGFloat = h.frame.height
-            frame.size.width = fixedHeight / ratio
-            frame.size.height = fixedHeight
-        } else {
-            let fixed: CGFloat = h.frame.width
-            frame.size.width = fixed
-            frame.size.height = fixed * ratio
-        }
-
-        h.frame = frame
-
-        tableView.tableHeaderView = h
+        tableView.tableHeaderView = header
 
         imageButton.setImage(image, for: .normal)
 
