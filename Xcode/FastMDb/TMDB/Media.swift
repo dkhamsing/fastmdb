@@ -57,10 +57,12 @@ extension Images {
 
         let items: [Item] = backdrops.map {
             let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .medium)
-            return Item(imageUrl: url)
+            return Item(url: url,
+                        destination: .url,
+                        imageUrl: url)
         }
 
-        return ItemSection(header: "Images", items: items, display: .collection)
+        return ItemSection(items: items, display: .collection)
     }
 }
 
