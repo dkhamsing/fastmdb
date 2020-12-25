@@ -53,15 +53,14 @@ struct Credit: Codable {
 }
 
 struct ImageSearch: Codable {
-    var results: [Media2]
+    var results: [Tagged]
 }
 
-struct Media2: Codable {
-    var media: Media3
-
+struct Tagged: Codable {
+    var media: TaggedImage
 }
 
-struct Media3: Codable {
+struct TaggedImage: Codable {
     var backdrop_path: String?
 }
 
