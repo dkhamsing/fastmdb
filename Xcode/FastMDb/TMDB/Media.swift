@@ -57,9 +57,7 @@ extension Images {
 
         let items: [Item] = backdrops.map {
             let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .medium)
-            return Item(url: url,
-                        destination: .url,
-                        imageUrl: url)
+            return Item.ImageItem(url)
         }
 
         return ItemSection(items: items, display: .collection)

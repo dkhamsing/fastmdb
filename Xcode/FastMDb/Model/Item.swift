@@ -33,6 +33,12 @@ struct Item {
 }
 
 extension Item {
+    static func ImageItem(_ url: URL?) -> Item {
+        return Item(url: url,
+                    destination: .url,
+                    imageUrl: url)
+    }
+
     static var linkImage: UIImage? {
         return UIImage(systemName: "link.circle.fill")
     }
