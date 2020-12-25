@@ -23,6 +23,10 @@ extension Media {
             list.append(section)
         }
 
+        if let section = backdropsSection {
+            list.append(section)
+        }
+
         if let section = ratingSection {
             list.append(section)
         }

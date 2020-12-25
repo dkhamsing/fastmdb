@@ -41,8 +41,18 @@ struct Media: Codable {
     var videos: VideoSearch?
     var watch: WatchSearch?
 
+    var images: Images?
+
     // TV
     var original_name: String?
+}
+
+struct Images: Codable {
+    var backdrops: [TmdbImage]
+}
+
+struct TmdbImage: Codable {
+    var file_path: String
 }
 
 extension Media {
@@ -60,6 +70,7 @@ extension Media {
              external_ids,
              genres,
              homepage,
+             images,
              original_language,
              overview,
              production_companies,
@@ -76,7 +87,6 @@ extension Media {
              videos
     }
 }
-
 
 extension WatchSearch {
 
@@ -129,6 +139,17 @@ struct Provider: Codable {
 }
 
 extension Media {
+
+    var backdropsSection: ItemSection? {
+        guard let backdrops = images?.backdrops else { return nil }
+
+        let items: [Item] = backdrops.map {
+            let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .medium)
+            return Item(imageUrl: url)
+        }
+
+        return ItemSection(header: "Images", items: items, display: .collection)
+    }
 
     var listItemSub: [String] {
         var sub: [String] = []

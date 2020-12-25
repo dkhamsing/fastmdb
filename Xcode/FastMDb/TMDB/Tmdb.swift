@@ -120,7 +120,7 @@ struct Tmdb {
         return urlComponents.url
     }
 
-    static func movieURL(movieId: Int?, append: String = "credits,videos,external_ids,recommendations,similar,reviews,release_dates,watch/providers") -> URL? {
+    static func movieURL(movieId: Int?, append: String = "credits,videos,external_ids,recommendations,similar,reviews,release_dates,watch/providers,images") -> URL? {
         guard let movieId = movieId else { return nil }
 
         var urlComponents = baseComponents
@@ -174,6 +174,14 @@ struct Tmdb {
 
 extension Tmdb {
 
+    static func backdropImageUrl(path: String?, size: BackdropSize) -> URL? {
+        guard
+            let path = path,
+            let url = URL(string: "\(Constant.imageBaseUrl)\(size.rawValue)\(path)") else { return nil }
+
+        return url
+    }
+
     static func stillImageUrl(path: String?, size: StillSize) -> URL? {
         guard
             let path = path,
@@ -219,6 +227,13 @@ enum StillSize: String {
     case small = "w92"
     case medium = "w185"
     case large = "w300"
+    case original = "original"
+}
+
+enum BackdropSize: String {
+    case small = "w300"
+    case medium = "w780"
+    case large = "w1280"
     case original = "original"
 }
 
