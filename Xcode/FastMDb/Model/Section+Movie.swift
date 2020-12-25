@@ -23,7 +23,7 @@ extension Media {
             list.append(section)
         }
 
-        if let section = backdropsSection {
+        if let section = images?.backdropsSection {
             list.append(section)
         }
 

@@ -51,6 +51,19 @@ struct Images: Codable {
     var backdrops: [TmdbImage]
 }
 
+extension Images {
+    var backdropsSection: ItemSection? {
+        guard backdrops.count > 0 else { return nil }
+
+        let items: [Item] = backdrops.map {
+            let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .medium)
+            return Item(imageUrl: url)
+        }
+
+        return ItemSection(header: "Images", items: items, display: .collection)
+    }
+}
+
 struct TmdbImage: Codable {
     var file_path: String
 }
@@ -140,16 +153,7 @@ struct Provider: Codable {
 
 extension Media {
 
-    var backdropsSection: ItemSection? {
-        guard let backdrops = images?.backdrops else { return nil }
 
-        let items: [Item] = backdrops.map {
-            let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .medium)
-            return Item(imageUrl: url)
-        }
-
-        return ItemSection(header: "Images", items: items, display: .collection)
-    }
 
     var listItemSub: [String] {
         var sub: [String] = []

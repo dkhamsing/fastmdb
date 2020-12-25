@@ -53,6 +53,8 @@ struct TV: Codable {
     var videos: VideoSearch?
 
     var watch: WatchSearch?
+
+    var images: Images?
 }
 
 extension TV {
@@ -72,6 +74,7 @@ extension TV {
              episode_run_time,
              genres,
              homepage,
+             images,
              origin_country,
              original_language,
              overview,

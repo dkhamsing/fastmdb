@@ -24,6 +24,10 @@ extension TV {
             list.append(section)
         }
 
+        if let section = images?.backdropsSection {
+            list.append(section)
+        }
+
         if let section = watchSection {
             list.append(section)
         }
