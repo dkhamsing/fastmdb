@@ -29,12 +29,24 @@ class MainListCollectionCell: UITableViewCell {
 private extension MainListCollectionCell {
     func setup() {
         collection = UICollectionView(frame: bounds, direction: .horizontal, identifiers: [ImageCollectionViewCell.identifier])
-        collection.backgroundColor = .secondarySystemBackground
+        collection.backgroundColor = .background
         collection.dataSource = handler
         collection.delegate = handler
         collection.showsHorizontalScrollIndicator = false
         collection.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         contentView.addSubview(collection)
+    }
+}
+
+private extension UIColor {
+    static var background: UIColor {
+        return UIColor { (traitCollection: UITraitCollection) -> UIColor in
+            if traitCollection.userInterfaceStyle == .dark {
+                return .black
+            } else {
+                return .secondarySystemBackground
+            }
+        }
     }
 }
