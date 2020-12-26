@@ -329,17 +329,11 @@ private extension Media {
 private extension Credits {
 
     func castSection(limit: Int) -> ItemSection? {
-        let c = Array(cast.prefix(limit))
-        guard c.count > 0 else { return nil }
+        guard cast.count > 0 else { return nil }
 
-        let items = c.map { $0.listItemCast }
+        let items = cast.map { $0.listItemCast }
 
-        var castTotal: String?
-        if cast.count > limit {
-            castTotal = String.allCreditsText(cast.count)
-        }
-
-        return ItemSection(header: "starring", items: items, footer: castTotal, destination: .items, destinationItems: cast.map { $0.listItemCast }, destinationTitle: "Cast", display: .collection)
+        return ItemSection(header: "starring", items: items, destination: .items, destinationTitle: "Cast", display: .collection)
     }
 
     func creditsSection(limit: Int) -> ItemSection? {
