@@ -128,10 +128,7 @@ extension WatchSearch {
         "directv",
         "fubotv",
         "sling tv",
-        "spectrum on demand",
-        "hbo now amazon channel",
-        "showtime amazon channel",
-        "starz play amazon channel"
+        "spectrum on demand"
     ]
 
     func watchItems(_ name: String?) -> [Item]? {
@@ -142,6 +139,7 @@ extension WatchSearch {
             .map { $0.provider_name }
             .unique
             .filter { !WatchSearch.providersNotInterested.contains($0.lowercased()) }
+            .filter { !$0.lowercased().contains("amazon channel") }
             .sorted { $0 < $1 }
             .map { Item(title: $0, url: country.link, destination: .url, image: Item.linkImage) }
 
