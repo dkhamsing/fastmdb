@@ -69,7 +69,8 @@ extension Images {
     }
 
     var profilesSection: ItemSection? {
-        guard let profiles = profiles else { return nil }
+        guard let profiles = profiles,
+              profiles.count > 1 else { return nil }
 
         let items: [Item] = profiles.map {
             let url = Tmdb.castProfileUrl(path: $0.file_path, size: .large)
