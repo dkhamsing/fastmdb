@@ -20,15 +20,15 @@ extension ItemSection {
             sections.append(section)
         }
 
-        if let section = credit?.taggedImageSection {
-            sections.append(section)
-        }
-
         if let section = Article.newsSection(articles) {
             sections.append(section)
         }
 
         if let section = credit?.bioSection {
+            sections.append(section)
+        }
+
+        if let section = credit?.taggedImageSection {
             sections.append(section)
         }
 
