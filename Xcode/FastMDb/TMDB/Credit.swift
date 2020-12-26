@@ -53,12 +53,12 @@ struct Credit: Codable {
     var roles: [Role]?
 }
 
-struct Tagged: Codable {
+struct TaggedMedia: Codable {
     var media: Media
     var media_type: String
 }
 
-extension Tagged {
+extension TaggedMedia {
     var destination: Destination? {
         switch media_type {
         case "movie":

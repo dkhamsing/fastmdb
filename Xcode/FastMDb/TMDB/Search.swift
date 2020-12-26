@@ -12,7 +12,7 @@ struct ContentRatingSearch: Codable {
 }
 
 struct ImageSearch: Codable {
-    var results: [Tagged]
+    var results: [TaggedMedia]
 }
 
 struct MediaSearch: Codable {
