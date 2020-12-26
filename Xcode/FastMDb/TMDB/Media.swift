@@ -77,7 +77,7 @@ extension Images {
             return Item.ImageItem(url: url, imageUrl: imageUrl)
         }
 
-        return ItemSection(items: items, display: .collection)
+        return ItemSection(items: items.suffix(items.count-1), display: .collection)
     }
 }
 
