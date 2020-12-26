@@ -53,9 +53,10 @@ struct Images: Codable {
 
 extension Images {
     var backdropsSection: ItemSection? {
-        guard backdrops.count > 0 else { return nil }
+        let filtered = backdrops.filter { ($0.iso_639_1 ?? "" == "") || ($0.iso_639_1 ?? "" == "en") }
+        guard filtered.count > 0 else { return nil }
 
-        let items: [Item] = backdrops.map {
+        let items: [Item] = filtered.map {
             let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .medium)
             return Item.ImageItem(url)
         }
@@ -66,6 +67,7 @@ extension Images {
 
 struct TmdbImage: Codable {
     var file_path: String
+    var iso_639_1: String?
 }
 
 extension Media {
