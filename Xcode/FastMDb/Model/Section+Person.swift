@@ -16,7 +16,11 @@ extension ItemSection {
             sections.append(section)
         }
 
-        if let section = credit?.imageSection {
+        if let section = credit?.images?.profilesSection {
+            sections.append(section)
+        }
+
+        if let section = credit?.taggedImageSection {
             sections.append(section)
         }
 

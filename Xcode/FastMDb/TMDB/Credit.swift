@@ -43,6 +43,7 @@ struct Credit: Codable {
     var popularity: Double?
     var release_date: String?
 
+    var images: Images?
     var tagged_images: ImageSearch?
 
     // Crew
@@ -110,7 +111,7 @@ extension Credit {
         return []
     }
 
-    var imageSection: ItemSection? {
+    var taggedImageSection: ItemSection? {
         guard let results = tagged_images?.results,
               results.count > 0 else { return nil }
         let backdrops = results
