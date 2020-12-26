@@ -11,6 +11,10 @@ struct ContentRatingSearch: Codable {
     var results: [ContentRating]
 }
 
+struct ImageSearch: Codable {
+    var results: [Tagged]
+}
+
 struct MediaSearch: Codable {
 //    var page: Int
 //    var total_pages: Int

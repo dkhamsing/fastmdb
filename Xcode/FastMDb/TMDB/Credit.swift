@@ -52,10 +52,6 @@ struct Credit: Codable {
     var roles: [Role]?
 }
 
-struct ImageSearch: Codable {
-    var results: [Tagged]
-}
-
 struct Tagged: Codable {
     var media: TaggedImage
 }
