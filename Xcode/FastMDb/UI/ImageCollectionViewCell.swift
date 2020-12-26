@@ -15,6 +15,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
 
     var imageView = UIImageView()
     var label = UILabel()
+    var label2 = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,6 +35,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
 
     func load(_ item: Item) {
         label.text = item.title
+        label2.text = item.subtitle
 
         let size = ImageCollectionViewCell.size
         imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
@@ -48,9 +50,12 @@ class ImageCollectionViewCell: UICollectionViewCell {
 
         label.font = .preferredFont(forTextStyle: .caption1)
         label.textAlignment = .center
-        label.textColor = .secondaryLabel
 
-        [imageView, label].forEach {
+        label2.font = .preferredFont(forTextStyle: .caption1)
+        label2.textAlignment = .center
+        label2.textColor = .secondaryLabel
+
+        [imageView, label, label2].forEach {
             contentView.addSubviewForAutoLayout($0)
         }
 
@@ -62,7 +67,11 @@ class ImageCollectionViewCell: UICollectionViewCell {
             label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 2),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+
+            label2.topAnchor.constraint(equalTo: label.bottomAnchor),
+            label2.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            label2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            label2.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
 

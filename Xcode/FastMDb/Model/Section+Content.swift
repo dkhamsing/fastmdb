@@ -88,22 +88,8 @@ private extension ItemSection {
 private extension Credit {
 
     var listItemPopular: Item {
-        var sub: [String] = []
-
-        if
-            let known = known_for,
-            known.count > 0 {
-            let movies = Array(known.prefix(3))
-                .map { $0.titleDisplay ?? "" }
-                .filter { $0.isEmpty == false }
-
-            if movies.count > 0 {
-                sub.append(movies.joined(separator: ", "))
-            }
-        }
-
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: name, subtitle: sub.joined(separator: ": "), destination: .person, imageUrl: url)
+        return Item(id: id, title: name, destination: .person, imageUrl: url)
     }
 
 }
