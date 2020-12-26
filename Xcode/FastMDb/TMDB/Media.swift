@@ -53,24 +53,25 @@ struct Images: Codable {
 }
 
 extension Images {
-    var profilesSection: ItemSection? {
-        guard let profiles = profiles else { return nil }
+    var backdropsSection: ItemSection? {
+        guard let backdrops = backdrops else { return nil }
 
-        let items: [Item] = profiles.map {
-            let url = Tmdb.castProfileUrl(path: $0.file_path, size: .medium)
+        let filtered = backdrops.filter { ($0.iso_639_1 ?? "" == "") || ($0.iso_639_1 ?? "" == "en") }
+        guard filtered.count > 0 else { return nil }
+
+        let items: [Item] = filtered.map {
+            let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .medium)
             return Item.ImageItem(url)
         }
 
         return ItemSection(items: items, display: .collection)
     }
 
-    var backdropsSection: ItemSection? {
-        guard let backdrops = backdrops else { return nil }
-        let filtered = backdrops.filter { ($0.iso_639_1 ?? "" == "") || ($0.iso_639_1 ?? "" == "en") }
-        guard filtered.count > 0 else { return nil }
+    var profilesSection: ItemSection? {
+        guard let profiles = profiles else { return nil }
 
-        let items: [Item] = filtered.map {
-            let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .medium)
+        let items: [Item] = profiles.map {
+            let url = Tmdb.castProfileUrl(path: $0.file_path, size: .medium)
             return Item.ImageItem(url)
         }
 
