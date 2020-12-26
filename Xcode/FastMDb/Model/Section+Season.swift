@@ -25,24 +25,16 @@ extension ItemSection {
             sections.append(section)
         }
 
-        let limit = 5
-
         if
             let cast = season?.credits?.cast,
             cast.count > 0 {
-
             let items = cast.map { $0.listItemCast }
-            let topItems = Array(items.prefix(limit))
-            var section = ItemSection(header: "cast", items: topItems)
-
-            if cast.count > limit {
-                section.footer = String.allCreditsText(cast.count)
-                section.destinationItems = cast.map { $0.listItemCast }
-                section.destination = .items
-            }
+            let section = ItemSection(header: "cast", items: items, display: .collection)
 
             sections.append(section)
         }
+
+        let limit = 5
 
         if
             let crew = season?.credits?.crew,

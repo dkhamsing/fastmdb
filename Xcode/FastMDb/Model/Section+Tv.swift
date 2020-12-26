@@ -88,8 +88,7 @@ private extension TV {
             let cast = aggregate_credits?.cast,
             cast.count > 0 else { return nil }
 
-        let prefix = cast.map { $0.listItemCastAggregated }.prefix(15)
-        let items = Array(prefix)
+        let items = cast.map { $0.listItemCastAggregated }
 
         return ItemSection(header: "cast", items: items, display: .collection)
     }

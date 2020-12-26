@@ -74,7 +74,7 @@ private extension Episode {
 
         guard items.count > 0 else { return nil }
 
-        let section = ItemSection(header: "Guest Stars", items: items)
+        let section = ItemSection(header: "Guest Stars", items: items, display: .collection)
 
         return section
     }
