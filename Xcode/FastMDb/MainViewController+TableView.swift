@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import SafariServices
 
 extension MainViewController: UITableViewDataSource {
 
@@ -200,6 +201,11 @@ private extension MainViewController {
             controller.title = item.title
             controller.productionId = item.id
             navigationController?.pushViewController(controller, animated: true)
+        case .safarivc:
+            guard let url = item.url else { return }
+            let sfvc = SFSafariViewController(url: url)
+            sfvc.modalPresentationStyle = .formSheet
+            present(sfvc, animated: true, completion: nil)
         case .season:
             let controller = MainViewController()
             controller.title = item.title

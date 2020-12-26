@@ -118,8 +118,9 @@ extension Credit {
             .map { $0.media.backdrop_path }
             .unique
         let items: [Item] = backdrops.map { item in
+            let url1 = Tmdb.backdropImageUrl(path: item, size: .original)
             let url = Tmdb.backdropImageUrl(path: item, size: .medium)
-            return Item.ImageItem(url)
+            return Item.ImageItem(url: url1, imageUrl: url)
         }
         return ItemSection(items: items, display: .collection)
     }

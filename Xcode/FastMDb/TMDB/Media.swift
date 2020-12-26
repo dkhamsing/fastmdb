@@ -60,8 +60,9 @@ extension Images {
         guard filtered.count > 0 else { return nil }
 
         let items: [Item] = filtered.map {
+            let url1 = Tmdb.backdropImageUrl(path: $0.file_path, size: .original)
             let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .medium)
-            return Item.ImageItem(url)
+            return Item.ImageItem(url: url1, imageUrl: url)
         }
 
         return ItemSection(items: items, display: .collection)
@@ -71,8 +72,9 @@ extension Images {
         guard let profiles = profiles else { return nil }
 
         let items: [Item] = profiles.map {
+            let url1 = Tmdb.castProfileUrl(path: $0.file_path, size: .large)
             let url = Tmdb.castProfileUrl(path: $0.file_path, size: .medium)
-            return Item.ImageItem(url)
+            return Item.ImageItem(url: url1, imageUrl: url)
         }
 
         return ItemSection(items: items, display: .collection)

@@ -33,10 +33,12 @@ struct Item {
 }
 
 extension Item {
-    static func ImageItem(_ url: URL?) -> Item {
+    static func ImageItem(
+        url: URL?,
+        imageUrl: URL?) -> Item {
         return Item(url: url,
-                    destination: .url,
-                    imageUrl: url)
+                    destination: .safarivc,
+                    imageUrl: imageUrl)
     }
 
     static var linkImage: UIImage? {

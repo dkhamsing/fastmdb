@@ -21,6 +21,7 @@ enum Destination {
     person,
     network,
     production,
+    safarivc,
     sections,
     season,
     tv,
