@@ -54,11 +54,22 @@ struct Credit: Codable {
 }
 
 struct Tagged: Codable {
-    var media: TaggedImage
+    var media: Media
+    var media_type: String
 }
 
-struct TaggedImage: Codable {
-    var backdrop_path: String?
+extension Tagged {
+    var destination: Destination? {
+        switch media_type {
+        case "movie":
+            return .movie
+        case "tv":
+            return .tv
+        default:
+            print("not implemented yet for \(media_type)")
+            return nil
+        }
+    }
 }
 
 struct Role: Codable {
@@ -114,15 +125,24 @@ extension Credit {
     var taggedImageSection: ItemSection? {
         guard let results = tagged_images?.results,
               results.count > 0 else { return nil }
-        let backdrops = results
-            .map { $0.media.backdrop_path }
-            .unique
-        let items: [Item] = backdrops.map { item in
-            let url = Tmdb.backdropImageUrl(path: item, size: .original)
-            let imageUrl = Tmdb.backdropImageUrl(path: item, size: .medium)
-            return Item.ImageItem(url: url, imageUrl: imageUrl)
+
+        let items: [Item] = results.map { item in
+            let imageUrl = Tmdb.backdropImageUrl(path: item.media.backdrop_path, size: .medium)
+            return Item(
+                id: item.media.id,
+                title: item.media.titleDisplay,
+                destination: item.destination,
+                imageUrl:imageUrl)
         }
-        return ItemSection(items: items, display: .collection)
+
+        var unique: [Item] = []
+        for item in items {
+            if !unique.contains(item) {
+                unique.append(item)
+            }
+        }
+
+        return ItemSection(items: unique, display: .collection)
     }
 
     var listItemCast: Item {

@@ -20,6 +20,7 @@ struct Media: Codable {
     var vote_average: Double
     var vote_count: Int
 
+    var backdrop_path: String?
     var belongs_to_collection: MediaCollection?
     var credits: Credits?
     var external_ids: ExternalIds?
@@ -93,6 +94,7 @@ extension Media {
         case id,
              title,
              original_title,
+             backdrop_path,
              budget, revenue,
              vote_average,
              vote_count,

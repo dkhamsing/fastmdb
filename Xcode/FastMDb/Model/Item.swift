@@ -32,6 +32,12 @@ struct Item {
     var imageUrl: URL?
 }
 
+extension Item: Equatable {
+    static func == (lhs: Item, rhs: Item) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 extension Item {
     static func ImageItem(
         url: URL?,
