@@ -115,7 +115,8 @@ extension Credit {
     }
 
     var imageSection: ItemSection? {
-        guard let results = tagged_images?.results else { return nil }
+        guard let results = tagged_images?.results,
+              results.count > 0 else { return nil }
         let items: [Item] = results.map { item in
             let url = Tmdb.backdropImageUrl(path: item.media.backdrop_path, size: .medium)
             return Item.ImageItem(url)
