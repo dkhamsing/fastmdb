@@ -16,6 +16,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
     var imageView = UIImageView()
     var label = UILabel()
     var label2 = UILabel()
+    var initials = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,7 +39,22 @@ class ImageCollectionViewCell: UICollectionViewCell {
         label2.text = item.subtitle
 
         let size = ImageCollectionViewCell.size
-        imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
+        imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared) {
+            self.initials.isHidden = self.imageView.image != nil
+        }
+
+        guard let name = item.title?.split(separator: " "),
+              let first = name.first
+              else { return }
+
+        initials.text = String(first.prefix(1))
+
+        if name.indices.contains(1) {
+            let last = name[1]
+            if let text = initials.text {
+                initials.text = text + String(last.prefix(1))
+            }
+        }
     }
 
     func setup() {
@@ -55,7 +71,11 @@ class ImageCollectionViewCell: UICollectionViewCell {
         label2.textAlignment = .center
         label2.textColor = .secondaryLabel
 
-        [imageView, label, label2].forEach {
+        initials.font = .preferredFont(forTextStyle: .largeTitle)
+        initials.textAlignment = .center
+        initials.textColor = .systemGray
+
+        [imageView, initials, label, label2].forEach {
             contentView.addSubviewForAutoLayout($0)
         }
 
@@ -63,6 +83,9 @@ class ImageCollectionViewCell: UICollectionViewCell {
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+
+            initials.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+            initials.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
 
             label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 2),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
