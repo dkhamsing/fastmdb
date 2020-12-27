@@ -93,7 +93,12 @@ extension Credit {
 
         if roles?.count == 1,
            let first = roles?.first {
-            var strings = [first.character ?? ""]
+            var strings: [String] = []
+
+            let name = first.character ?? ""
+            if !name.isEmpty {
+                strings.append(name)
+            }
 
             if let count = first.episode_count,
                count > 0 {
