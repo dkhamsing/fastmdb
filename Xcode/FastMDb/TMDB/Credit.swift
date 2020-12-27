@@ -126,12 +126,16 @@ extension Credit {
         guard let results = tagged_images?.results,
               results.count > 0 else { return nil }
 
-        let items: [Item] = results.map { item in
+        let items: [Item] = results
+            .filter { $0.media.backdrop_path ?? "" != "" }
+            .map { item in
+            let url = Tmdb.backdropImageUrl(path: item.media.backdrop_path, size: .original)
             let imageUrl = Tmdb.backdropImageUrl(path: item.media.backdrop_path, size: .medium)
             return Item(
                 id: item.media.id,
                 title: item.media.titleDisplay,
-                destination: item.destination,
+                url: url,
+                destination: .safarivc,
                 imageUrl:imageUrl)
         }
 
