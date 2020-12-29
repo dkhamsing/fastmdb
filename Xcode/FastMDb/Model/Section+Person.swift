@@ -75,8 +75,8 @@ private extension Credit {
             sections.append(contentsOf: s)
         }
 
-        if let section = tvCastSection(limit: limit) {
-            sections.append(section)
+        if let section = tvCastSection(limit: 5) {
+            sections.append(contentsOf: section)
         }
 
         let crewSections = movieCrewSections(limit: limit)
@@ -108,8 +108,8 @@ private extension Credit {
             sections.append(contentsOf: s)
         }
 
-        if let section = tvCastSection(limit: limit) {
-            sections.append(section)
+        if let section = tvCastSection(limit: 5) {
+            sections.append(contentsOf: section)
         }
 
         return sections
@@ -458,14 +458,49 @@ private extension Credit {
         return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tv, color: ratingColor)
     }
 
-    func tvCastSection(limit: Int) -> ItemSection? {
+    var tvCastSectionLatest: ItemSection? {
         guard
             let c = tv_credits ,
             c.cast.count > 0 else { return nil }
 
+        let limit = 5
+
         let items = c.cast
+            .sorted { $0.first_air_date ?? "" > $1.first_air_date ?? "" }
+            .map { $0.listItemTv }
+            .prefix(limit)
+
+        guard items.count > 0 else { return nil }
+
+        let prefix = Array(items)
+        let section = ItemSection(header: "tv\(Tmdb.separator)latest", items: prefix)
+
+        return section
+    }
+
+    func tvCastSection(limit: Int) -> [ItemSection]? {
+        var sections: [ItemSection] = []
+
+        if let section = tvCastSectionLatest {
+            sections.append(section)
+        }
+
+        guard
+            let c = tv_credits ,
+            c.cast.count > 0 else { return nil }
+
+        let temp = c.cast
             .sorted { $0.episode_count ?? 0 > $1.episode_count ?? 0 }
             .map { $0.listItemTv }
+
+        var items: [Item] = []
+        for item in temp {
+            if let section = tvCastSectionLatest,
+               let sectionItems = section.items,
+               !sectionItems.contains(item) {
+                items.append(item)
+            }
+        }
 
         guard items.count > 0 else { return nil }
         var total: String?
@@ -475,7 +510,11 @@ private extension Credit {
 
         let prefix = Array(items.prefix(limit))
 
-        return ItemSection(header: "tv", items: prefix, footer: total, destination: .items, destinationItems: c.cast.map { $0.listItemTv }, destinationTitle: "TV")
+        let section = ItemSection(header: "tv\(Tmdb.separator)more", items: prefix, footer: total, destination: .items, destinationItems: c.cast.map { $0.listItemTv }, destinationTitle: "TV")
+
+        sections.append(section)
+
+        return sections
     }
 
     func TvCrewSections(limit: Int) -> [ItemSection]? {
