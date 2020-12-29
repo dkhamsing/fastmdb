@@ -175,6 +175,10 @@ extension Credit {
     }
 
     var listItemTv: Item {
+        return listItemTv()
+    }
+
+    func listItemTv(isImage: Bool = false) -> Item {
         var sub: [String] = []
 
         if first_air_date.yearDisplay != "" {
@@ -197,7 +201,12 @@ extension Credit {
             sub.append(epString)
         }
 
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tv, color: ratingColor)
+        var imageUrl: URL?
+        if isImage {
+            imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        }
+
+        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tv, color: ratingColor, imageUrl: imageUrl)
     }
 
     var ratingColor: UIColor? {

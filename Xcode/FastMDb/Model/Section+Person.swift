@@ -205,7 +205,7 @@ private extension Credit {
             count > magic,
             let known = known_for_department else { return nil }
 
-        let limit = 2
+        let limit = 5
         var items: [Item]?
         switch known {
         case "Directing":
@@ -228,7 +228,7 @@ private extension Credit {
             let i = items,
             i.count > 0 else { return nil }
 
-        return ItemSection(header: "known for", items: i)
+        return ItemSection(header: "known for", items: i, display: .collection)
     }
 
     var linksSection: ItemSection? {
@@ -445,8 +445,11 @@ private extension Credit {
         return sections
     }
 
-    // TODO: is this being repeated somewhere?
     var tvCrewItem: Item {
+        return tvCrewItem()
+    }
+
+    func tvCrewItem(isImage: Bool = false) -> Item {
         var sub: [String] = []
         if first_air_date.yearDisplay != "" {
             sub.append(first_air_date.yearDisplay)
@@ -454,8 +457,11 @@ private extension Credit {
         if let job = job {
             sub.append(job)
         }
-
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tv, color: ratingColor)
+        var imageUrl: URL?
+        if isImage {
+            imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        }
+        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tv, color: ratingColor, imageUrl: imageUrl)
     }
 
     var tvCastSectionLatest: ItemSection? {
@@ -598,7 +604,7 @@ private extension Credits {
                 .filter { $0.ratingColor != nil }
                 .filter { $0.vote_average ?? 0 > 6 }
                 .prefix(limit)
-            items = Array(movies).map { $0.movieCastItem }
+            items = Array(movies).map { $0.movieCastImageItem }
         }
 
         if let tv = tv_credits?.cast {
@@ -608,7 +614,7 @@ private extension Credits {
                 .sorted{ $0.episode_count ?? 0 > $1.episode_count ?? 0 }
                 .prefix(limit)
 
-            let tvItems: [Item] = Array(sorted).map { $0.listItemTv }
+            let tvItems: [Item] = Array(sorted).map { $0.listItemTv(isImage: true) }
             items.append(contentsOf: tvItems)
         }
 
@@ -619,19 +625,19 @@ private extension Credits {
         var items: [Item] = []
 
         if let media = movie_credits?.crew.prefix(limit) {
-            items = Array(media).map { $0.movieCrewItem }
+            items = Array(media).map { $0.movieCrewItem(isImage: true) }
         }
 
         if let media = tv_credits?.crew {
             let collapsedCredits = Credit.collapsedCredits(media).prefix(limit)
-            items.append(contentsOf: Array(collapsedCredits).map { $0.tvCrewItem })
+            items.append(contentsOf: Array(collapsedCredits).map { $0.tvCrewItem(isImage: true) })
         }
 
         return items
     }
 
     var topDirectingCredits: [Credit] {
-        let limit = 2
+        let limit = 5
 
         let directors = crew
             .sorted  { $0.popularity ?? 0 > $1.popularity ?? 0}
@@ -641,17 +647,17 @@ private extension Credits {
     }
 
     var movieDirectingItems: [Item] {
-        let items = topDirectingCredits.map { $0.movieCrewItem }
+        let items = topDirectingCredits.map { $0.movieCrewItem(isImage: true) }
         return items
     }
 
     var tvDirectingItems: [Item] {
-        let items = topDirectingCredits.map { $0.tvCrewItem }
+        let items = topDirectingCredits.map { $0.tvCrewItem(isImage: true) }
         return items
     }
 
     var topWritingCredits: [Credit] {
-        let limit = 2
+        let limit = 5
 
         let writers = crew
             .sorted  { $0.popularity ?? 0 > $1.popularity ?? 0 }
@@ -661,12 +667,12 @@ private extension Credits {
     }
 
     var movieWritingItems: [Item] {
-        let items = topWritingCredits.map { $0.movieCrewItem }
+        let items = topWritingCredits.map { $0.movieCrewItem(isImage: true) }
         return items
     }
 
     var tvWritingItems: [Item] {
-        let items: [Item] = topWritingCredits.map { $0.tvCrewItem }
+        let items: [Item] = topWritingCredits.map { $0.tvCrewItem(isImage: true) }
         return items
     }
 
@@ -693,6 +699,11 @@ private extension Credit {
         return Item(id: id, title: titleDisplay, subtitle: movieCastSubtitle, destination: .movie, color: ratingColor)
     }
 
+    var movieCastImageItem: Item {
+        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        return Item(id: id, title: titleDisplay, subtitle: movieCastSubtitle, destination: .movie, color: ratingColor, imageUrl: imageUrl)
+    }
+
     var movieCastSubtitle: String {
         var sub: [String] = []
 
@@ -710,6 +721,10 @@ private extension Credit {
     }
 
     var movieCrewItem: Item {
+        return movieCrewItem()
+    }
+
+    func movieCrewItem(isImage: Bool = false) -> Item {
         var sub: [String] = []
         if let year = releaseYear {
             sub.append(year)
@@ -717,7 +732,11 @@ private extension Credit {
         if let j = job {
             sub.append(j)
         }
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .movie, color: ratingColor)
+        var imageUrl: URL?
+        if isImage {
+            imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        }
+        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .movie, color: ratingColor, imageUrl: imageUrl)
     }
 
 }
