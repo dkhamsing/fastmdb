@@ -75,7 +75,7 @@ private extension Credit {
             sections.append(contentsOf: s)
         }
 
-        if let section = tvCastSection(limit: 5) {
+        if let section = tvCastSections(limit: 5) {
             sections.append(contentsOf: section)
         }
 
@@ -108,7 +108,7 @@ private extension Credit {
             sections.append(contentsOf: s)
         }
 
-        if let section = tvCastSection(limit: 5) {
+        if let section = tvCastSections(limit: 5) {
             sections.append(contentsOf: section)
         }
 
@@ -478,16 +478,16 @@ private extension Credit {
         return section
     }
 
-    func tvCastSection(limit: Int) -> [ItemSection]? {
+    func tvCastSections(limit: Int) -> [ItemSection]? {
+        guard
+            let c = tv_credits ,
+            c.cast.count > 0 else { return nil }
+
         var sections: [ItemSection] = []
 
         if let section = tvCastSectionLatest {
             sections.append(section)
         }
-
-        guard
-            let c = tv_credits ,
-            c.cast.count > 0 else { return nil }
 
         let temp = c.cast
             .sorted { $0.episode_count ?? 0 > $1.episode_count ?? 0 }
