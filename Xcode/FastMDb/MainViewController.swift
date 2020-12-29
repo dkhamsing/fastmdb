@@ -350,9 +350,18 @@ private extension MainViewController {
         provider.get(collectionId) { (movies, image) in
             guard let movies = movies else { return }
 
+            var sections: [ItemSection] = []
+
+            if let imageSection = image?.backdropsSection {
+                sections.append(imageSection)
+            }
+
             let items = movies.map { $0.listItemCollection }
-            let sections = [ ItemSection(items: items) ]
-            let u = Updater(image: image, dataSource: sections)
+            sections.append(
+                ItemSection(items: items)
+            )
+
+            let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
     }

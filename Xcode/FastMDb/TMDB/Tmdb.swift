@@ -25,6 +25,9 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.collection)/\(collectionId)"
 
+        let appendQueryItem = URLQueryItem(name: "append_to_response", value: "images")
+        urlComponents.queryItems = [ Tmdb.keyQueryItem, appendQueryItem ]
+
         return urlComponents.url
     }
 

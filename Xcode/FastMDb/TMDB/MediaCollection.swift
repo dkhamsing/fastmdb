@@ -10,9 +10,8 @@ import Foundation
 struct MediaCollection: Codable {
     var id: Int
 
-    var backdrop_path: String?
     var name: String
     var overview: String?
     var parts: [Media]?
-//    var poster_path: String?
+    var images: Images?
 }

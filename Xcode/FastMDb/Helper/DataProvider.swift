@@ -57,18 +57,16 @@ private extension DataProvider {
 
 final class CollectionDataProvider: DataProvider {
 
-    func get(_ collectionId: Int?, completion: @escaping ([Media]?, UIImage?) -> Void) {
+    func get(_ collectionId: Int?, completion: @escaping ([Media]?, Images?) -> Void) {
         var movies: [Media] = []
-        var image: UIImage?
+        var images: Images?
 
         fetchItem(url: Tmdb.collectionURL(collectionId: collectionId)) { (item: MediaCollection?) in
             guard
                 let collection = item,
                 let list = item?.parts else { return }
 
-            self.fetchImage(url: Tmdb.mediaPosterUrl(path: collection.backdrop_path, size: .large)) { i in
-                image = i
-            }
+            images = collection.images
 
             let movieIds = list.map { $0.id }
             for id in movieIds {
@@ -83,7 +81,7 @@ final class CollectionDataProvider: DataProvider {
 
         group.notify(queue: .main) {
             let sorted = movies.sorted { $0.release_date ?? "" > $1.release_date ?? "" }
-            completion(sorted,image)
+            completion(sorted, images)
         }
     }
 
