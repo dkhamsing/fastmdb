@@ -89,7 +89,7 @@ extension Images {
 
         let items: [Item] = stills.map {
             let url = Tmdb.stillImageUrl(path: $0.file_path, size: .original)
-            let imageUrl = Tmdb.stillImageUrl(path: $0.file_path, size: .large)
+            let imageUrl = Tmdb.stillImageUrl(path: $0.file_path, size: .original)
             return Item.ImageItem(url: url, imageUrl: imageUrl)
         }
 
