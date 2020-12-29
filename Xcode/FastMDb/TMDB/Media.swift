@@ -51,6 +51,7 @@ struct Media: Codable {
 struct Images: Codable {
     var backdrops: [TmdbImage]?
     var profiles: [TmdbImage]?
+    var stills: [TmdbImage]?
 }
 
 extension Images {
@@ -80,6 +81,19 @@ extension Images {
         }
 
         return ItemSection(items: items.suffix(items.count-1), display: .collection)
+    }
+
+    var stillsSection: ItemSection? {
+        guard let stills = stills,
+              !stills.isEmpty else { return nil }
+
+        let items: [Item] = stills.map {
+            let url = Tmdb.stillImageUrl(path: $0.file_path, size: .original)
+            let imageUrl = Tmdb.stillImageUrl(path: $0.file_path, size: .large)
+            return Item.ImageItem(url: url, imageUrl: imageUrl)
+        }
+
+        return ItemSection(items: items, display: .collection)
     }
 }
 

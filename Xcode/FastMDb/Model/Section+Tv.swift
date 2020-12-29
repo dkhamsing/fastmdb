@@ -213,6 +213,7 @@ private extension TV {
     var nextEpisodeItem: Item? {
         guard var item = next_episode_to_air?.dateItem else { return nil }
 
+        item.id = id
         item.episode = next_episode_to_air
         item.destination = .episode
 

@@ -143,7 +143,7 @@ private extension MainViewController {
         case .episode:
             let controller = MainViewController()
             controller.title = item.title
-            controller.episode = item.episode
+            controller.updateEpisode(tvId: item.id, episode: item.episode)
             navigationController?.pushViewController(controller, animated: true)
         case .genreMovie:
             let controller = MainViewController()

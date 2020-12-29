@@ -21,6 +21,8 @@ struct Episode: Codable {
 
     var vote_average: Double
     var vote_count: Int
+
+    var images: Images?
 }
 
 extension Episode {

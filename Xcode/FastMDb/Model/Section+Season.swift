@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension ItemSection {
-    static func seasonSections(_ season: Season?) -> [ItemSection] {
+    static func seasonSections(tvId: Int?, season: Season?) -> [ItemSection] {
         var sections: [ItemSection] = []
 
         if let section = season?.airDatesSection {
@@ -54,7 +54,7 @@ extension ItemSection {
 
         if let episodes = season?.episodes,
             episodes.count > 0 {
-            let items = episodes.map { $0.listItem }
+            let items = episodes.map { $0.listItem(tvId) }
             let section = ItemSection(header: "\(items.count) episodes", items: items)
             sections.append(section)
         }
@@ -70,7 +70,7 @@ private extension Episode {
         return vote_average.color
     }
 
-    var listItem: Item {
+    func listItem(_ tvId: Int?) -> Item {
         var sub: [String] = []
 
         if let episodeNumber = episode_number {
@@ -81,7 +81,7 @@ private extension Episode {
             sub.append(airDate)
         }
 
-        return Item(title: name, subtitle: sub.joined(separator: Tmdb.separator), destination: .episode, episode: self, color: episodeRatingColor)
+        return Item(id: tvId, title: name, subtitle: sub.joined(separator: Tmdb.separator), destination: .episode, episode: self, color: episodeRatingColor)
     }
 }
 

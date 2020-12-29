@@ -87,6 +87,19 @@ struct Tmdb {
         return urlComponents.url
     }
 
+    static func tvURL(id: Int?, episode: Episode?) -> URL? {
+        guard let episode = episode,
+              let episodeId = id,
+              let seasonNumber = episode.season_number,
+              let episodeNumber = episode.episode_number
+              else { return nil }
+
+        var urlComponents = baseComponents
+        urlComponents.path = Path.tv + "/\(episodeId)/season/\(seasonNumber)/episode/\(episodeNumber)/images"
+
+        return urlComponents.url
+    }
+
     static func tvURL(genreId: Int?) -> URL? {
         guard let genreId = genreId else { return nil }
 

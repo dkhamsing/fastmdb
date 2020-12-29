@@ -19,12 +19,6 @@ class MainViewController: UIViewController {
         }
     }
 
-    var episode: Episode? {
-        didSet {
-            updateEpisode(episode)
-        }
-    }
-
     var genreTvId: Int? {
         didSet {
             updateGenreTv(genreTvId)
@@ -227,6 +221,32 @@ extension MainViewController {
         tableView.reloadData()
     }
 
+    func updateEpisode(tvId: Int?, episode: Episode?) {
+        screen = .list
+        spinner.startAnimating()
+
+        let url = Tmdb.tvURL(id: tvId, episode: episode)
+        url?.get(completion: { (result: Result<Images, ApiError>) in
+            switch result {
+            case .success(let images): 
+                var sections: [ItemSection] = []
+
+                if let section = images.stillsSection {
+                    sections.append(section)
+                }
+
+                if let section = episode?.episodeSections {
+                    sections.append(contentsOf: section)
+                }
+
+                let u = Updater(dataSource: sections)
+                self.updateScreen(u)
+            case .failure(_):
+                self.updateScreen(nil)
+            }
+        })
+    }
+
 }
 
 private extension MainViewController {
@@ -366,22 +386,6 @@ private extension MainViewController {
         }
     }
 
-    func updateEpisode(_ episode: Episode?) {
-        screen = .list
-        spinner.startAnimating()
-
-        let url = Tmdb.stillImageUrl(path: episode?.still_path, size: .original)
-        let provider = ImageDataProvider()
-        provider.get(url) { (image) in
-            guard let episode = episode else { return }
-
-            let sections = episode.episodeSections
-            let buttonUrl = Tmdb.stillImageUrl(path: episode.still_path, size: .original)
-            let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
-            self.updateScreen(u)
-        }
-    }
-
     func updateGenreTv(_ genreTvId: Int?) {
         screen = .list
         spinner.startAnimating()
@@ -492,7 +496,7 @@ private extension MainViewController {
 
         let provider = SeasonDataProvider()
         provider.get(seasonItem) { (season, image) in
-            let sections = ItemSection.seasonSections(season)
+            let sections = ItemSection.seasonSections(tvId: seasonItem?.id, season: season)
             let buttonUrl = Tmdb.mediaPosterUrl(path: season?.poster_path, size: .xxl)
             let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
             self.updateScreen(u)
