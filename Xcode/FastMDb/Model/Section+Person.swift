@@ -526,6 +526,10 @@ private extension Credit {
     func TvCrewSections(limit: Int) -> [ItemSection]? {
         var sections: [ItemSection] = []
 
+        if let section = TvCrewSectionCreator {
+            sections.append(section)
+        }
+
         if let section = TvCrewSectionUpcoming(limit: limit) {
             sections.append(section)
         }
@@ -539,6 +543,29 @@ private extension Credit {
         return sections
     }
 
+    var TvCrewSectionCreator: ItemSection? {
+        guard let crew = tv_credits?.crew else { return nil }
+
+        let items = Credit.collapsedTvCredits(crew)
+            .filter { ($0.job ?? "").contains("Creator") }
+            .filter { $0.first_air_date ?? "" != "" }
+            .filter {
+                var releaseDateInFuture = false
+                if let inFuture = $0.first_air_date?.inFuture,
+                   inFuture == false {
+                    releaseDateInFuture = true
+                }
+
+                return releaseDateInFuture
+            }
+            .sorted { $0.first_air_date ?? "" > $1.first_air_date ?? "" }
+            .map { $0.tvCrewItem() }
+
+        guard items.count > 0 else { return nil }
+
+        return ItemSection(header: "tv\(Tmdb.separator)creator", items: items)
+    }
+
     func TvCrewSectionUpcoming(limit: Int) -> ItemSection? {
         guard let crew = tv_credits?.crew else { return nil }
 
@@ -548,13 +575,13 @@ private extension Credit {
 
                 var releaseDateInFuture = false
                 if let inFuture = $0.first_air_date?.inFuture,
-                    inFuture == true {
+                   inFuture == true {
                     releaseDateInFuture = true
                 }
 
                 return releaseDateInFuture || noRelease
-        }
-        .map { $0.tvCrewItem }
+            }
+            .map { $0.tvCrewItem }
 
         guard items.count > 0 else { return nil }
 
@@ -569,7 +596,7 @@ private extension Credit {
     func TvCrewSectionLatest(limit: Int) -> ItemSection? {
         guard let crew = tv_credits?.crew else { return nil }
 
-        let items = Credit.collapsedTvCredits(crew)
+        let temp = Credit.collapsedTvCredits(crew)
             .filter { $0.first_air_date ?? "" != "" }
             .filter {
                     var releaseDateInFuture = false
@@ -582,6 +609,15 @@ private extension Credit {
             }
             .sorted { $0.first_air_date ?? "" > $1.first_air_date ?? ""}
             .map { $0.tvCrewItem }
+
+        var items: [Item] = []
+        for item in temp {
+            if let section = TvCrewSectionCreator,
+               let sectionItems = section.items,
+               !sectionItems.contains(item) {
+                items.append(item)
+            }
+        }
 
         guard items.count > 0 else { return nil }
 
