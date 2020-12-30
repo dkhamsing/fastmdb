@@ -8,7 +8,7 @@
 
 ## Requirements
 
-- iOS 13
+- iOS 14
 - [TMdB API key](https://www.themoviedb.org/documentation/api)
 - [News API key](https://newsapi.org/register)
 
