@@ -128,6 +128,22 @@ extension TV {
         return item
     }
 
+    var listItemImage: Item {
+        var item = listItemNoSub
+
+        var sub: [String] = []
+        if first_air_date.yearDisplay != "" {
+            sub.append(first_air_date.yearDisplay)
+        }
+        sub.append(contentsOf: subtitleLanguageCountry)
+
+        item.subtitle = sub.joined(separator: Tmdb.separator)
+
+        item.imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+
+        return item
+    }
+
     var listItemWithoutYear: Item {
         var item = listItemNoSub
         item.subtitle = subtitleLanguageCountry.joined(separator: Tmdb.separator)

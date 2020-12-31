@@ -48,7 +48,11 @@ extension TV {
             list.append(section)
         }
 
-        if let section = relatedSection {
+        if let section = recommendedSection {
+            list.append(section)
+        }
+
+        if let section = similarSection {
             list.append(section)
         }
 
@@ -341,34 +345,22 @@ private extension TV {
         return section
     }
 
-    var relatedSection: ItemSection? {
-        var relatedItems: [Item] = []
+    var recommendedSection: ItemSection? {
+        guard let recs = recommendations?.results,
+              recs.count > 0 else { return nil }
 
-        if
-            let recs = recommendations?.results,
-            recs.count > 0 {
+        let items = recs.map { $0.listItemImage }
 
-            let titles = recs.map { $0.name }
-            let items = recs.map { $0.listItem }
-            let top3 = Array(titles.prefix(3))
-            let item = Item(title: top3.joined(separator: ", "), subtitle: "Recommendations", destination: .items, destinationTitle: "Recommendations", items: items)
-            relatedItems.append(item)
-        }
+        return ItemSection(header: "recommended", items: items, display: .portraitImage)
+    }
 
-        if
-            let recs = similar?.results,
-            recs.count > 0 {
+    var similarSection: ItemSection? {
+        guard let recs = similar?.results,
+              recs.count > 0 else { return nil }
 
-        let titles = recs.map { $0.name }
-        let items = recs.map { $0.listItem }
-        let top3 = Array(titles.prefix(3))
-        let item = Item(title: top3.joined(separator: ", "), subtitle: "Similar", destination: .items, destinationTitle: "Similar", items: items)
-            relatedItems.append(item)
-        }
+        let items = recs.map { $0.listItemImage }
 
-        guard relatedItems.count > 0 else { return nil }
-
-        return ItemSection(header: "related", items: relatedItems)
+        return ItemSection(header: "similar", items: items, display: .portraitImage)
     }
 
     var watchSection: ItemSection? {
