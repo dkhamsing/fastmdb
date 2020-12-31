@@ -160,9 +160,13 @@ private extension MainViewController {
     }
 
     func config() {
-        tableView.frame = view.bounds
-        tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(tableView)
+        view.addSubviewForAutoLayout(tableView)
+        NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+        ])
 
         spinner.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(spinner)
