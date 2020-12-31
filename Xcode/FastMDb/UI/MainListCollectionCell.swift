@@ -65,7 +65,7 @@ class MainListCollectionCell: UITableViewCell {
 private extension MainListCollectionCell {
     func setup() {
         let identifiers = [
-            ImageCollectionViewCell.identifier,
+            PortraitCollectionViewCell.identifier,
             ThumbnailCollectionViewCell.identifier,
             SquareCollectionViewCell.identifier
         ]

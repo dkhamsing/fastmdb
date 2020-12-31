@@ -80,7 +80,7 @@ extension MainViewController: UITableViewDataSource {
         case .squareImage:
             return SquareCollectionViewCell.size.height
         case .portraitImage:
-            return ImageCollectionViewCell.size.height
+            return PortraitCollectionViewCell.size.height
         case .thumbnailImage:
             return ThumbnailCollectionViewCell.size.height
         case .text:
