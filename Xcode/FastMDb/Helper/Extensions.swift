@@ -309,7 +309,7 @@ extension String {
 
     var wikipediaUrl: URL? {
         let baseUrl = "https://en.wikipedia.org/wiki"
-        let item = self.replacingOccurrences(of: " ", with: "_")
+        guard let item = self.replacingOccurrences(of: " ", with: "_").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return nil }
         
         return URL(string: "\(baseUrl)/\(item)")
     }
