@@ -11,7 +11,7 @@ import UIKit
 class SquareCollectionViewCell: UICollectionViewCell {
 
     static let identifier = "SquareCollectionViewCell"
-    static let size: CGSize = CGSize(width: 50, height: 50)
+    static let size: CGSize = CGSize(width: 44, height: 44)
 
     var imageView = UIImageView()
     var label = UILabel()
@@ -39,22 +39,23 @@ class SquareCollectionViewCell: UICollectionViewCell {
 //        label2.text = item.subtitle
 
         let size = SquareCollectionViewCell.size
-        imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared) {
-            self.initials.isHidden = self.imageView.image != nil
-        }
+        imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
+//        {
+//            self.initials.isHidden = self.imageView.image != nil
+//        }
 
-        guard let name = item.title?.split(separator: " "),
-              let first = name.first
-              else { return }
-
-        initials.text = String(first.prefix(1))
-
-        if name.indices.contains(1) {
-            let last = name[1]
-            if let text = initials.text {
-                initials.text = text + String(last.prefix(1))
-            }
-        }
+//        guard let name = item.title?.split(separator: " "),
+//              let first = name.first
+//              else { return }
+//
+//        initials.text = String(first.prefix(1))
+//
+//        if name.indices.contains(1) {
+//            let last = name[1]
+//            if let text = initials.text {
+//                initials.text = text + String(last.prefix(1))
+//            }
+//        }
     }
 
     func setup() {
