@@ -40,15 +40,15 @@ extension TV {
             list.append(section)
         }
 
+        if let section = linksSection {
+            list.append(section)
+        }
+
         if let section = mediaSection(albums: albums) {
             list.append(section)
         }
 
         if let section = relatedSection {
-            list.append(section)
-        }
-
-        if let section = linksSection {
             list.append(section)
         }
 
@@ -146,32 +146,42 @@ private extension TV {
         if
             let homepage = homepage,
             homepage != "" {
-            let item = Item(title: homepageDisplay, url: URL(string: homepage), destination: .url, image: Item.linkImage)
+            let url = URL(string: homepage)
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: homepageDisplay, url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if let instagram = external_ids?.validInstagramId {
-            let item = Item(title: "Instagram", subtitle: instagram, url: Instagram.url(instagram), destination: .url, image: Item.linkImage)
+            let url = Instagram.url(instagram)
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "Instagram", subtitle: instagram, url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if let twitter = external_ids?.twitter_id,
             twitter != "" {
-            let item = Item(title: "Twitter", subtitle: Twitter.username(twitter), url: Twitter.url(twitter), destination: .url, image: Item.linkImage)
+            let url = Twitter.url(twitter)
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "Twitter", subtitle: "", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if name != "" {
-            let item = Item(title: "Wikipedia", url: name.wikipediaUrl, destination: .url, image: Item.linkImage)
+            let url = name.wikipediaUrl
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "Wikipedia", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if let imdb = external_ids?.validImdbId {
-            let item = Item(title: "IMDb", url: Imdb.url(id: imdb, kind: .title), destination: .url, image: Item.linkImage)
+            let url = Imdb.url(id: imdb, kind: .title)
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "IMDb", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
-        return ItemSection(header: "links", items: items)
+        return ItemSection(items: items, display: .squareImage)
     }
 
     func mediaSection(albums: [iTunes.Album]?) -> ItemSection? {
