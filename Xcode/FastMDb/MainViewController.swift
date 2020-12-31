@@ -156,7 +156,7 @@ private extension MainViewController {
 
         // long press on image button
         let interaction = UIContextMenuInteraction(delegate: self)
-        imageButton.addInteraction(interaction) // TODO: change bounds of image button, right now width is full
+        imageButton.addInteraction(interaction)
     }
 
     func config() {
