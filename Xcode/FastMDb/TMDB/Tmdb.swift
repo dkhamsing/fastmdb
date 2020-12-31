@@ -222,6 +222,14 @@ extension Tmdb {
         return url
     }
 
+//    static func logoUrl(path: String?, size: LogoSize) -> URL? {
+//        guard
+//            let path = path,
+//            let url = URL(string: "\(Constant.imageBaseUrl)\(size.rawValue)\(path)") else { return nil }
+//
+//        return url
+//    }
+
 }
 
 enum PosterSize: String {
@@ -252,6 +260,16 @@ enum BackdropSize: String {
     case large = "w1280"
     case original = "original"
 }
+
+//enum LogoSize: String {
+//    case tiny = "w45",
+//         small = "w92",
+//         medium = "w154",
+//         large = "w185",
+//         xl = "w300",
+//         xxl = "w500",
+//         original = "original"
+//}
 
 extension Tmdb {
 
