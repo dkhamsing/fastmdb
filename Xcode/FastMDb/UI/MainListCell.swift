@@ -48,12 +48,12 @@ private extension MainListCell {
         textLabel?.numberOfLines = 0
 
         detailTextLabel?.numberOfLines = 0
-        detailTextLabel?.textColor = .seconday
+        detailTextLabel?.textColor = .secondary
     }
 }
 
 private extension UIColor {
-    static var seconday: UIColor {
+    static var secondary: UIColor {
         return UIColor { (UITraitCollection: UITraitCollection) -> UIColor in
             if UITraitCollection.userInterfaceStyle == .dark {
                 return .white
