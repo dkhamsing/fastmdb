@@ -330,11 +330,9 @@ private extension MainViewController {
         let headerView = UIView()
 
         let size = CGSize(width: 150, height: 260)
-        let frame = CGRect.init(origin: .zero, size: size)
+        let frame = CGRect(origin: .zero, size: size)
         headerView.frame = frame
 
-        imageButton.layer.cornerRadius = 8
-        imageButton.layer.masksToBounds = true
         imageButton.imageView?.contentMode = .scaleAspectFill
         imageButton.imageView?.clipsToBounds = true
         imageButton.addTarget(self, action: #selector(imageTap), for: .touchUpInside)
