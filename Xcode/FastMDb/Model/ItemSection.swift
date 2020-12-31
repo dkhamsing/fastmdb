@@ -21,5 +21,5 @@ struct ItemSection {
 }
 
 enum Display {
-    case table, collection
+    case table, collection, thumbnail
 }

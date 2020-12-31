@@ -151,7 +151,7 @@ extension Credit {
             }
         }
 
-        return ItemSection(items: unique, display: .collection)
+        return ItemSection(items: unique, display: .thumbnail)
     }
 
     var listItemCast: Item {

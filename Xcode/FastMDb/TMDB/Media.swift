@@ -67,7 +67,7 @@ extension Images {
             return Item.ImageItem(url: url, imageUrl: imageUrl)
         }
 
-        return ItemSection(items: items, display: .collection)
+        return ItemSection(items: items, display: .thumbnail)
     }
 
     var profilesSection: ItemSection? {
@@ -93,7 +93,7 @@ extension Images {
             return Item.ImageItem(url: url, imageUrl: imageUrl)
         }
 
-        return ItemSection(items: items, display: .collection)
+        return ItemSection(items: items, display: .thumbnail)
     }
 }
 

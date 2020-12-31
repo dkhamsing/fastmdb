@@ -26,7 +26,7 @@ extension MainViewController: UITableViewDataSource {
         switch s.display {
         case .table:
             return s.items?.count ?? 0
-        case .collection:
+        case .collection, .thumbnail:
             return 1
         }
 
@@ -54,14 +54,24 @@ extension MainViewController: UITableViewDataSource {
             }
         case .collection:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-
+            c.update(display: .collection)
             if let items = section.items {
                 c.handler.items = items
                 c.handler.listener = self
                 c.collection.reloadData()
             }
             
-            return c 
+            return c
+        case .thumbnail:
+            let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
+            c.update(display: .thumbnail)
+            if let items = section.items {
+                c.handler2.items = items
+                c.handler2.listener = self
+                c.collection.reloadData()
+            }
+
+            return c
         }
 
     }
@@ -71,6 +81,8 @@ extension MainViewController: UITableViewDataSource {
         switch section.display {
         case .collection:
             return ImageCollectionViewCell.size.height
+        case .thumbnail:
+            return ThumbnailCollectionViewCell.size.height
         case .table:
             return UITableView.automaticDimension
         }
