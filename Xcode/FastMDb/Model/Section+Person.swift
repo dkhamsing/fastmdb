@@ -806,13 +806,3 @@ private extension String {
     }
 
 }
-
-extension URL {
-
-    var urlToSourceLogo: URL? {
-        guard let host = self.host else { return nil }
-
-        return URL.init(string: "https://logo.clearbit.com/\(host)?greyscale=true")
-    }
-
-}

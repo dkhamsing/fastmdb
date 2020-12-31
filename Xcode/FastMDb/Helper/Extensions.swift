@@ -326,7 +326,6 @@ extension Sequence where Iterator.Element: Hashable {
 
 }
 
-
 extension UIColor {
 
     static var background: UIColor {
@@ -348,6 +347,16 @@ extension UIColor {
                 return UIColor(red: 0.964706, green: 0.843137, blue: 0.262745, alpha: 1)
             }
         }
+    }
+
+}
+
+extension URL {
+
+    var urlToSourceLogo: URL? {
+        guard let host = self.host else { return nil }
+
+        return URL(string: "https://logo.clearbit.com/\(host)?greyscale=true")
     }
 
 }
