@@ -12,11 +12,13 @@ class ImageCollectionViewCell: UICollectionViewCell {
 
     static let identifier = "ImageCollectionViewCell"
     static let size: CGSize = CGSize(width: 90, height: 150)
+    let ratingWidth: CGFloat = 14
 
     var imageView = UIImageView()
     var label = UILabel()
     var label2 = UILabel()
     var initials = UILabel()
+    var ratingLabel = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,6 +34,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         imageView.image = nil
+        ratingLabel.backgroundColor = .clear
     }
 
     func load(_ item: Item) {
@@ -55,6 +58,10 @@ class ImageCollectionViewCell: UICollectionViewCell {
                 initials.text = text + String(last.prefix(1))
             }
         }
+
+        if let color = item.color {
+            ratingLabel.backgroundColor = color
+        }
     }
 
     func setup() {
@@ -75,10 +82,14 @@ class ImageCollectionViewCell: UICollectionViewCell {
         initials.textAlignment = .center
         initials.textColor = .systemGray
 
-        [imageView, initials, label, label2].forEach {
+        ratingLabel.layer.cornerRadius = ratingWidth / 2
+        ratingLabel.layer.masksToBounds = true
+
+        [imageView, initials, label, label2, ratingLabel].forEach {
             contentView.addSubviewForAutoLayout($0)
         }
 
+        let ratingInset: CGFloat = 4
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -95,6 +106,11 @@ class ImageCollectionViewCell: UICollectionViewCell {
             label2.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             label2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             label2.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+
+            ratingLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: ratingInset),
+            imageView.trailingAnchor.constraint(equalTo: ratingLabel.trailingAnchor, constant: ratingInset),
+            ratingLabel.widthAnchor.constraint(equalToConstant: ratingWidth),
+            ratingLabel.heightAnchor.constraint(equalToConstant: ratingWidth),
         ])
     }
 
