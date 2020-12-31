@@ -55,6 +55,14 @@ extension Media {
             list.append(section)
         }
 
+        if let section = recommendedSection {
+            list.append(section)
+        }
+        
+        if let section = similarSection {
+            list.append(section)
+        }
+
         if let section = googleSection {
             list.append(section)
         }
@@ -266,26 +274,6 @@ private extension Media {
             moreItems.append(item)
         }
 
-        if
-            let recs = recommendations?.results,
-            recs.count > 0 {
-            let titles = recs.map { $0.titleDisplay ?? "" }
-            let top3 = Array(titles.prefix(3))
-            let items: [Item] = recs.map { $0.listItem }
-            let item = Item(title: top3.joined(separator: ", "), subtitle: "Recommendations", destination: .items, destinationTitle: "Recommendations", items: items)
-            moreItems.append(item)
-        }
-
-        if
-            let recs = similar?.results,
-            recs.count > 0 {
-            let titles = recs.map { $0.titleDisplay ?? "" }
-            let top3 = Array(titles.prefix(3))
-            let items: [Item] = recs.map { $0.listItem }
-            let item = Item(title: top3.joined(separator: ", "), subtitle: "Similar", destination: .items, destinationTitle: "Similar", items: items)
-            moreItems.append(item)
-        }
-
         if moreItems.count > 0 {
             section.items = moreItems
             return section
@@ -310,6 +298,23 @@ private extension Media {
         }
 
         return section
+    }
+
+    var recommendedSection: ItemSection? {
+        guard let recs = recommendations?.results,
+              recs.count > 0 else { return nil }
+
+        let items: [Item] = recs.map { $0.listItemImage }
+
+        return ItemSection(header: "Recommendations", items: items, display: .portraitImage)
+    }
+
+    var similarSection: ItemSection? {
+        guard let recs = similar?.results,
+              recs.count > 0 else { return nil }
+
+        let items: [Item] = recs.map { $0.listItemImage }
+        return ItemSection(header: "Similar", items: items, display: .portraitImage)
     }
 
     var watchSection: ItemSection? {

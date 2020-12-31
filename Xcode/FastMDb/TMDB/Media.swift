@@ -212,6 +212,13 @@ extension Media {
         return Item(id: id, title: titleDisplay, subtitle: sub, destination: .movie, color: ratingColor)
     }
 
+    var listItemImage: Item {
+        let sub = listItemSub.joined(separator: Tmdb.separator)
+        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+
+        return Item(id: id, title: titleDisplay, subtitle: sub, destination: .movie, color: ratingColor, imageUrl: imageUrl)
+    }
+
     var listItemCollection: Item {
         var sub = listItemSub
 
