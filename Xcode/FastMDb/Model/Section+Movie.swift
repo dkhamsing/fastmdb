@@ -39,6 +39,10 @@ extension Media {
             list.append(section)
         }
 
+        if let section = linksSection {
+            list.append(section)
+        }
+
         if let section = languageSection {
             list.append(section)
         }
@@ -48,10 +52,6 @@ extension Media {
         }
 
         if let section = moreSection {
-            list.append(section)
-        }
-
-        if let section = linksSection {
             list.append(section)
         }
 
@@ -129,34 +129,43 @@ private extension Media {
             let homepage = homepage,
             homepage != "" {
             let url = URL(string: homepage)
-            let item = Item(title: homepageDisplay, url: url, destination: .url, image: Item.linkImage)
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: homepageDisplay, url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if let name = title {
-            let item = Item(title: "Wikipedia", url: name.wikipediaUrl, destination: .url, image: Item.linkImage)
+            let url = name.wikipediaUrl
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "Wikipedia", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if
             let id = external_ids?.validImdbId {
-            let item = Item(title: "IMDb", url: Imdb.url(id: id, kind: .title), destination: .url, image: Item.linkImage)
+            let url = Imdb.url(id: id, kind: .title)
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "IMDb", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if let name = title {
-            let item = Item(title: "Rotten Tomatoes", url: name.rottenTomatoestUrl, destination: .url, image: Item.linkImage)
+            let url = name.rottenTomatoestUrl
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "Rotten Tomatoes", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if let name = title {
-            let item = Item(title: "Letterboxd", url: name.letterboxdUrl, destination: .url, image: Item.linkImage)
+            let url = name.letterboxdUrl
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "Letterboxd", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         guard items.count > 0 else { return nil }
 
-        return ItemSection(header: "links", items: items)
+        return ItemSection(items: items, display: .squareImage)
     }
 
     func mediaSection(albums: [iTunes.Album]?) -> ItemSection? {

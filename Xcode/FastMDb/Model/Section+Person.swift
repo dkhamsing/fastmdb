@@ -806,7 +806,7 @@ private extension String {
 
 }
 
-private extension URL {
+extension URL {
 
     var urlToSourceLogo: URL? {
         guard let host = self.host else { return nil }
