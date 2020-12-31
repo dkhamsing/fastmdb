@@ -24,6 +24,10 @@ extension ItemSection {
             sections.append(section)
         }
 
+        if let section = credit?.linksSection {
+            sections.append(section)
+        }
+
         if let section = credit?.bioSection {
             sections.append(section)
         }
@@ -32,15 +36,11 @@ extension ItemSection {
             sections.append(section)
         }
 
-        if let section = credit?.googleSection {
-            sections.append(section)
-        }
-
         if let section = credit?.knownForSection {
             sections.append(section)
         }
 
-        if let section = credit?.linksSection {
+        if let section = credit?.googleSection {
             sections.append(section)
         }
 
@@ -235,26 +235,34 @@ private extension Credit {
         var items: [Item] = []
 
         if let instagram = external_ids?.validInstagramId {
-            let item = Item(title: "Instagram", subtitle: instagram, url: Instagram.url(instagram), destination: .url, image: Item.linkImage)
+            let url = Instagram.url(instagram)
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "Instagram", subtitle: instagram, url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if let twitter = external_ids?.validTwitterId {
-            let item = Item(title: "Twitter", subtitle: Twitter.username(twitter), url: Twitter.url(twitter), destination: .url, image: Item.linkImage)
+            let url = Twitter.url(twitter)
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "Twitter", subtitle: Twitter.username(twitter), url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if let name = name {
-            let item = Item(title: "Wikipedia", url: name.wikipediaUrl, destination: .url, image: Item.linkImage)
+            let url = name.wikipediaUrl
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "Wikipedia", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
         if let id = external_ids?.validImdbId {
-            let item = Item(title: "IMDb", url: Imdb.url(id: id, kind: .person), destination: .url, image: Item.linkImage)
+            let url = Imdb.url(id: id, kind: .person)
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "IMDb", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
             items.append(item)
         }
 
-        return ItemSection(header: "links", items: items)
+        return ItemSection(items: items, display: .squareImage)
     }
 
 }
@@ -794,6 +802,16 @@ private extension String {
 
         let finalUrl = baseUrl + encodedName
         return URL(string: finalUrl)
+    }
+
+}
+
+private extension URL {
+
+    var urlToSourceLogo: URL? {
+        guard let host = self.host else { return nil }
+
+        return URL.init(string: "https://logo.clearbit.com/\(host)?greyscale=true")
     }
 
 }

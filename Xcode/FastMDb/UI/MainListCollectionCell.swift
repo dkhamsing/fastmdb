@@ -14,6 +14,7 @@ class MainListCollectionCell: UITableViewCell {
     var collection: UICollectionView!
     var portraitHandler = CollectionHandler()
     var thumbnailHandler = CollectionThumbnailHandler()
+    var squareHandler = CollectionSquareHandler()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -41,6 +42,15 @@ class MainListCollectionCell: UITableViewCell {
                 collection.reloadData()
             }
 
+        case .squareImage:
+            collection.dataSource = squareHandler
+            collection.delegate = squareHandler
+
+            if let items = items {
+                squareHandler.items = items
+                collection.reloadData()
+            }
+
         default:
             break
         }
@@ -56,7 +66,8 @@ private extension MainListCollectionCell {
     func setup() {
         let identifiers = [
             ImageCollectionViewCell.identifier,
-            ThumbnailCollectionViewCell.identifier
+            ThumbnailCollectionViewCell.identifier,
+            SquareCollectionViewCell.identifier
         ]
         collection = UICollectionView(frame: bounds, direction: .horizontal, identifiers: identifiers)
         collection.backgroundColor = .background
