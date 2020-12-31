@@ -90,7 +90,7 @@ private extension TV {
 
         let items = cast.map { $0.listItemCastAggregated }
 
-        return ItemSection(header: "cast", items: items, display: .collection)
+        return ItemSection(header: "cast", items: items, display: .portraitImage)
     }
 
     var createdBySection: ItemSection? {

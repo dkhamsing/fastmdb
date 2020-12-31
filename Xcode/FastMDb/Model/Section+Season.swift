@@ -29,7 +29,7 @@ extension ItemSection {
             let cast = season?.credits?.cast,
             cast.count > 0 {
             let items = cast.map { $0.listItemCast }
-            let section = ItemSection(header: "cast", items: items, display: .collection)
+            let section = ItemSection(header: "cast", items: items, display: .portraitImage)
 
             sections.append(section)
         }

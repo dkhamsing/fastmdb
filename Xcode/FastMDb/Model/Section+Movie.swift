@@ -333,7 +333,7 @@ private extension Credits {
 
         let items = cast.map { $0.listItemCast }
 
-        return ItemSection(header: "starring", items: items, destination: .items, destinationTitle: "Cast", display: .collection)
+        return ItemSection(header: "starring", items: items, destination: .items, destinationTitle: "Cast", display: .portraitImage)
     }
 
     func creditsSection(limit: Int) -> ItemSection? {

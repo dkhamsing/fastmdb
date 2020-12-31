@@ -228,7 +228,7 @@ private extension Credit {
             let i = items,
             i.count > 0 else { return nil }
 
-        return ItemSection(header: "known for", items: i, display: .collection)
+        return ItemSection(header: "known for", items: i, display: .portraitImage)
     }
 
     var linksSection: ItemSection? {

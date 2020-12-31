@@ -24,9 +24,9 @@ extension MainViewController: UITableViewDataSource {
         let s = dataSource[section]
 
         switch s.display {
-        case .table:
+        case .text:
             return s.items?.count ?? 0
-        case .collection, .thumbnail:
+        case .portraitImage, .thumbnailImage:
             return 1
         }
 
@@ -37,7 +37,7 @@ extension MainViewController: UITableViewDataSource {
         let section = dataSource[indexPath.section]
 
         switch section.display {
-        case .table:
+        case .text:
             guard let items = section.items else { return UITableViewCell() }
 
             let item = items[indexPath.row]
@@ -52,15 +52,15 @@ extension MainViewController: UITableViewDataSource {
                 c.item = item
                 return c
             }
-        case .collection:
+        case .portraitImage:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.update(display: .collection, items: section.items)
+            c.update(display: .portraitImage, items: section.items)
             c.portraitHandler.listener = self
             
             return c
-        case .thumbnail:
+        case .thumbnailImage:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.update(display: .thumbnail, items: section.items)
+            c.update(display: .thumbnailImage, items: section.items)
             c.thumbnailHandler.listener = self
 
             return c
@@ -71,11 +71,11 @@ extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let section = dataSource[indexPath.section]
         switch section.display {
-        case .collection:
+        case .portraitImage:
             return ImageCollectionViewCell.size.height
-        case .thumbnail:
+        case .thumbnailImage:
             return ThumbnailCollectionViewCell.size.height
-        case .table:
+        case .text:
             return UITableView.automaticDimension
         }
     }

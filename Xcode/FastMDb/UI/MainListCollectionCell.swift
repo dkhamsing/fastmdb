@@ -23,7 +23,7 @@ class MainListCollectionCell: UITableViewCell {
 
     func update(display: Display, items: [Item]?) {
         switch display {
-        case .collection:
+        case .portraitImage:
             collection.dataSource = portraitHandler
             collection.delegate = portraitHandler
 
@@ -32,7 +32,7 @@ class MainListCollectionCell: UITableViewCell {
                 collection.reloadData()
             }
 
-        case .thumbnail:
+        case .thumbnailImage:
             collection.dataSource = thumbnailHandler
             collection.delegate = thumbnailHandler
 

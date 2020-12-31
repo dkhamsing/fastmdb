@@ -17,9 +17,9 @@ struct ItemSection {
     var destinationSections: [ItemSection]?
     var destinationTitle: String?
 
-    var display: Display = .table
+    var display: Display = .text
 }
 
 enum Display {
-    case table, collection, thumbnail
+    case text, portraitImage, thumbnailImage
 }

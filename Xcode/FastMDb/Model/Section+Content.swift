@@ -27,7 +27,7 @@ extension ItemSection {
 
         if let people = people {
             let items = people.results.map { $0.listItemPopular }
-            let section = ItemSection(header: "people\(Tmdb.separator)\(kind.title)", items: items, display: .collection)
+            let section = ItemSection(header: "people\(Tmdb.separator)\(kind.title)", items: items, display: .portraitImage)
             sections.append(section)
         }
 
