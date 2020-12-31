@@ -555,18 +555,13 @@ private extension MainViewController {
 extension MainViewController: UIContextMenuInteractionDelegate {
 
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        guard let _ = imageButton.url else { return nil }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: { () -> UIViewController? in
+            guard let url = self.imageButton.url else { return nil }
+            
+            let sfvc = SFSafariViewController(url: url)
 
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: sfvc, actionProvider: nil)
-    }
-
-    private func sfvc() -> UIViewController? {
-        guard let url = imageButton.url else { return nil }
-
-        let sfvc = SFSafariViewController(url: url)
-        sfvc.modalPresentationStyle = .formSheet
-
-        return sfvc
+            return sfvc
+        }, actionProvider: nil)
     }
 
 }
