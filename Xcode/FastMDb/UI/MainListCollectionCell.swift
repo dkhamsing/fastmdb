@@ -12,8 +12,8 @@ class MainListCollectionCell: UITableViewCell {
     static let identifier = "MainListCollectionCell"
 
     var collection: UICollectionView!
-    var handler = CollectionHandler()
-    var handler2 = CollectionThumbnailHandler()
+    var portraitHandler = CollectionHandler()
+    var thumbnailHandler = CollectionThumbnailHandler()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -21,14 +21,26 @@ class MainListCollectionCell: UITableViewCell {
         setup()
     }
 
-    func update(display: Display) {
+    func update(display: Display, items: [Item]?) {
         switch display {
         case .collection:
-            collection.dataSource = handler
-            collection.delegate = handler
+            collection.dataSource = portraitHandler
+            collection.delegate = portraitHandler
+
+            if let items = items {
+                portraitHandler.items = items
+                collection.reloadData()
+            }
+
         case .thumbnail:
-            collection.dataSource = handler2
-            collection.delegate = handler2
+            collection.dataSource = thumbnailHandler
+            collection.delegate = thumbnailHandler
+
+            if let items = items {
+                thumbnailHandler.items = items
+                collection.reloadData()
+            }
+
         default:
             break
         }

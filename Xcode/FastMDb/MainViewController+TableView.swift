@@ -54,22 +54,14 @@ extension MainViewController: UITableViewDataSource {
             }
         case .collection:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.update(display: .collection)
-            if let items = section.items {
-                c.handler.items = items
-                c.handler.listener = self
-                c.collection.reloadData()
-            }
+            c.update(display: .collection, items: section.items)
+            c.portraitHandler.listener = self
             
             return c
         case .thumbnail:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.update(display: .thumbnail)
-            if let items = section.items {
-                c.handler2.items = items
-                c.handler2.listener = self
-                c.collection.reloadData()
-            }
+            c.update(display: .thumbnail, items: section.items)
+            c.thumbnailHandler.listener = self
 
             return c
         }
