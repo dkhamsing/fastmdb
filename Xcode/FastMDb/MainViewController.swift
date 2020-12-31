@@ -160,10 +160,12 @@ private extension MainViewController {
     }
 
     func config() {
+        view.backgroundColor = .background
+        
         view.addSubviewForAutoLayout(tableView)
         NSLayoutConstraint.activate([
-            tableView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])

@@ -78,7 +78,7 @@ private extension MainListCollectionCell {
     }
 }
 
-private extension UIColor {
+extension UIColor {
     static var background: UIColor {
         return UIColor { (traitCollection: UITraitCollection) -> UIColor in
             if traitCollection.userInterfaceStyle == .dark {
