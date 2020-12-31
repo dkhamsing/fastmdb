@@ -511,7 +511,8 @@ private extension Credit {
         for item in temp {
             if let section = tvCastSectionLatest,
                let sectionItems = section.items,
-               !sectionItems.contains(item) {
+               !sectionItems.contains(item),
+               !items.contains(item) {
                 items.append(item)
             }
         }
