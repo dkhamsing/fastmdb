@@ -77,15 +77,3 @@ private extension MainListCollectionCell {
         contentView.addSubview(collection)
     }
 }
-
-extension UIColor {
-    static var background: UIColor {
-        return UIColor { (traitCollection: UITraitCollection) -> UIColor in
-            if traitCollection.userInterfaceStyle == .dark {
-                return .black
-            } else {
-                return .secondarySystemBackground
-            }
-        }
-    }
-}

@@ -328,6 +328,17 @@ extension Sequence where Iterator.Element: Hashable {
 
 
 extension UIColor {
+
+    static var background: UIColor {
+        return UIColor { (traitCollection: UITraitCollection) -> UIColor in
+            if traitCollection.userInterfaceStyle == .dark {
+                return .black
+            } else {
+                return .secondarySystemBackground
+            }
+        }
+    }
+
     static var appYellow: UIColor {
         return UIColor { (UITraitCollection: UITraitCollection) -> UIColor in
             if UITraitCollection.userInterfaceStyle == .dark {
@@ -338,32 +349,5 @@ extension UIColor {
             }
         }
     }
-}
 
-//extension UIColor {
-//
-//    static func hexStringToUIColor (hex:String) -> UIColor {
-//        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-//
-//        if (cString.hasPrefix("#")) {
-//            cString.remove(at: cString.startIndex)
-//        }
-//
-//        if ((cString.count) != 6) {
-//            return UIColor.gray
-//        }
-//
-//        var rgbValue:UInt64 = 0
-//        Scanner(string: cString).scanHexInt64(&rgbValue)
-//
-//        let c = UIColor(
-//            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-//            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-//            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
-//            alpha: CGFloat(1.0)
-//        )
-//
-//        return c
-//    }
-//
-//}
+}
