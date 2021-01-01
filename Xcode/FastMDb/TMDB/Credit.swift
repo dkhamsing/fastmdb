@@ -170,7 +170,7 @@ extension Credit {
 
     var listItemCast: Item {
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: titleDisplay, subtitle: character, destination: .person, imageUrl: url, centerLabelText: initials)
+        return Item(id: id, title: titleDisplay, subtitle: character, destination: .person, imageUrl: url, imageCenterText: initials)
     }
 
     var listItemCastAggregated: Item {
@@ -181,7 +181,7 @@ extension Credit {
         }
 
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .person, imageUrl: url, centerLabelText: initials)
+        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .person, imageUrl: url, imageCenterText: initials)
     }
 
     var listItemCrew: Item {

@@ -31,7 +31,7 @@ struct Item {
 
     var imageUrl: URL?
 
-    var centerLabelText: String?
+    var imageCenterText: String?
 }
 
 extension Item: Equatable {

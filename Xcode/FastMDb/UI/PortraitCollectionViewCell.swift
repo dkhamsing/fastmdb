@@ -46,7 +46,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
             self.initials.isHidden = self.imageView.image != nil
         }
 
-        initials.text = item.centerLabelText
+        initials.text = item.imageCenterText
 
         if let color = item.color {
             ratingLabel.backgroundColor = color
