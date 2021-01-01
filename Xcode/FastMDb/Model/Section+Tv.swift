@@ -129,7 +129,7 @@ private extension TV {
     var imagesSection: ItemSection? {
         let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
         let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
-        let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl)
+        let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)
 
         var items = [posterItem]
 

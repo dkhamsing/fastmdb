@@ -73,7 +73,15 @@ class CollectionImagesHandler: GenericCollectionHandler {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return ImagesCollectionViewCell.size
+        var size = ImagesCollectionViewCell.size
+
+        let item = items[indexPath.row]
+        if let display = item.display,
+           display == .portraitImage {
+            size.width = 100
+        }
+
+        return size
     }
 
 }

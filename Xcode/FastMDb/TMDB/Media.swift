@@ -85,7 +85,9 @@ extension Images {
         let items: [Item] = profiles.map {
             let url = Tmdb.castProfileUrl(path: $0.file_path, size: .large)
             let imageUrl = Tmdb.castProfileUrl(path: $0.file_path, size: .medium)
-            return Item.ImageItem(url: url, imageUrl: imageUrl)
+            var item = Item.ImageItem(url: url, imageUrl: imageUrl)
+            item.display = .portraitImage
+            return item
         }
 
         return ItemSection(items: items, display: .images)

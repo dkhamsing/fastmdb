@@ -32,6 +32,8 @@ struct Item {
     var imageUrl: URL?
 
     var imageCenterText: String?
+
+    var display: Display?
 }
 
 extension Item: Equatable {

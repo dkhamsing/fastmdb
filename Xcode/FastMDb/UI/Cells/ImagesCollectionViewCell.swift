@@ -11,7 +11,7 @@ import UIKit
 class ImagesCollectionViewCell: UICollectionViewCell {
 
     static let identifier = "ImagesCollectionViewCell"
-    static let size: CGSize = CGSize(width: 110, height: 140)
+    static let size: CGSize = CGSize(width: 200, height: 150)
 
     var imageView = UIImageView()
 
