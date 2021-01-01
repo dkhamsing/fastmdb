@@ -13,8 +13,8 @@ class MainListCollectionCell: UITableViewCell {
 
     var collection: UICollectionView!
 
-    var imagesHandler = ImagesHandler()
-    var portraitHandler = CollectionHandler()
+    var imagesHandler = CollectionImagesHandler()
+    var portraitHandler = CollectionPortraitHandler()
     var thumbnailHandler = CollectionThumbnailHandler()
     var squareHandler = CollectionSquareHandler()
 

@@ -44,7 +44,7 @@ class GenericCollectionHandler: NSObject, UICollectionViewDataSource, UICollecti
 
 }
 
-class CollectionHandler: GenericCollectionHandler {
+class CollectionPortraitHandler: GenericCollectionHandler {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let c = collectionView.dequeueReusableCell(withReuseIdentifier: PortraitCollectionViewCell.identifier, for: indexPath) as! PortraitCollectionViewCell
@@ -61,7 +61,7 @@ class CollectionHandler: GenericCollectionHandler {
 
 }
 
-class ImagesHandler: GenericCollectionHandler {
+class CollectionImagesHandler: GenericCollectionHandler {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let c = collectionView.dequeueReusableCell(withReuseIdentifier: ImagesCollectionViewCell.identifier, for: indexPath) as! ImagesCollectionViewCell
