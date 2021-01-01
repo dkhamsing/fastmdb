@@ -88,7 +88,7 @@ extension Images {
             return Item.ImageItem(url: url, imageUrl: imageUrl)
         }
 
-        return ItemSection(items: items, display: .portraitImage)
+        return ItemSection(items: items, display: .images)
     }
 
     var stillsSection: ItemSection? {

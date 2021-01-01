@@ -61,6 +61,23 @@ class CollectionHandler: GenericCollectionHandler {
 
 }
 
+class ImagesHandler: GenericCollectionHandler {
+
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let c = collectionView.dequeueReusableCell(withReuseIdentifier: ImagesCollectionViewCell.identifier, for: indexPath) as! ImagesCollectionViewCell
+
+        let item = items[indexPath.row]
+        c.load(item)
+
+        return c
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return ImagesCollectionViewCell.size
+    }
+
+}
+
 class CollectionThumbnailHandler: GenericCollectionHandler {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

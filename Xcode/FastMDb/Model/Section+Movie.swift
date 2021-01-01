@@ -135,7 +135,7 @@ private extension Media {
             items.append(contentsOf: it)
         }
 
-        return ItemSection(items: items, display: .portraitImage)
+        return ItemSection(items: items, display: .images)
     }
 
     var languageSection: ItemSection? {

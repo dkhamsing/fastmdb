@@ -22,6 +22,7 @@ struct ItemSection {
 
 enum Display {
     case text,
+         images,
          portraitImage,
          thumbnailImage,
          squareImage

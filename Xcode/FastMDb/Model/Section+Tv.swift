@@ -137,7 +137,7 @@ private extension TV {
             items.append(contentsOf: it)
         }
 
-        return ItemSection(items: items, display: .portraitImage)
+        return ItemSection(items: items, display: .images)
     }
 
     var googleSection: ItemSection? {
