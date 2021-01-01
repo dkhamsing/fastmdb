@@ -11,7 +11,7 @@ import UIKit
 class PortraitCollectionViewCell: UICollectionViewCell {
 
     static let identifier = "PortraitCollectionViewCell"
-    static let size: CGSize = CGSize(width: 90, height: 150)
+    static let size: CGSize = CGSize(width: 90, height: 160)
     let ratingWidth: CGFloat = 14
 
     var imageView = UIImageView()
@@ -90,6 +90,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
         }
 
         let ratingInset: CGFloat = 4
+        let height: CGFloat = 13
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -101,11 +102,13 @@ class PortraitCollectionViewCell: UICollectionViewCell {
             label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 2),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            label.heightAnchor.constraint(equalToConstant: height),
 
             label2.topAnchor.constraint(equalTo: label.bottomAnchor),
             label2.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             label2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             label2.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            label2.heightAnchor.constraint(equalToConstant: height),
 
             ratingLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: ratingInset),
             imageView.trailingAnchor.constraint(equalTo: ratingLabel.trailingAnchor, constant: ratingInset),
