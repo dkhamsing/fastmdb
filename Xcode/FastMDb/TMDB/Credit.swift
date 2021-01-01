@@ -127,6 +127,20 @@ extension Credit {
         return []
     }
 
+    var initials: String? {
+        guard let name = name?.split(separator: " "),
+              let first = name.first else { return nil }
+
+        var text = String(first.prefix(1))
+
+        if name.indices.contains(1) {
+            let last = name[1]
+            text = text + String(last.prefix(1))
+        }
+
+        return text
+    }
+
     var taggedImageSection: ItemSection? {
         guard let results = tagged_images?.results,
               results.count > 0 else { return nil }
@@ -156,7 +170,7 @@ extension Credit {
 
     var listItemCast: Item {
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: titleDisplay, subtitle: character, destination: .person, imageUrl: url)
+        return Item(id: id, title: titleDisplay, subtitle: character, destination: .person, imageUrl: url, centerLabelText: initials)
     }
 
     var listItemCastAggregated: Item {
@@ -167,7 +181,7 @@ extension Credit {
         }
 
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .person, imageUrl: url)
+        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .person, imageUrl: url, centerLabelText: initials)
     }
 
     var listItemCrew: Item {

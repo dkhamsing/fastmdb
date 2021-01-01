@@ -89,8 +89,7 @@ private extension Credit {
 
     var listItemPopular: Item {
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: name, destination: .person, imageUrl: url)
+        return Item(id: id, title: name, destination: .person, imageUrl: url, centerLabelText: initials)
     }
 
 }
-

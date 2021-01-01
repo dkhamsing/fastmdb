@@ -30,6 +30,8 @@ struct Item {
     var albums: [iTunes.Album]?
 
     var imageUrl: URL?
+
+    var centerLabelText: String?
 }
 
 extension Item: Equatable {

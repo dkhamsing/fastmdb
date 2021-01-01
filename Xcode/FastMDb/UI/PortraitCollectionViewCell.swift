@@ -46,18 +46,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
             self.initials.isHidden = self.imageView.image != nil
         }
 
-        guard let name = item.title?.split(separator: " "),
-              let first = name.first
-              else { return }
-
-        initials.text = String(first.prefix(1))
-
-        if name.indices.contains(1) {
-            let last = name[1]
-            if let text = initials.text {
-                initials.text = text + String(last.prefix(1))
-            }
-        }
+        initials.text = item.centerLabelText
 
         if let color = item.color {
             ratingLabel.backgroundColor = color
