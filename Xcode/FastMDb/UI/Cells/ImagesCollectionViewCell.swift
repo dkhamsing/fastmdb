@@ -32,7 +32,7 @@ class ImagesCollectionViewCell: UICollectionViewCell {
     }
 
     func load(_ item: Item) {
-        let size = PortraitCollectionViewCell.size
+        let size = item.size
         imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
     }
 
@@ -55,4 +55,17 @@ class ImagesCollectionViewCell: UICollectionViewCell {
         ])
     }
 
+}
+
+extension Item {
+    var size: CGSize {
+        var size = ImagesCollectionViewCell.size
+
+        if let display = display,
+           display == .portraitImage {
+            size.width = 100
+        }
+
+        return size
+    }
 }
