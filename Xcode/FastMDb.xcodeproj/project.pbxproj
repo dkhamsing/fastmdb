@@ -53,6 +53,7 @@
 		655B0F4824B1735900E587E9 /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B0F4724B1735900E587E9 /* VideoView.swift */; };
 		656724B3259E84250056F2D6 /* ThumbnailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656724B2259E84250056F2D6 /* ThumbnailCollectionViewCell.swift */; };
 		656724B7259E843D0056F2D6 /* SquareCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656724B6259E843D0056F2D6 /* SquareCollectionViewCell.swift */; };
+		656724C1259FC31B0056F2D6 /* ImagesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656724C0259FC31B0056F2D6 /* ImagesCollectionViewCell.swift */; };
 		657655D72474D5B30080D6B1 /* NewsApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657655D52474D5B30080D6B1 /* NewsApiModel.swift */; };
 		657655DE2474E4E00080D6B1 /* NewsApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657655DD2474E4E00080D6B1 /* NewsApi.swift */; };
 		65883AC82471F9F400C1A55A /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883AC72471F9F400C1A55A /* Item.swift */; };
@@ -128,6 +129,7 @@
 		655B0F4724B1735900E587E9 /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
 		656724B2259E84250056F2D6 /* ThumbnailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailCollectionViewCell.swift; sourceTree = "<group>"; };
 		656724B6259E843D0056F2D6 /* SquareCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareCollectionViewCell.swift; sourceTree = "<group>"; };
+		656724C0259FC31B0056F2D6 /* ImagesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCollectionViewCell.swift; sourceTree = "<group>"; };
 		657655D52474D5B30080D6B1 /* NewsApiModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsApiModel.swift; sourceTree = "<group>"; };
 		657655DD2474E4E00080D6B1 /* NewsApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsApi.swift; sourceTree = "<group>"; };
 		65883AC72471F9F400C1A55A /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -163,16 +165,12 @@
 		650BAB2824971ED5003A0E95 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				656724C4259FC3560056F2D6 /* Cells */,
 				65D47DC425955D9F009701BB /* CollectionHandler.swift */,
 				65B7495F24B18DA600C8997C /* ImageCache.swift */,
-				654D0F6F246B16BA00B2A968 /* MainListCell.swift */,
-				65D47DCA25955DC8009701BB /* MainListCollectionCell.swift */,
 				655B0F4524B16E7F00E587E9 /* MusicView.swift */,
-				65D47DBA25955D26009701BB /* PortraitCollectionViewCell.swift */,
 				655B0F4324B14AF200E587E9 /* RemoteImage.swift */,
-				656724B6259E843D0056F2D6 /* SquareCollectionViewCell.swift */,
 				650BAB262496BDFD003A0E95 /* StackButtons.swift */,
-				656724B2259E84250056F2D6 /* ThumbnailCollectionViewCell.swift */,
 				655B0F4724B1735900E587E9 /* VideoView.swift */,
 			);
 			path = UI;
@@ -250,6 +248,19 @@
 				654D0FC1246B30E700B2A968 /* Info.plist */,
 			);
 			path = FastMDbTests;
+			sourceTree = "<group>";
+		};
+		656724C4259FC3560056F2D6 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				656724C0259FC31B0056F2D6 /* ImagesCollectionViewCell.swift */,
+				654D0F6F246B16BA00B2A968 /* MainListCell.swift */,
+				65D47DCA25955DC8009701BB /* MainListCollectionCell.swift */,
+				65D47DBA25955D26009701BB /* PortraitCollectionViewCell.swift */,
+				656724B6259E843D0056F2D6 /* SquareCollectionViewCell.swift */,
+				656724B2259E84250056F2D6 /* ThumbnailCollectionViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		657655DC2474D5DB0080D6B1 /* NewsApi */ = {
@@ -406,6 +417,7 @@
 				657655D72474D5B30080D6B1 /* NewsApiModel.swift in Sources */,
 				655B0F4424B14AF200E587E9 /* RemoteImage.swift in Sources */,
 				654D0F98246B16C900B2A968 /* MediaCollection.swift in Sources */,
+				656724C1259FC31B0056F2D6 /* ImagesCollectionViewCell.swift in Sources */,
 				657655DE2474E4E00080D6B1 /* NewsApi.swift in Sources */,
 				654D0F81246B16BA00B2A968 /* External.swift in Sources */,
 				654D0F91246B16C900B2A968 /* DataProvider.swift in Sources */,
