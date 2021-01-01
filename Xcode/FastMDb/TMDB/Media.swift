@@ -55,11 +55,11 @@ struct Images: Codable {
 }
 
 extension Images {
-    var backdropsSection: ItemSection? {
-        guard let backdrops = backdrops else { return nil }
+    var backdropItems: [Item] {
+        guard let backdrops = backdrops else { return [] }
 
         let filtered = backdrops.filter { ($0.iso_639_1 ?? "" == "") || ($0.iso_639_1 ?? "" == "en") }
-        guard filtered.count > 0 else { return nil }
+        guard filtered.count > 0 else { return [] }
 
         let items: [Item] = filtered.map {
             let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .original)
@@ -67,12 +67,20 @@ extension Images {
             return Item.ImageItem(url: url, imageUrl: imageUrl)
         }
 
+        return items
+    }
+
+    var backdropsSection: ItemSection? {
+        let items = backdropItems
+
+        guard items.count > 0 else { return nil }
+
         return ItemSection(items: items, display: .thumbnailImage)
     }
 
     var profilesSection: ItemSection? {
         guard let profiles = profiles,
-              profiles.count > 1 else { return nil }
+              profiles.count > 0 else { return nil }
 
         let items: [Item] = profiles.map {
             let url = Tmdb.castProfileUrl(path: $0.file_path, size: .large)
@@ -80,7 +88,7 @@ extension Images {
             return Item.ImageItem(url: url, imageUrl: imageUrl)
         }
 
-        return ItemSection(items: items.suffix(items.count-1), display: .portraitImage)
+        return ItemSection(items: items, display: .portraitImage)
     }
 
     var stillsSection: ItemSection? {

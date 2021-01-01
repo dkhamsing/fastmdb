@@ -12,11 +12,11 @@ extension ItemSection {
     static func personSections(credit: Credit?, articles: [Article]?, limit: Int) -> [ItemSection] {
         var sections: [ItemSection] = []
 
-        if let section = credit?.ageSection {
+        if let section = credit?.images?.profilesSection {
             sections.append(section)
         }
 
-        if let section = credit?.images?.profilesSection {
+        if let section = credit?.ageSection {
             sections.append(section)
         }
 

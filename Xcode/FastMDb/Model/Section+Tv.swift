@@ -12,6 +12,10 @@ extension TV {
     func sections(articles: [Article]?, albums: [iTunes.Album]?) -> [ItemSection] {
         var list: [ItemSection] = []
 
+        if let section = imagesSection {
+            list.append(section)
+        }
+        
         if let section = nextEpisodeSection {
             list.append(section)
         }
@@ -21,10 +25,6 @@ extension TV {
         }
         
         if let section = Article.newsSection(articles) {
-            list.append(section)
-        }
-
-        if let section = images?.backdropsSection {
             list.append(section)
         }
 
@@ -124,6 +124,20 @@ private extension TV {
         let items = genres.map { Item(id: $0.id, title: $0.name, destination: .genreTv) }
 
         return ItemSection(header: "genres", items: items)
+    }
+
+    var imagesSection: ItemSection? {
+        let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
+        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl)
+
+        var items = [posterItem]
+
+        if let it = images?.backdropItems {
+            items.append(contentsOf: it)
+        }
+
+        return ItemSection(items: items, display: .portraitImage)
     }
 
     var googleSection: ItemSection? {

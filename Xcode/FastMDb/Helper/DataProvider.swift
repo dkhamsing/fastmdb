@@ -142,7 +142,7 @@ final class MovieDataProvider: DataProvider {
     func get(_ id: Int?, completion: @escaping (Media?, [Article]?, UIImage?, [iTunes.Album]?) -> Void) {
         var movie: Media?
         var articles: [Article]?
-        var image: UIImage?
+//        var image: UIImage?
         var albums: [iTunes.Album]?
 
         let url = Tmdb.movieURL(movieId: id)
@@ -157,10 +157,10 @@ final class MovieDataProvider: DataProvider {
                 }
             }
 
-            let url = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large)
-            self.fetchImage(url: url) { i in
-                image = i
-            }
+//            let url = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large)
+//            self.fetchImage(url: url) { i in
+//                image = i
+//            }
 
             if let name = item?.title,
                let url = name.itunesMusicSearchUrl {
@@ -175,7 +175,7 @@ final class MovieDataProvider: DataProvider {
         }
 
         group.notify(queue: .main) {
-            completion(movie, articles, image, albums)
+            completion(movie, articles, nil, albums)
         }
     }
 
@@ -186,7 +186,7 @@ final class PersonDataProvider: DataProvider {
     func get(_ id: Int?, completion: @escaping (Credit?, [Article]?, UIImage?) -> Void) {
         var credit: Credit?
         var articles: [Article]?
-        var image: UIImage?
+//        var image: UIImage?
 
         let url = Tmdb.personURL(personId: id)
         fetchItem(url: url) { (item: Credit?) in
@@ -200,14 +200,14 @@ final class PersonDataProvider: DataProvider {
                 }
             }
 
-            let url = Tmdb.castProfileUrl(path: item?.profile_path, size: .large)
-            self.fetchImage(url: url) { i in
-                image = i
-            }
+//            let url = Tmdb.castProfileUrl(path: item?.profile_path, size: .large)
+//            self.fetchImage(url: url) { i in
+//                image = i
+//            }
         }
 
         group.notify(queue: .main) {
-            completion(credit, articles, image)
+            completion(credit, articles, nil)
         }
     }
 }
@@ -262,18 +262,18 @@ final class TvDataProvider: DataProvider {
     func get(_ id: Int?, completion: @escaping (TV?, UIImage?, [Article]?, [iTunes.Album]?) -> Void) {
         var tv: TV?
         var articles: [Article]?
-        var image: UIImage?
+//        var image: UIImage?
         var albums: [iTunes.Album]?
 
         let url = Tmdb.tvURL(tvId: id)
         fetchItem(url: url) { (item: TV?) in
             tv = item
 
-            if let url = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large) {
-                self.fetchImage(url: url) { i in
-                    image = i
-                }
-            }
+//            if let url = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large) {
+//                self.fetchImage(url: url) { i in
+//                    image = i
+//                }
+//            }
 
             if
                 let name = item?.name,
@@ -296,7 +296,7 @@ final class TvDataProvider: DataProvider {
         }
 
         group.notify(queue: .main) {
-            completion(tv, image, articles, albums)
+            completion(tv, nil, articles, albums)
         }
     }
 

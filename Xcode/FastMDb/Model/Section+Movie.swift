@@ -15,15 +15,15 @@ extension Media {
                   limit: Int) -> [ItemSection] {
         var list: [ItemSection] = []
 
+        if let section = imagesSection {
+            list.append(section)
+        }
+
         if let section = metadataSection {
             list.append(section)
         }
 
         if let section = Article.newsSection(articles) {            
-            list.append(section)
-        }
-
-        if let section = images?.backdropsSection {
             list.append(section)
         }
 
@@ -122,6 +122,20 @@ private extension Media {
         guard items.count > 0 else { return nil }
 
         return ItemSection(header: "google", items: items)
+    }
+
+    var imagesSection: ItemSection? {
+        let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
+        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl)
+
+        var items = [posterItem]
+
+        if let it = images?.backdropItems {
+            items.append(contentsOf: it)
+        }
+
+        return ItemSection(items: items, display: .portraitImage)
     }
 
     var languageSection: ItemSection? {
