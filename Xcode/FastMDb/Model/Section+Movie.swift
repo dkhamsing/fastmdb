@@ -55,26 +55,6 @@ extension Media {
             list.append(section)
         }
 
-        if let section = productionSection {
-            list.append(section)
-        }
-
-        if let section = genreSection {
-            list.append(section)
-        }
-
-        if let section = recommendedSection {
-            list.append(section)
-        }
-        
-        if let section = similarSection {
-            list.append(section)
-        }
-
-        if let section = googleSection {
-            list.append(section)
-        }
-
         let credits = self.credits
         if let section = credits?.directorSection {
             list.append(section)
@@ -84,8 +64,27 @@ extension Media {
             list.append(section)
         }
 
+        if let section = productionSection {
+            list.append(section)
+        }
+
+        if let section = genreSection {
+            list.append(section)
+        }
+
+        if let section = googleSection {
+            list.append(section)
+        }
 
         if let section = credits?.creditsSection(limit: limit) {
+            list.append(section)
+        }
+
+        if let section = recommendedSection {
+            list.append(section)
+        }
+
+        if let section = similarSection {
             list.append(section)
         }
 
