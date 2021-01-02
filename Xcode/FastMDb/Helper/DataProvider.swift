@@ -239,20 +239,20 @@ final class SeasonDataProvider: DataProvider {
         guard let item = seasonItem else { return }
 
         var season: Season?
-        var image: UIImage?
+//        var image: UIImage?
 
         let url = Tmdb.tvURL(tvId: item.id, seasonNumber: item.seasonNumber)
         fetchItem(url: url) { (item: Season?) in
             season = item
 
-            let imageUrl = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large)
-            self.fetchImage(url: imageUrl) { i in
-                image = i
-            }
+//            let imageUrl = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large)
+//            self.fetchImage(url: imageUrl) { i in
+//                image = i
+//            }
         }
 
         group.notify(queue: .main) {
-            completion(season, image)
+            completion(season, nil)
         }
     }
 }

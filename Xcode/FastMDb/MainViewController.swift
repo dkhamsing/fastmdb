@@ -499,8 +499,7 @@ private extension MainViewController {
         let provider = SeasonDataProvider()
         provider.get(seasonItem) { (season, image) in
             let sections = ItemSection.seasonSections(tvId: seasonItem?.id, season: season)
-            let buttonUrl = Tmdb.mediaPosterUrl(path: season?.poster_path, size: .xxl)
-            let u = Updater(image: image, buttonUrl: buttonUrl, dataSource: sections)
+            let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
     }

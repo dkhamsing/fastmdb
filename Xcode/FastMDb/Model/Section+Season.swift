@@ -13,6 +13,10 @@ extension ItemSection {
     static func seasonSections(tvId: Int?, season: Season?) -> [ItemSection] {
         var sections: [ItemSection] = []
 
+        if let section = season?.imageSection {
+            sections.append(section)
+        }
+
         if let section = season?.airDatesSection {
             sections.append(section)
         }
@@ -108,6 +112,20 @@ private extension Season {
         let section = ItemSection(header: "air dates", items: items)
 
         return section
+    }
+
+    var imageSection: ItemSection? {
+        if let path = poster_path,
+           !path.isEmpty {
+            let url = Tmdb.mediaPosterUrl(path: path, size: .xxl)
+            let imageUrl = Tmdb.mediaPosterUrl(path: path, size: .medium)
+            let item = Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)
+            let items = [item]
+            let section = ItemSection(items: items, display: .images)
+            return section
+        }
+
+        return nil
     }
 
 }
