@@ -1,5 +1,6 @@
 //
 //  Created by Daniel on 12/12/20.
+//  Updated 01/02/21.
 //
 
 import UIKit
@@ -8,7 +9,7 @@ class ImageDownloader {
 
     static let shared = ImageDownloader()
 
-    private var imageCache = NSCache<AnyObject, UIImage>()
+    private var imageCache = NSCache<NSString, UIImage>()
     private let debug = false
 
     func load(url: URL,
@@ -37,18 +38,18 @@ class ImageDownloader {
 
 private extension ImageDownloader {
 
-    static func key(urlString: String, size: CGSize?) -> AnyObject {
+    static func key(urlString: String, size: CGSize?) -> NSString {
         var key = urlString
 
         if let size = size {
             key = key + "\(size.width)-\(size.height)"
         }
 
-        return key as AnyObject
+        return key as NSString
     }
 
     func loadUrl(url: URL,
-                 key: AnyObject,
+                 key: NSString,
                  size: CGSize? = nil,
                  tag: Int,
                  completion: @escaping (UIImage?, Int) -> Void) {
