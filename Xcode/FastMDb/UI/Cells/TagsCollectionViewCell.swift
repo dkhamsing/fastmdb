@@ -11,7 +11,7 @@ import UIKit
 class TagsCollectionViewCell: UICollectionViewCell {
 
     static let identifier = "TagsCollectionViewCell"
-    static let size: CGSize = CGSize(width: 50, height: 40)
+    static let size: CGSize = CGSize(width: 0, height: 40)
     static let font: UIFont = .preferredFont(forTextStyle: .caption1)
 
     var label = UILabel()
