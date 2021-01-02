@@ -12,6 +12,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
 
     static let identifier = "PortraitCollectionViewCell"
     static let size: CGSize = CGSize(width: 90, height: 174)
+    static let height: CGFloat = 13
     let ratingWidth: CGFloat = 14
 
     var imageView = UIImageView()
@@ -20,7 +21,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
     var label3 = UILabel()
     var initials = UILabel()
     var ratingLabel = UILabel()
-    var myConstraint: NSLayoutConstraint!
+    var label3HeightConstraint: NSLayoutConstraint!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,7 +51,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
 
             if strings.indices.contains(2) {
                 label3.text = strings[2]
-                myConstraint.constant = 13
+                label3HeightConstraint.constant = PortraitCollectionViewCell.height
                 contentView.layoutIfNeeded()
             }
         } else {
@@ -100,8 +101,8 @@ class PortraitCollectionViewCell: UICollectionViewCell {
         }
 
         let ratingInset: CGFloat = 4
-        let height: CGFloat = 13
-        myConstraint = label3.heightAnchor.constraint(equalToConstant: 0)
+        let height = PortraitCollectionViewCell.height
+        label3HeightConstraint = label3.heightAnchor.constraint(equalToConstant: 0)
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -124,7 +125,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
             label3.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             label3.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             label3.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            myConstraint,
+            label3HeightConstraint,
 
             ratingLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: ratingInset),
             imageView.trailingAnchor.constraint(equalTo: ratingLabel.trailingAnchor, constant: ratingInset),
