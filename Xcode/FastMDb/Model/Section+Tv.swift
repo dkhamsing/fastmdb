@@ -131,7 +131,7 @@ private extension TV {
 
         let items = genres.map { Item(id: $0.id, title: $0.name, destination: .genreTv) }
 
-        return ItemSection(header: "genres", items: items)
+        return ItemSection(header: "genres", items: items, display: .tags)
     }
 
     var imagesSection: ItemSection? {
@@ -341,10 +341,9 @@ private extension TV {
             let companies = production_companies,
             companies.count > 0 else { return nil }
 
-        let names = companies.map { $0.name }
-        let item = Item(title: names.joined(separator: ", "), destination: .items, destinationTitle: "Production", items: companies.map { $0.listItem })
+        let items = companies.map { $0.listItem }
 
-        return ItemSection(header: "production", items: [item])
+        return ItemSection(header: "production", items: items, display: .tags)
     }
 
     var ratingSection: ItemSection? {
