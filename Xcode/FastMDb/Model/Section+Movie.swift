@@ -407,7 +407,7 @@ private extension Credits {
 
         let prefixed = Array(items.prefix(limit))
 
-        return ItemSection(header: "credits", items: prefixed, footer: crewTotal, destination: .items, destinationItems: items, destinationTitle: "Credits")
+        return ItemSection(header: "crew", items: prefixed, footer: crewTotal, destination: .items, destinationItems: items, destinationTitle: "Crew")
     }
 
     var directorSection: ItemSection? {
