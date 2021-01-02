@@ -55,11 +55,11 @@ extension Media {
             list.append(section)
         }
 
-        if let section = moreSection {
+        if let section = productionSection {
             list.append(section)
         }
 
-        if let section = productionSection {
+        if let section = genreSection {
             list.append(section)
         }
 
@@ -109,6 +109,14 @@ private extension Media {
 
         let i = Item(title: budget.display)
         return ItemSection(header: "budget", items: [i])
+    }
+
+    var genreSection: ItemSection? {
+        guard let genre = genres,
+              genre.count > 0 else { return nil }
+
+        let items = genre.map { Item(id: $0.id, title: $0.name, destination: .genreMovie) }
+        return ItemSection(header: "genre", items: items, display: .tags)
     }
 
     var googleSection: ItemSection? {
@@ -264,31 +272,12 @@ private extension Media {
             items.append(item)
         }
 
-        return ItemSection(header: "movie", items: items)
-    }
-
-    var moreSection: ItemSection? {
-        var section = ItemSection(header: "more")
-        var moreItems: [Item] = []
-
-        // collection
         if let c = belongs_to_collection {
-            moreItems.append(Item(id: c.id, title: c.name, destination: .collection))
+            let item = Item(id: c.id, title: c.name, destination: .collection)
+            items.append(item)
         }
 
-        // genre
-        if let genre = genres,
-            genre.count > 0 {
-            let items = genre.map { Item(id: $0.id, title: $0.name, destination: .genreMovie) }
-            moreItems.append(contentsOf: items)
-        }
-
-        if moreItems.count > 0 {
-            section.items = moreItems
-            return section
-        }
-
-        return nil
+        return ItemSection(header: "movie", items: items)
     }
 
     var productionSection: ItemSection? {
