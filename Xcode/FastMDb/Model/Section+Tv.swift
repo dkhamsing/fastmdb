@@ -60,18 +60,6 @@ extension TV {
             list.append(section)
         }
 
-        if let section = recommendedSection {
-            list.append(section)
-        }
-
-        if let section = similarSection {
-            list.append(section)
-        }
-
-        if let section = googleSection {
-            list.append(section)
-        }
-
         if let section = createdBySection {
             list.append(section)
         }
@@ -81,6 +69,18 @@ extension TV {
         }
 
         if let section = genresSection {
+            list.append(section)
+        }
+
+        if let section = googleSection {
+            list.append(section)
+        }
+
+        if let section = recommendedSection {
+            list.append(section)
+        }
+
+        if let section = similarSection {
             list.append(section)
         }
 
