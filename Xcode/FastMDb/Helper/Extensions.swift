@@ -338,6 +338,16 @@ extension UIColor {
         }
     }
 
+    static var cellBackground: UIColor {
+        return UIColor { (traitCollection: UITraitCollection) -> UIColor in
+            if traitCollection.userInterfaceStyle == .dark {
+                return .systemFill
+            } else {
+                return .white
+            }
+        }
+    }
+
     static var appYellow: UIColor {
         return UIColor { (UITraitCollection: UITraitCollection) -> UIColor in
             if UITraitCollection.userInterfaceStyle == .dark {

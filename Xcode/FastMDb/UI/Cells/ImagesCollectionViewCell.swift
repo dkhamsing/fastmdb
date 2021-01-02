@@ -98,7 +98,7 @@ class TagsCollectionViewCell: UICollectionViewCell {
         label.font = TagsCollectionViewCell.font
         label.layer.cornerRadius = 10
         label.layer.masksToBounds = true
-        label.backgroundColor = .secondarySystemFill
+        label.backgroundColor = .cellBackground 
 
         [label].forEach {
             contentView.addSubviewForAutoLayout($0)
