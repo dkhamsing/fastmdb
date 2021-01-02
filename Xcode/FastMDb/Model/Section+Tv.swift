@@ -44,6 +44,10 @@ extension TV {
             list.append(section)
         }
 
+        if let section = castSection {
+            list.append(section)
+        }
+
         if let section = ratingSection {
             list.append(section)
         }
@@ -77,10 +81,6 @@ extension TV {
         }
 
         if let section = genresSection {
-            list.append(section)
-        }
-
-        if let section = castSection {
             list.append(section)
         }
 
