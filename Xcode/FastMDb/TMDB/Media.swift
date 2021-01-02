@@ -51,6 +51,7 @@ struct Media: Codable {
 struct Images: Codable {
     var backdrops: [TmdbImage]?
     var profiles: [TmdbImage]?
+    var posters: [TmdbImage]?
     var stills: [TmdbImage]?
 }
 
@@ -76,6 +77,23 @@ extension Images {
         guard items.count > 0 else { return nil }
 
         return ItemSection(items: items, display: .thumbnailImage)
+    }
+
+    var postersSection: ItemSection? {
+        guard let posters = posters else { return nil }
+
+        let filtered = posters.filter { ($0.iso_639_1 ?? "" == "") || ($0.iso_639_1 ?? "" == "en") }
+        guard filtered.count > 0 else { return nil }
+
+        let items: [Item] = filtered.map {
+            let url = Tmdb.castProfileUrl(path: $0.file_path, size: .large)
+            let imageUrl = Tmdb.castProfileUrl(path: $0.file_path, size: .medium)
+            var item = Item.ImageItem(url: url, imageUrl: imageUrl)
+            item.display = .portraitImage
+            return item
+        }
+
+        return ItemSection(items: items, display: .images)
     }
 
     var profilesSection: ItemSection? {

@@ -17,5 +17,7 @@ struct Season: Codable {
     var name: String
     var overview: String?
     var poster_path: String?
-    var season_number: Int 
+    var season_number: Int
+
+    var images: Images?
 }
