@@ -27,7 +27,11 @@ extension TV {
         if let section = seasonSection {
             list.append(section)
         }
-        
+
+        if let section = seasonSpecialSection {
+            list.append(section)
+        }
+
         if let section = Article.newsSection(articles) {
             list.append(section)
         }
@@ -378,6 +382,19 @@ private extension TV {
         return ItemSection(header: header, items: items, display: .portraitImage)
     }
 
+    var seasonSpecialSection: ItemSection? {
+        var items: [Item] = []
+        if let seasons = seasons {
+            items = seasons
+                .filter { $0.season_number == 0 }
+                .map { $0.listItem(tvId: id) }
+        }
+
+        guard items.count > 0 else { return nil }
+
+        return ItemSection(items: items)
+    }
+
     var similarSection: ItemSection? {
         guard let recs = similar?.results,
               recs.count > 0 else { return nil }
@@ -493,10 +510,13 @@ private extension TV {
     var remappedSeasonItems: [Item] {
         var items: [Item] = []
         if let seasons = seasons {
-            items = seasons.filter {
-                let count = $0.episode_count
-                return count ?? 0 > 0
-            }.map { $0.listItem(tvId: id) }
+            items = seasons
+                .filter { $0.season_number != 0 }
+                .filter {
+                    let count = $0.episode_count
+                    return count ?? 0 > 0
+                }
+                .map { $0.listItem(tvId: id) }
         }
 
         return items
