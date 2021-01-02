@@ -351,7 +351,6 @@ extension UIColor {
     static var appYellow: UIColor {
         return UIColor { (UITraitCollection: UITraitCollection) -> UIColor in
             if UITraitCollection.userInterfaceStyle == .dark {
-
                 return UIColor(red: 0.952941, green: 0.776471, blue: 0.137255, alpha: 1)
             } else {
                 return UIColor(red: 0.964706, green: 0.843137, blue: 0.262745, alpha: 1)
