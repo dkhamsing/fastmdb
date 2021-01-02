@@ -255,14 +255,7 @@ private extension Media {
             items.append(item)
         }
 
-        if
-            let tagline = tagline,
-            tagline.isEmpty == false {
-            items.append(Item(title: tagline))
-        }
-
-        if let value = overviewDisplay {
-            let item = Item(title: value)
+        if let item = taglineOverviewItem {
             items.append(item)
         }
 
@@ -339,6 +332,21 @@ private extension Media {
 
     var watchSection: ItemSection? {
         return watch?.watchSection(title)
+    }
+
+    var taglineOverviewItem: Item? {
+        if let value = overviewDisplay {
+            var item = Item(subtitle: value)
+
+            if let tagline = tagline,
+               tagline.isEmpty == false {
+                item.title = tagline
+            }
+
+            return item
+        }
+
+        return nil
     }
 
     var statusDisplay: String? {

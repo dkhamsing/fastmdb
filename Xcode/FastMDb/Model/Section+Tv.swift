@@ -329,16 +329,8 @@ private extension TV {
 
         }
 
-        if
-            let tagline = tagline,
-            tagline.isEmpty == false {
-            items.append(Item(title: tagline))
-        }
-
-        if
-            let o = overview,
-            o != "" {
-            items.append(Item(title: o))
+        if let item = taglineOverviewItem {
+            items.append(item)
         }
 
         return ItemSection(header: "tv", items: items)
@@ -402,6 +394,21 @@ private extension TV {
         let items = recs.map { $0.listItemImage }
 
         return ItemSection(header: "similar", items: items, display: .portraitImage)
+    }
+
+    var taglineOverviewItem: Item? {
+        if let value = overview {
+            var item = Item(subtitle: value)
+
+            if let tagline = tagline,
+               tagline.isEmpty == false {
+                item.title = tagline
+            }
+
+            return item
+        }
+
+        return nil
     }
 
     var watchSection: ItemSection? {
