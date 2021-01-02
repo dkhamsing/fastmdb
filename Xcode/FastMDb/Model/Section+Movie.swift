@@ -76,7 +76,7 @@ extension Media {
             list.append(section)
         }
 
-        if let section = credits?.creditsSection(limit: limit) {
+        if let section = credits?.creditsSection(limit: 6) {
             list.append(section)
         }
 
