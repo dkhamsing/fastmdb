@@ -95,7 +95,7 @@ class MainViewController: UIViewController {
     var startSearch = false
 
     // UI
-    var imageButton = ImageButton()
+//    var imageButton = ImageButton()
     let spinner = UIActivityIndicatorView(style: .large)
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     var searchResultsButtons = StackButtons()
@@ -155,8 +155,8 @@ private extension MainViewController {
         searchResultsButtons.delegate = self
 
         // long press on image button
-        let interaction = UIContextMenuInteraction(delegate: self)
-        imageButton.addInteraction(interaction)
+//        let interaction = UIContextMenuInteraction(delegate: self)
+//        imageButton.addInteraction(interaction)
     }
 
     func config() {
@@ -216,7 +216,7 @@ extension MainViewController {
     }
 
     func updateScreen(_ updater: Updater?) {
-        updateTableHeaderHeader(image: updater?.image, buttonUrl: updater?.buttonUrl)
+//        updateTableHeaderHeader(image: updater?.image, buttonUrl: updater?.buttonUrl)
 
         spinner.stopAnimating()
 
@@ -326,41 +326,41 @@ private extension MainViewController {
         return UIMenu(title: "", children: menuActions)
     }
 
-    var header: UIView {
-        let headerView = UIView()
+//    var header: UIView {
+//        let headerView = UIView()
+//
+//        let size = CGSize(width: 150, height: 260)
+//        let frame = CGRect(origin: .zero, size: size)
+//        headerView.frame = frame
+//
+//        imageButton.imageView?.contentMode = .scaleAspectFill
+//        imageButton.imageView?.clipsToBounds = true
+//        imageButton.addTarget(self, action: #selector(imageTap), for: .touchUpInside)
+//
+//        headerView.addSubview(imageButton)
+//        imageButton.translatesAutoresizingMaskIntoConstraints = false
+//
+//        let inset: CGFloat = 20
+//        NSLayoutConstraint.activate([
+//            imageButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: inset),
+//            imageButton.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+//            imageButton.widthAnchor.constraint(equalToConstant: size.width),
+//            imageButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -inset),
+//        ])
+//
+//        return headerView
+//    }
 
-        let size = CGSize(width: 150, height: 260)
-        let frame = CGRect(origin: .zero, size: size)
-        headerView.frame = frame
-
-        imageButton.imageView?.contentMode = .scaleAspectFill
-        imageButton.imageView?.clipsToBounds = true
-        imageButton.addTarget(self, action: #selector(imageTap), for: .touchUpInside)
-
-        headerView.addSubview(imageButton)
-        imageButton.translatesAutoresizingMaskIntoConstraints = false
-
-        let inset: CGFloat = 20
-        NSLayoutConstraint.activate([
-            imageButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: inset),
-            imageButton.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
-            imageButton.widthAnchor.constraint(equalToConstant: size.width),
-            imageButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -inset),
-        ])
-
-        return headerView
-    }
-
-    func updateTableHeaderHeader(image: UIImage?, buttonUrl: URL?) {
-        // TODO: show banner instead? looks better on ipad
-        guard let image = image else { return }
-
-        tableView.tableHeaderView = header
-
-        imageButton.setImage(image, for: .normal)
-
-        imageButton.url = buttonUrl
-    }
+//    func updateTableHeaderHeader(image: UIImage?, buttonUrl: URL?) {
+//        // TODO: show banner instead? looks better on ipad
+//        guard let image = image else { return }
+//
+//        tableView.tableHeaderView = header
+//
+//        imageButton.setImage(image, for: .normal)
+//
+//        imageButton.url = buttonUrl
+//    }
 
 }
 
@@ -548,19 +548,19 @@ private extension MainViewController {
 
 }
 
-extension MainViewController: UIContextMenuInteractionDelegate {
-
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: { () -> UIViewController? in
-            guard let url = self.imageButton.url else { return nil }
-            
-            let sfvc = SFSafariViewController(url: url)
-
-            return sfvc
-        }, actionProvider: nil)
-    }
-
-}
+//extension MainViewController: UIContextMenuInteractionDelegate {
+//
+//    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+//        return UIContextMenuConfiguration(identifier: nil, previewProvider: { () -> UIViewController? in
+//            guard let url = self.imageButton.url else { return nil }
+//
+//            let sfvc = SFSafariViewController(url: url)
+//
+//            return sfvc
+//        }, actionProvider: nil)
+//    }
+//
+//}
 
 private extension Credit {
 
@@ -588,8 +588,8 @@ enum ScreenType {
 
 struct Updater {
 
-    var image: UIImage?
-    var buttonUrl: URL?
+//    var image: UIImage?
+//    var buttonUrl: URL?
     var dataSource: [ItemSection]?
     
 }

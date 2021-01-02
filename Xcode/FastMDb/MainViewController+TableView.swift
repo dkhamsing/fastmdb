@@ -142,10 +142,10 @@ extension MainViewController: UITableViewDelegate {
         loadDestination(item)
     }
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let value = tableView.contentOffset.y + tableView.safeAreaInsets.top
-        imageButton.alpha = (300 - value)/300
-    }
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        let value = tableView.contentOffset.y + tableView.safeAreaInsets.top
+//        imageButton.alpha = (300 - value)/300
+//    }
 
 }
 
