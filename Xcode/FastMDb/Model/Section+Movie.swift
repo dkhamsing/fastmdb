@@ -35,6 +35,10 @@ extension Media {
             list.append(section)
         }
 
+        if let section = credits?.castSection(limit: limit) {
+            list.append(section)
+        }
+
         if let section = watchSection {
             list.append(section)
         }
@@ -76,9 +80,6 @@ extension Media {
             list.append(section)
         }
 
-        if let section = credits?.castSection(limit: limit) {
-            list.append(section)
-        }
 
         if let section = credits?.creditsSection(limit: limit) {
             list.append(section)
