@@ -39,8 +39,6 @@ class PortraitCollectionViewCell: UICollectionViewCell {
     }
 
     func load(_ item: Item) {
-        label.text = item.title
-        label2.text = item.subtitle
 
         if let strings = item.strings {
             label.text = strings.first
@@ -52,6 +50,9 @@ class PortraitCollectionViewCell: UICollectionViewCell {
             if strings.indices.contains(2) {
                 label3.text = strings[2]
             }
+        } else {
+            label.text = item.title
+            label2.text = item.subtitle
         }
 
         let size = PortraitCollectionViewCell.size
@@ -113,7 +114,6 @@ class PortraitCollectionViewCell: UICollectionViewCell {
             label2.topAnchor.constraint(equalTo: label.bottomAnchor),
             label2.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             label2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-//            label2.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             label2.heightAnchor.constraint(equalToConstant: height),
 
             label3.topAnchor.constraint(equalTo: label2.bottomAnchor),
