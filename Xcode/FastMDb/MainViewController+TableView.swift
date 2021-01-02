@@ -54,31 +54,31 @@ extension MainViewController: UITableViewDataSource {
             }
         case .tags:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.update(display: .tags, items: section.items)
+            c.load(display: .tags, items: section.items)
             c.tagsHandler.listener = self
 
             return c
         case .images:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.update(display: .images, items: section.items)
+            c.load(display: .images, items: section.items)
             c.imagesHandler.listener = self
 
             return c
         case .portraitImage:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.update(display: .portraitImage, items: section.items)
+            c.load(display: .portraitImage, items: section.items)
             c.portraitHandler.listener = self
             
             return c
         case .thumbnailImage:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.update(display: .thumbnailImage, items: section.items)
+            c.load(display: .thumbnailImage, items: section.items)
             c.thumbnailHandler.listener = self
 
             return c
         case .squareImage:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.update(display: .squareImage, items: section.items)
+            c.load(display: .squareImage, items: section.items)
             c.squareHandler.listener = self
 
             return c

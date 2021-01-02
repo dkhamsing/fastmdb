@@ -32,14 +32,6 @@ class MainListCell: UITableViewCell {
         fatalError("not implemented")
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-        textLabel?.text = nil
-        detailTextLabel?.text = nil
-        imageView?.image = nil
-    }
-
 }
 
 private extension MainListCell {

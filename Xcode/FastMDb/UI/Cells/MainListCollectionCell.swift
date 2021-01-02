@@ -25,7 +25,7 @@ class MainListCollectionCell: UITableViewCell {
         setup()
     }
 
-    func update(display: Display, items: [Item]?) {
+    func load(display: Display, items: [Item]?) {
         switch display {
         case .tags:
             collection.dataSource = tagsHandler
