@@ -149,6 +149,14 @@ extension MainViewController: UITableViewDelegate {
 
 }
 
+extension MainViewController: CollectionListener {
+
+    func doTapItem(_ item: Item) {
+        loadDestination(item)
+    }
+
+}
+
 private extension MainViewController {
 
     func loadDestination(_ item: Item) {
@@ -256,19 +264,11 @@ private extension MainViewController {
             let contentView = VideoView(items: items)
             let controller = UIHostingController(rootView: contentView)
             navigationController?.pushViewController(controller, animated: true)
-
-//            let controller = VideosViewController()
-//            controller.items = item.items
-//            navigationController?.pushViewController(controller, animated: true)
         default:
             print("todo for \(item)")
         }
     }
 
-}
-
-private class DestinationButton: UIButton {
-    var section: ItemSection?
 }
 
 private extension MainViewController {
@@ -304,16 +304,8 @@ private extension MainViewController {
 
 }
 
-protocol CollectionListener: class {
+private class DestinationButton: UIButton {
 
-    func doTapItem(_ item: Item)
-
-}
-
-extension MainViewController: CollectionListener {
-
-    func doTapItem(_ item: Item) {
-        loadDestination(item)
-    }
+    var section: ItemSection?
 
 }

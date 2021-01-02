@@ -9,6 +9,12 @@
 import UIKit
 import SafariServices
 
+protocol CollectionListener: class {
+
+    func doTapItem(_ item: Item)
+
+}
+
 class GenericCollectionHandler: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     var items: [Item] = []
