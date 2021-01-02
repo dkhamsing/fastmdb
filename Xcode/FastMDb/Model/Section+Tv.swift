@@ -127,15 +127,21 @@ private extension TV {
     }
 
     var imagesSection: ItemSection? {
+        var items: [Item] = []
+
+        if !(poster_path ?? "").isEmpty {
+
         let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
         let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
         let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)
-
-        var items = [posterItem]
+            items.append(posterItem)
+        }
 
         if let it = images?.backdropItems {
             items.append(contentsOf: it)
         }
+
+        guard items.count > 0 else { return nil }
 
         return ItemSection(items: items, display: .images)
     }
