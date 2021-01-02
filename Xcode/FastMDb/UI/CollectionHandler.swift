@@ -81,7 +81,7 @@ class CollectionImagesHandler: GenericCollectionHandler {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         let item = items[indexPath.row]
-        return item.size
+        return item.imageSize
     }
 
 }
@@ -116,6 +116,24 @@ class CollectionSquareHandler: GenericCollectionHandler {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return SquareCollectionViewCell.size
+    }
+
+}
+
+class CollectionTagHandler: GenericCollectionHandler {
+
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let c = collectionView.dequeueReusableCell(withReuseIdentifier: TagsCollectionViewCell.identifier, for: indexPath) as! TagsCollectionViewCell
+
+        let item = items[indexPath.row]
+        c.load(item)
+
+        return c
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let item = items[indexPath.row]
+        return item.textSize
     }
 
 }

@@ -13,6 +13,7 @@ class MainListCollectionCell: UITableViewCell {
 
     var collection: UICollectionView!
 
+    var tagsHandler = CollectionTagHandler()
     var imagesHandler = CollectionImagesHandler()
     var portraitHandler = CollectionPortraitHandler()
     var thumbnailHandler = CollectionThumbnailHandler()
@@ -26,6 +27,15 @@ class MainListCollectionCell: UITableViewCell {
 
     func update(display: Display, items: [Item]?) {
         switch display {
+        case .tags:
+            collection.dataSource = tagsHandler
+            collection.delegate = tagsHandler
+
+            if let items = items {
+                tagsHandler.items = items
+                collection.reloadData()
+            }
+
         case .portraitImage:
             collection.dataSource = portraitHandler
             collection.delegate = portraitHandler
@@ -80,7 +90,8 @@ private extension MainListCollectionCell {
             PortraitCollectionViewCell.identifier,
             ThumbnailCollectionViewCell.identifier,
             SquareCollectionViewCell.identifier,
-            ImagesCollectionViewCell.identifier
+            ImagesCollectionViewCell.identifier,
+            TagsCollectionViewCell.identifier
         ]
         collection = UICollectionView(frame: bounds, direction: .horizontal, identifiers: identifiers)
         collection.backgroundColor = .background

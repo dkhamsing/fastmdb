@@ -26,7 +26,7 @@ extension MainViewController: UITableViewDataSource {
         switch s.display {
         case .text:
             return s.items?.count ?? 0
-        case .portraitImage, .thumbnailImage, .squareImage, .images:
+        case .portraitImage, .thumbnailImage, .squareImage, .images, .tags:
             return 1
         }
 
@@ -52,6 +52,12 @@ extension MainViewController: UITableViewDataSource {
                 c.item = item
                 return c
             }
+        case .tags:
+            let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
+            c.update(display: .tags, items: section.items)
+            c.tagsHandler.listener = self
+
+            return c
         case .images:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
             c.update(display: .images, items: section.items)
@@ -83,6 +89,8 @@ extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let section = dataSource[indexPath.section]
         switch section.display {
+        case .tags:
+            return TagsCollectionViewCell.size.height
         case .images:
             return ImagesCollectionViewCell.size.height
         case .squareImage:

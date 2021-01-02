@@ -59,6 +59,10 @@ extension Media {
             list.append(section)
         }
 
+        if let section = productionSection {
+            list.append(section)
+        }
+
         if let section = recommendedSection {
             list.append(section)
         }
@@ -279,21 +283,20 @@ private extension Media {
             moreItems.append(contentsOf: items)
         }
 
-        // production companies
-        if
-            let companies = production_companies,
-            companies.count > 0 {
-            let names = companies.map { $0.name }
-            let item = Item(title: names.joined(separator: ", "), subtitle: "Production", destination: .items, destinationTitle: "Production", items: companies.map { $0.listItem })
-            moreItems.append(item)
-        }
-
         if moreItems.count > 0 {
             section.items = moreItems
             return section
         }
 
         return nil
+    }
+
+    var productionSection: ItemSection? {
+        guard let companies = production_companies,
+              companies.count > 0 else { return nil }
+
+        let items: [Item] = companies.map { $0.listItem }
+        return ItemSection(header: "production", items: items, display: .tags)
     }
 
     var ratingSection: ItemSection? {
