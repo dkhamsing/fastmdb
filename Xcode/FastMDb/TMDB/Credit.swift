@@ -215,12 +215,17 @@ extension Credit {
             sub.append(epString)
         }
 
+        var sub2 = sub
+        if let value = titleDisplay {
+            sub2.insert(value, at: 0)
+        }
+
         var imageUrl: URL?
         if isImage {
             imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
         }
 
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tv, color: ratingColor, imageUrl: imageUrl)
+        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tv, color: ratingColor, imageUrl: imageUrl, strings: sub2)
     }
 
     var ratingColor: UIColor? {
