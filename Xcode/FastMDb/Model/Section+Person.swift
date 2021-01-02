@@ -745,11 +745,17 @@ private extension Credit {
     }
 
     var movieCastImageItem: Item {
+        var sub: [String] = []
+        if let value = titleDisplay {
+            sub.append(value)
+        }
+        sub.append(contentsOf: movieCastSubtitles)
+
         let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
-        return Item(id: id, title: titleDisplay, subtitle: movieCastSubtitle, destination: .movie, color: ratingColor, imageUrl: imageUrl)
+        return Item(id: id, destination: .movie, color: ratingColor, imageUrl: imageUrl, strings: sub)
     }
 
-    var movieCastSubtitle: String {
+    var movieCastSubtitles: [String] {
         var sub: [String] = []
 
         if let year = releaseYear {
@@ -762,7 +768,11 @@ private extension Credit {
             sub.append(character)
         }
 
-        return sub.joined(separator: Tmdb.separator)
+        return sub
+    }
+
+    var movieCastSubtitle: String {
+        return movieCastSubtitles.joined(separator: Tmdb.separator)
     }
 
     var movieCrewItem: Item {

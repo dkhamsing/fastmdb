@@ -34,6 +34,8 @@ struct Item {
     var imageCenterText: String?
 
     var display: Display?
+
+    var strings: [String]?
 }
 
 extension Item: Equatable {

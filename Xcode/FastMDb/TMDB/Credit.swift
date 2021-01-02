@@ -175,13 +175,13 @@ extension Credit {
 
     var listItemCastAggregated: Item {
         var sub: [String] = []
-
-        if aggregated.count > 0 {
-            sub = aggregated
+        if let value = titleDisplay {
+            sub.append(value)
         }
+        sub.append(contentsOf: aggregated)
 
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .person, imageUrl: url, imageCenterText: initials)
+        return Item(id: id, destination: .person, imageUrl: url, imageCenterText: initials, strings: sub)
     }
 
     var listItemCrew: Item {

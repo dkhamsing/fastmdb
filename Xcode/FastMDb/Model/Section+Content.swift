@@ -88,8 +88,17 @@ private extension ItemSection {
 private extension Credit {
 
     var listItemPopular: Item {
+        var sub: [String] = []
+        if let value = name {
+            sub.append(value)
+        }
+        if let known = known_for {
+            let kf = known.map { $0.titleDisplay ?? "" }
+            sub.append(contentsOf: kf)
+        }
+
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: name, destination: .person, imageUrl: url, imageCenterText: initials)
+        return Item(id: id, destination: .person, imageUrl: url, imageCenterText: initials, strings: sub)
     }
 
 }
