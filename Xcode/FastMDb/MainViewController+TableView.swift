@@ -295,17 +295,16 @@ private extension MainViewController {
 
 }
 
-
-
 protocol CollectionListener: class {
 
     func doTapItem(_ item: Item)
 
 }
 
-
 extension MainViewController: CollectionListener {
+
     func doTapItem(_ item: Item) {
         loadDestination(item)
     }
+
 }
