@@ -23,6 +23,10 @@ extension TV {
         if let section = overviewSection {
             list.append(section)
         }
+
+        if let section = seasonSection {
+            list.append(section)
+        }
         
         if let section = Article.newsSection(articles) {
             list.append(section)
@@ -315,16 +319,7 @@ private extension TV {
                 subt += "\nRated " + contentRating
             }
 
-            var item = Item(title: displayName, subtitle: subt)
-
-            if
-                let s = seasons?.first,
-                let c = s.episode_count,
-                c > 0 {
-                item.destination = .items
-                item.destinationTitle = "Seasons"
-                item.items = self.remappedSeasonItems
-            }
+            let item = Item(title: displayName, subtitle: subt)
 
             items.append(item)
 
@@ -374,6 +369,15 @@ private extension TV {
         return ItemSection(header: "recommended", items: items, display: .portraitImage)
     }
 
+    var seasonSection: ItemSection? {
+        let items: [Item] = remappedSeasonItems
+
+        guard items.count > 0 else { return nil }
+
+        let header = "\(items.count) season\(items.count.pluralized)"
+        return ItemSection(header: header, items: items, display: .portraitImage)
+    }
+
     var similarSection: ItemSection? {
         guard let recs = similar?.results,
               recs.count > 0 else { return nil }
@@ -409,7 +413,10 @@ private extension Season {
             sub.append(string)
         }
 
-        return Item(id: tvId, title: name, subtitle: sub.joined(separator: Tmdb.separator), destination: .season, seasonNumber: season_number)
+        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+
+        let text = season_number > 0 ? "\(season_number)" : ""
+        return Item(id: tvId, title: name, subtitle: sub.joined(separator: Tmdb.separator), destination: .season, seasonNumber: season_number, imageUrl: imageUrl, imageCenterText: text)
     }
 }
 
