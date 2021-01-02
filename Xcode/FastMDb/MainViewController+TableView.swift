@@ -236,16 +236,7 @@ private extension MainViewController {
             present(sfvc, animated: true, completion: nil)
         case .season:
             let controller = MainViewController()
-
-            var titl: String?
-            if let temp = item.title,
-               !temp.lowercased().contains("special") {
-                titl = "Season " + temp
-            } else {
-                titl = item.title
-            }
-            controller.title = titl
-
+            controller.title = item.title
             controller.seasonItem = item
             navigationController?.pushViewController(controller, animated: true)
         case .tv:
