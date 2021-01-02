@@ -401,22 +401,32 @@ private extension Credit {
 
 private extension Season {
     func listItem(tvId: Int?) -> Item {
-        var sub: [String] = []
-
-        if let _ = air_date {
-            sub.append(air_date.yearDisplay)
-        }
-
+        var string: String?
         if let c = episode_count,
             c > 0 {
-            let string = "\(c) episode\(c.pluralized)"
-            sub.append(string)
+            string = "\(c) episode\(c.pluralized)"
         }
 
         let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
 
         let text = season_number > 0 ? "\(season_number)" : ""
-        return Item(id: tvId, title: name, subtitle: sub.joined(separator: Tmdb.separator), destination: .season, seasonNumber: season_number, imageUrl: imageUrl, imageCenterText: text)
+        return Item(id: tvId, title: nameDisplay, subtitle: string, destination: .season, seasonNumber: season_number, imageUrl: imageUrl, imageCenterText: text)
+    }
+
+    var nameDisplay: String {
+        guard season_number > 0 else { return name }
+
+        var sub: [String] = []
+
+        sub.append(
+            "\(season_number)"
+        )
+
+        if let _ = air_date {
+            sub.append(air_date.yearDisplay)
+        }
+
+        return sub.joined(separator: Tmdb.separator)
     }
 }
 
