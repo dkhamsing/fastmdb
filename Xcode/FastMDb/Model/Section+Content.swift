@@ -92,11 +92,9 @@ private extension Credit {
         if let value = name {
             sub.append(value)
         }
-        if let known = known_for {
-            let kf = known.map { $0.titleDisplay ?? "" }
-            sub.append(contentsOf: kf)
+        if let known = known_for?.first?.titleDisplay {
+            sub.append(known)
         }
-
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
         return Item(id: id, destination: .person, imageUrl: url, imageCenterText: initials, strings: sub)
     }
