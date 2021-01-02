@@ -20,6 +20,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
     var label3 = UILabel()
     var initials = UILabel()
     var ratingLabel = UILabel()
+    var myConstraint: NSLayoutConstraint!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,6 +50,8 @@ class PortraitCollectionViewCell: UICollectionViewCell {
 
             if strings.indices.contains(2) {
                 label3.text = strings[2]
+                myConstraint.constant = 13
+                contentView.layoutIfNeeded()
             }
         } else {
             label.text = item.title
@@ -98,6 +101,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
 
         let ratingInset: CGFloat = 4
         let height: CGFloat = 13
+        myConstraint = label3.heightAnchor.constraint(equalToConstant: 0)
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -120,7 +124,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
             label3.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             label3.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             label3.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            label3.heightAnchor.constraint(equalToConstant: height),
+            myConstraint,
 
             ratingLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: ratingInset),
             imageView.trailingAnchor.constraint(equalTo: ratingLabel.trailingAnchor, constant: ratingInset),
