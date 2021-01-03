@@ -38,6 +38,10 @@ class PortraitCollectionViewCell: UICollectionViewCell {
 
         imageView.image = nil
         ratingLabel.backgroundColor = .clear
+
+        label.text = nil
+        label2.text = nil
+        label3.text = nil
     }
 
     func load(_ item: Item) {
