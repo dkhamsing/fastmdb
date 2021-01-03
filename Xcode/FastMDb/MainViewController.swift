@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SafariServices // TODO: swap out safari controller with custom image controller
+//import SafariServices // TODO: swap out safari controller with custom image controller
 
 // TODO: lists pagination
 // TODO: error handling
@@ -289,22 +289,22 @@ private extension MainViewController {
          )*/
     }
 
-    @objc
-    func imageTap(sender: ImageButton) {
-        guard let url = sender.url else { return }
+//    @objc
+//    func imageTap(sender: ImageButton) {
+//        guard let url = sender.url else { return }
+//
+//        let sfvc = SFSafariViewController(url: url)
+//        sfvc.modalPresentationStyle = .formSheet
+//        present(sfvc, animated: true, completion: nil)
+//    }
 
-        let sfvc = SFSafariViewController(url: url)
-        sfvc.modalPresentationStyle = .formSheet
-        present(sfvc, animated: true, completion: nil)
-    }
-
-    @objc
-    func loadRandom() {
-        let list = Tmdb.MoviesType.allCases.filter { $0.rawValue != kind.rawValue }
-        let random = list.randomElement()
-
-        loadContent(random)
-    }
+//    @objc
+//    func loadRandom() {
+//        let list = Tmdb.MoviesType.allCases.filter { $0.rawValue != kind.rawValue }
+//        let random = list.randomElement()
+//
+//        loadContent(random)
+//    }
 
 }
 
