@@ -89,7 +89,7 @@ class MainViewController: UIViewController {
 
     // Data
     var screen: ScreenType = .landing
-    var kind: Tmdb.MoviesType = .popular
+//    var kind: Tmdb.MoviesType = .popular
     var dataSource: [ItemSection] = []
     var search = TableSearch()
     var startSearch = false
@@ -108,7 +108,7 @@ class MainViewController: UIViewController {
         config()
         
         if screen == .landing {
-            loadContent(kind)
+            loadContent(.popular)
         }
     }
 
@@ -217,7 +217,7 @@ extension MainViewController {
             }
         }
 
-        self.kind = kind
+//        self.kind = kind
     }
 
     func updateScreen(_ updater: Updater?) {
