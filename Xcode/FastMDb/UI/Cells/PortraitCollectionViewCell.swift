@@ -41,8 +41,9 @@ class PortraitCollectionViewCell: UICollectionViewCell {
     }
 
     func load(_ item: Item) {
-
         if let strings = item.strings {
+            label3HeightConstraint.constant = PortraitCollectionViewCell.height
+
             label.text = strings.first
 
             if strings.indices.contains(1) {
@@ -51,7 +52,6 @@ class PortraitCollectionViewCell: UICollectionViewCell {
 
             if strings.indices.contains(2) {
                 label3.text = strings[2]
-                label3HeightConstraint.constant = PortraitCollectionViewCell.height
                 contentView.layoutIfNeeded()
             }
         } else {
