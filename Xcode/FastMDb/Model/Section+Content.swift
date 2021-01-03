@@ -68,13 +68,13 @@ private extension ItemSection {
         let english = tv.results.filter { $0.original_language == "en" }.map { $0.listItem }
 
         if english.count > 0 {
-            let section = ItemSection(header: "tv\(Tmdb.separator)English\(Tmdb.separator)\(kind.tv.title)", items: english)
+            let section = ItemSection(header: "tv\(Tmdb.separator)English\(Tmdb.separator)\(kind.tv?.title ?? "")", items: english)
             sections.append(section)
         }
 
         let notEnglish = tv.results.filter { $0.original_language != "en" }.map { $0.listItem }
         if notEnglish.count > 0 {
-            let section = ItemSection(header: "tv\(Tmdb.separator)Not English\(Tmdb.separator)\(kind.tv.title)", items: notEnglish)
+            let section = ItemSection(header: "tv\(Tmdb.separator)Not English\(Tmdb.separator)\(kind.tv?.title ?? "")", items: notEnglish)
             sections.append(section)
         }
 

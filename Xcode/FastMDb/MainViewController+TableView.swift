@@ -293,7 +293,7 @@ private extension MainViewController {
         case .moviesSortedBy:
             let controller = MainViewController()
             controller.title = "Highest Grossing"
-            controller.sortedBy = "revenue.desc"
+            controller.sortedBy = Tmdb.byRevenue
             navigationController?.pushViewController(controller, animated: true)
         default:
             print("handle button not implemented for \(s)")

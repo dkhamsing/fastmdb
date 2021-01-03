@@ -205,11 +205,16 @@ extension MainViewController {
         let updater = Updater(dataSource: [])
         updateScreen(updater)
 
-        let provider = ContentDataProvider()
-        provider.get(kind) { (movie, tv, people, articles) in
-            let sections = ItemSection.contentSections(kind: kind, movie: movie, tv: tv, people: people, articles: articles)
-            let updater = Updater(dataSource: sections)
-            self.updateScreen(updater)
+        if kind == .top_grossing {
+            sortedBy = Tmdb.byRevenue
+            updateSortedBy(sortedBy, releaseYear)
+        } else {
+            let provider = ContentDataProvider()
+            provider.get(kind) { (movie, tv, people, articles) in
+                let sections = ItemSection.contentSections(kind: kind, movie: movie, tv: tv, people: people, articles: articles)
+                let updater = Updater(dataSource: sections)
+                self.updateScreen(updater)
+            }
         }
 
         self.kind = kind

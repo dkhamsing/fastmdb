@@ -95,7 +95,8 @@ final class ContentDataProvider: DataProvider {
         var people: PeopleSearch?
         var articles: [Article]?
 
-        if let url = Tmdb.tvURL(kind: kind.tv) {
+        if let kind = kind.tv,
+            let url = Tmdb.tvURL(kind: kind) {
             fetchItem(url: url) { (item: TvSearch?) in
                 tv = item
             }
