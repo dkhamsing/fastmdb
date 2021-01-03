@@ -300,6 +300,7 @@ extension Tmdb {
     enum MoviesType: String, CaseIterable {
         case
         popular,
+        top_grossing,
         top_rated,
         now_playing,
         upcoming
@@ -311,6 +312,9 @@ extension Tmdb {
 
             case .now_playing:
                 return "Now Playing"
+
+            case .top_grossing:
+                return "Top Grossing"
 
             case .top_rated:
                 return "Top Rated"
@@ -324,6 +328,8 @@ extension Tmdb {
                 string = "star"
             case .now_playing:
                 string = "play"
+            case .top_grossing:
+                string = "dollarsign.circle"
             case .top_rated:
                 string = "hand.thumbsup"
             case .upcoming:
@@ -333,7 +339,7 @@ extension Tmdb {
             return UIImage(systemName: string)
         }
 
-        var tv: TvType {
+        var tv: TvType? {
             switch self {
             case .popular:
                 return .popular
@@ -343,6 +349,8 @@ extension Tmdb {
                 return .airing_today
             case .upcoming:
                 return .on_the_air
+            case .top_grossing:
+                return nil
             }
         }
     }
@@ -374,6 +382,8 @@ extension Tmdb {
     enum SearchType: String {
         case movie, person, tv
     }
+
+    static let byRevenue = "revenue.desc"
 
     static let separator = " · "
 
