@@ -205,7 +205,11 @@ extension MainViewController {
         let updater = Updater(dataSource: [])
         updateScreen(updater)
 
-        if kind == .top_grossing {
+        if kind == .highest_grossing {
+            let dc = Calendar.current.dateComponents([.year], from: Date())
+            if let year = dc.year {
+                releaseYear = String(year)
+            }
             sortedBy = Tmdb.byRevenue
             updateSortedBy(sortedBy, releaseYear)
         } else {

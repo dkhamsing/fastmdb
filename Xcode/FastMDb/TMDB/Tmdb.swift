@@ -300,7 +300,7 @@ extension Tmdb {
     enum MoviesType: String, CaseIterable {
         case
         popular,
-        top_grossing,
+        highest_grossing,
         top_rated,
         now_playing,
         upcoming
@@ -313,8 +313,8 @@ extension Tmdb {
             case .now_playing:
                 return "Now Playing"
 
-            case .top_grossing:
-                return "Top Grossing"
+            case .highest_grossing:
+                return "Highest Grossing"
 
             case .top_rated:
                 return "Top Rated"
@@ -328,7 +328,7 @@ extension Tmdb {
                 string = "star"
             case .now_playing:
                 string = "play"
-            case .top_grossing:
+            case .highest_grossing:
                 string = "dollarsign.circle"
             case .top_rated:
                 string = "hand.thumbsup"
@@ -349,7 +349,7 @@ extension Tmdb {
                 return .airing_today
             case .upcoming:
                 return .on_the_air
-            case .top_grossing:
+            case .highest_grossing:
                 return nil
             }
         }
