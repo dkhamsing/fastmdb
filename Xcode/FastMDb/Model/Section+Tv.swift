@@ -396,7 +396,8 @@ private extension TV {
     }
 
     var taglineOverviewItem: Item? {
-        if let value = overview {
+        if let value = overview,
+           !value.isEmpty {
             var item = Item(subtitle: value)
 
             if let tagline = tagline,
