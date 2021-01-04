@@ -11,7 +11,8 @@ import UIKit
 class ImagesCollectionViewCell: UICollectionViewCell {
 
     static let identifier = "ImagesCollectionViewCell"
-    static let size: CGSize = CGSize(width: 200, height: 150)
+    static let size: CGSize = CGSize(width: 290, height: 230)
+    static let portraitWidth: CGFloat = 140
 
     var imageView = UIImageView()
 
@@ -63,7 +64,7 @@ extension Item {
 
         if let display = display,
            display == .portraitImage {
-            size.width = 100
+            size.width = ImagesCollectionViewCell.portraitWidth
         }
 
         return size
