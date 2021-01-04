@@ -521,7 +521,13 @@ private extension MainViewController {
         url?.apiGet { (result: Result<MediaSearch, NetError>) in
             guard case .success(let search) = result else { return }
 
-            let items = search.results.map { $0.listItem }
+            let temp = search.results.map { $0.listItem }
+            var items: [Item] = []
+            for (index, element) in temp.enumerated() {
+                var tmp = element
+                tmp.title = "\(index + 1). " + (element.title ?? "")
+                items.append(tmp)
+            }
 
             var footer: String?
             if let _ = releaseYear {
