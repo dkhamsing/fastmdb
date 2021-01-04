@@ -142,7 +142,7 @@ private extension Media {
         
         if !(poster_path ?? "").isEmpty {
             let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
-            let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+            let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .large)
             let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)
             items.append(posterItem)
         }
