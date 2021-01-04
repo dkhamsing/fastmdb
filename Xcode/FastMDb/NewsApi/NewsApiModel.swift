@@ -8,55 +8,81 @@
 import Foundation
 
 struct Headline: Codable {
+
     var articles: [Article]
+
 }
 
 struct Article: Codable {
+
     var author: String?
     var title: String?
     var description: String?
     var content: String?
-    var url: URL?
+    var url: String?
     var urlToImage: String?
     var publishedAt: Date?
     var source: Source?
+
+}
+
+extension Article: Hashable {
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(title)
+    }
+
+}
+
+extension Article: Equatable {
+
+    static func == (lhs: Article, rhs: Article) -> Bool {
+        return lhs.title == rhs.title
+    }
 }
 
 struct Source: Codable {
+
     var name: String?
+
 }
 
 extension Article {
+
+    var descriptionOrContent: String? {
+        return description ?? content
+    }
+
     var identifier: String? {
-        return url?.absoluteString ?? urlToImage
+        return url
     }
 
     var urlToSourceLogo: String {
-        guard let host = url?.host else { return "" }
+        guard let url = url,
+              let u = URL(string: url),
+              let host = u.host else { return "" }
 
         return "https://logo.clearbit.com/\(host)"
     }
 
-    var validDescription: String? {
-        let d = descriptionOrContent
-        guard d != "" else { return nil }
-
-        return d
+    var safeTitle: String {
+        return title ?? ""
     }
-}
 
-private extension Article {
-    var descriptionOrContent: String? {
-        return description ?? content
+    var safeDescription: String {
+        return descriptionOrContent ?? ""
     }
+
 }
 
 enum NewsCategory: String, CaseIterable, Codable {
-    case general
-    case business
-    case entertainment
-    case health
-    case science
-    case sports
-    case technology
+
+    case General
+    case Business
+    case Entertainment
+    case Health
+    case Science
+    case Sports
+    case Technology
+
 }

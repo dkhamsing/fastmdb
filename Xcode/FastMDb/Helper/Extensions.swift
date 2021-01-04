@@ -48,7 +48,15 @@ private extension Article {
     }
 
     var listItem: Item {
-        return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), url: url, destination: .url)
+        var item = Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator))
+
+        if let u = url,
+           let url = URL(string: u) {
+            item.url = url
+            item.destination = .url
+        }
+
+        return item
     }
 
     var listItemWithTimeAgo: Item {
@@ -58,7 +66,15 @@ private extension Article {
         }
         s.append(contentsOf: sub)
 
-        return Item(title: titleDisplay, subtitle: s.joined(separator: Tmdb.separator), url: url, destination: .url)
+        var item =  Item(title: titleDisplay, subtitle: s.joined(separator: Tmdb.separator))
+
+        if let u = url,
+           let url = URL(string: u) {
+            item.url = url
+            item.destination = .url
+        }
+
+        return item
     }
 
 
@@ -74,7 +90,7 @@ private extension Article {
         if let source = source?.name {
             sub.append(source)
         }
-        if let desc = validDescription {
+        if let desc = descriptionOrContent {
             sub.append(desc)
         }
 

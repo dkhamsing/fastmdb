@@ -117,7 +117,7 @@ final class ContentDataProvider: DataProvider {
         }
 
         if kind == .popular,
-           let url = NewsApi.urlForCategory(NewsCategory.entertainment.rawValue) {
+           let url = NewsApi.urlForCategory(NewsCategory.Entertainment.rawValue) {
             fetchArticles(url: url) { a in
                 articles = a
             }
