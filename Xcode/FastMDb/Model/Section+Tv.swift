@@ -137,11 +137,10 @@ private extension TV {
     var imagesSection: ItemSection? {
         var items: [Item] = []
 
-        if !(poster_path ?? "").isEmpty {
-
-        let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
-        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .large)
-        let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)
+        if !(poster_path ?? "").isEmpty {            
+            let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
+            let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .large)
+            let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)
             items.append(posterItem)
         }
 
