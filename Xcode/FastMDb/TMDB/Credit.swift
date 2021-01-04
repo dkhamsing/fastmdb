@@ -181,7 +181,7 @@ extension Credit {
         sub.append(contentsOf: aggregated)
 
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, destination: .person, imageUrl: url, imageCenterText: initials, strings: sub)
+        return Item(id: id, title: name, destination: .person, imageUrl: url, imageCenterText: initials, strings: sub)
     }
 
     var listItemCrew: Item {
