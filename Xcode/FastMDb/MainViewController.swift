@@ -179,7 +179,7 @@ private extension MainViewController {
             spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
 
-        updateNav()
+        updateNav(screen: screen)
 
         searchResultsButtons.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchResultsButtons)
@@ -267,7 +267,7 @@ extension MainViewController {
 
 private extension MainViewController {
 
-    func updateNav(_ kind: Bookmark.Kind? = nil) {
+    func updateNav(screen: ScreenType, kind: Bookmark.Kind? = nil) {
         let buttons = barButtonItems(screen: screen, kind: kind)
         navigationItem.rightBarButtonItems = buttons
     }
@@ -287,7 +287,7 @@ private extension MainViewController {
 
         BookmarksCache.shared.listBookmarks()
 
-        updateNav(bookmark.kind)
+        updateNav(screen: screen, kind: bookmark.kind)
     }
 
     @objc
@@ -597,7 +597,7 @@ private extension MainViewController {
             self.bookmark = Bookmark(id: id,
                                      title: tv.name,
                                      kind: .tv)
-            self.updateNav(.tv)
+            self.updateNav(screen: self.screen, kind: .tv)
         }
     }
 
