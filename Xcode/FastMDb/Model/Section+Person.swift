@@ -523,7 +523,10 @@ private extension Credit {
             }
         }
 
-        guard items.count > 0 else { return nil }
+        if items.count == 0 && sections.count == 0 {
+            return nil
+        }
+
         var total: String?
         if items.count > limit {
             total = String.allCreditsText(items.count)
@@ -533,7 +536,9 @@ private extension Credit {
 
         let section = ItemSection(header: "tv\(Tmdb.separator)more", items: prefix, footer: total, destination: .items, destinationItems: c.cast.map { $0.listItemTv }, destinationTitle: "TV")
 
-        sections.append(section)
+        if items.count > 0 {
+            sections.append(section)
+        }
 
         return sections
     }
