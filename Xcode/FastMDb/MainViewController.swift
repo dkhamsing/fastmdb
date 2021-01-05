@@ -32,7 +32,6 @@ class MainViewController: UIViewController {
     }
 
     var bookmark: Bookmark?
-    var isBookmarked: Bool = false
 
     var items: [Item]? {
         didSet {
@@ -293,8 +292,6 @@ private extension MainViewController {
                 BookmarksCache.shared.listBookmarks()
             }
         }
-
-        isBookmarked.toggle()
 
         updateNav()
     }
