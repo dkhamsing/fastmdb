@@ -31,6 +31,9 @@ class MainViewController: UIViewController {
         }
     }
 
+    var bookmark: Bookmark?
+    var isBookmarked: Bool = false
+
     var items: [Item]? {
         didSet {
             updateItems(items)
@@ -177,8 +180,7 @@ private extension MainViewController {
             spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
 
-        let button = barButtonItem(screen)
-        navigationItem.rightBarButtonItem = button
+        updateNav()
 
         searchResultsButtons.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchResultsButtons)
@@ -266,6 +268,73 @@ extension MainViewController {
 
 private extension MainViewController {
 
+    static let keyBookmarks = "bookmarks"
+
+    func listBookmarks() {
+        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
+            print("bookmarks:")
+            print(array)
+        } else {
+            print("bookmarks empty")
+        }
+
+    }
+
+//    func getBookmarks() -> [Bookmark] {
+//        if let savedPerson = UserDefaults.standard.object(forKey: "SavedPerson") as? Data {
+//            let decoder = JSONDecoder()
+//            if let loadedPerson = try? decoder.decode([Bookmark].self, from: savedPerson) {
+//                return loadedPerson
+//            }
+//            return []
+//        }
+//        return []
+//    }
+
+    func updateNav() {
+        let buttons = barButtonItem(screen)
+        navigationItem.rightBarButtonItems = buttons
+    }
+
+    @objc
+    func bookmarkAction() {
+        if isBookmarkBookmarked {
+//            listBookmarks()
+//            print("todo remove bookmark")
+
+            var bookmarks: [Int] = []
+            if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
+                bookmarks = array
+            }
+
+            if let id = bookmark?.id {
+                bookmarks = bookmarks.filter { $0 != id }
+            }
+
+            UserDefaults.standard.setValue(bookmarks, forKey: MainViewController.keyBookmarks)
+            listBookmarks()
+        } else {
+//            listBookmarks()
+//            print("todo add bookmark")
+
+            var bookmarks: [Int] = []
+            if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
+                bookmarks = array
+            }
+
+            if let id = bookmark?.id {
+                bookmarks.append(id)
+            }
+
+            UserDefaults.standard.setValue(bookmarks, forKey: MainViewController.keyBookmarks)
+            listBookmarks()
+        }
+
+        isBookmarked.toggle()
+
+        updateNav()
+    }
+
     @objc
     func goHome() {
         navigationController?.popToRootViewController(animated: true)
@@ -313,15 +382,37 @@ private extension MainViewController {
 }
 
 private extension MainViewController {
+    var isBookmarkBookmarked: Bool {
 
-    func barButtonItem(_ screen: ScreenType) -> UIBarButtonItem {
+        guard let id = bookmark?.id else { return false }
+
+
+        var bookmarks: [Int] = []
+        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
+            bookmarks = array
+
+
+        }
+
+        return bookmarks.contains(id)
+
+    }
+
+    func barButtonItem(_ screen: ScreenType) -> [UIBarButtonItem] {
         if screen == .landing {
             let image = UIImage(systemName: "ellipsis")
-            return UIBarButtonItem(title: nil, image: image, primaryAction: nil, menu: barMenu)
+            return [UIBarButtonItem(title: nil, image: image, primaryAction: nil, menu: barMenu)]
         }
         else {
             let image = UIImage(systemName: "house")
-            return  UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(goHome))
+            let houseButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(goHome))
+
+            let image2 = isBookmarkBookmarked ?
+            UIImage(systemName: "bookmark.fill") :
+            UIImage(systemName: "bookmark")
+            let bookmarkButton = UIBarButtonItem(image: image2, style: .plain, target: self, action: #selector(bookmarkAction))
+
+            return [houseButton, bookmarkButton]
         }
     }
 
@@ -558,9 +649,25 @@ private extension MainViewController {
             let sections = tv.sections(articles: articles, albums: albums)
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
+
+            self.bookmark = Bookmark(id: id,
+                                     title: tv.name,
+                                     kind: .tv)
+            self.updateNav()
         }
     }
 
+}
+
+struct Bookmark: Codable {
+    var id: Int?
+    var title: String?
+    var kind: Kind = .tv
+
+    enum Kind: Int, Codable {
+        case tv,
+             movie
+    }
 }
 
 //extension MainViewController: UIContextMenuInteractionDelegate {
