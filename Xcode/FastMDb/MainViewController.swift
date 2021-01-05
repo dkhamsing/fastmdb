@@ -271,25 +271,36 @@ private extension MainViewController {
     static let keyBookmarks = "bookmarks"
 
     func listBookmarks() {
-        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
-            print("bookmarks:")
-            print(array)
-        } else {
-            print("bookmarks empty")
-        }
+//        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
+//            print("bookmarks:")
+//            print(array)
+//        } else {
+//            print("bookmarks empty")
+//        }
+
+        let bm = getBookmarks()
+        print(bm)
 
     }
 
-//    func getBookmarks() -> [Bookmark] {
-//        if let savedPerson = UserDefaults.standard.object(forKey: "SavedPerson") as? Data {
-//            let decoder = JSONDecoder()
-//            if let loadedPerson = try? decoder.decode([Bookmark].self, from: savedPerson) {
-//                return loadedPerson
-//            }
-//            return []
-//        }
-//        return []
-//    }
+    func getBookmarks() -> [Bookmark] {
+        if let savedPerson = UserDefaults.standard.object(forKey: "SavedPerson") as? Data {
+            let decoder = JSONDecoder()
+            if let loadedPerson = try? decoder.decode([Bookmark].self, from: savedPerson) {
+                return loadedPerson
+            }
+            return []
+        }
+        return []
+    }
+
+    func saveBookmarks(_ list: [Bookmark]) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(list) {
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: "SavedPerson")
+        }
+    }
 
     func updateNav() {
         let buttons = barButtonItem(screen)
@@ -302,32 +313,49 @@ private extension MainViewController {
 //            listBookmarks()
 //            print("todo remove bookmark")
 
-            var bookmarks: [Int] = []
-            if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
-                bookmarks = array
+//            var bookmarks: [Int] = []
+//            if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
+//                bookmarks = array
+//            }
+//
+//            if let id = bookmark?.id {
+//                bookmarks = bookmarks.filter { $0 != id }
+//            }
+//
+//            UserDefaults.standard.setValue(bookmarks, forKey: MainViewController.keyBookmarks)
+
+//            if let bookmark = bookmark {
+                        if let id = bookmark?.id {
+                var bm = getBookmarks()
+
+                            bm = bm.filter { $0.id ?? 0 != id }
+                            saveBookmarks(bm)
+
             }
 
-            if let id = bookmark?.id {
-                bookmarks = bookmarks.filter { $0 != id }
-            }
-
-            UserDefaults.standard.setValue(bookmarks, forKey: MainViewController.keyBookmarks)
             listBookmarks()
         } else {
 //            listBookmarks()
 //            print("todo add bookmark")
 
-            var bookmarks: [Int] = []
-            if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
-                bookmarks = array
-            }
+//            var bookmarks: [Int] = []
+//            if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
+//                bookmarks = array
+//            }
+//
+//            if let id = bookmark?.id {
+//                bookmarks.append(id)
+//            }
+//
+//            UserDefaults.standard.setValue(bookmarks, forKey: MainViewController.keyBookmarks)
 
-            if let id = bookmark?.id {
-                bookmarks.append(id)
-            }
+            if let bookmark = bookmark {
+            var bm = getBookmarks()
+            bm.append(bookmark)
+            saveBookmarks(bm)
 
-            UserDefaults.standard.setValue(bookmarks, forKey: MainViewController.keyBookmarks)
             listBookmarks()
+            }
         }
 
         isBookmarked.toggle()
@@ -386,15 +414,16 @@ private extension MainViewController {
 
         guard let id = bookmark?.id else { return false }
 
-
-        var bookmarks: [Int] = []
-        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
-            bookmarks = array
-
-
-        }
-
-        return bookmarks.contains(id)
+        let bm = getBookmarks().compactMap { $0.id }
+        return bm.contains(id)
+//        var bookmarks: [Int] = []
+//        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
+//            bookmarks = array
+//
+//
+//        }
+//
+//        return bookmarks.contains(id)
 
     }
 
