@@ -274,24 +274,18 @@ private extension MainViewController {
 
     @objc
     func bookmarkAction() {
+        guard let bookmark = bookmark else { return }
         if isBookmarkBookmarked {
-            if let id = bookmark?.id {
-                var bm = BookmarksCache.shared.getBookmarks()
-
-                bm = bm.filter { $0.id ?? 0 != id }
-                BookmarksCache.shared.saveBookmarks(bm)
-
-            }
-            BookmarksCache.shared.listBookmarks()
+            var bm = BookmarksCache.shared.getBookmarks()
+            bm = bm.filter { $0.id ?? 0 != bookmark.id ?? 0 }
+            BookmarksCache.shared.saveBookmarks(bm)
         } else {
-            if let bookmark = bookmark {
-                var bm = BookmarksCache.shared.getBookmarks()
-                bm.append(bookmark)
-                BookmarksCache.shared.saveBookmarks(bm)
-
-                BookmarksCache.shared.listBookmarks()
-            }
+            var bm = BookmarksCache.shared.getBookmarks()
+            bm.append(bookmark)
+            BookmarksCache.shared.saveBookmarks(bm)
         }
+        
+        BookmarksCache.shared.listBookmarks()
 
         updateNav()
     }
