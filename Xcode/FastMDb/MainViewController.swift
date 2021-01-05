@@ -129,6 +129,52 @@ class MainViewController: UIViewController {
 
 }
 
+class BookmarksCache {
+
+    static let shared = BookmarksCache()
+
+    func isBookmarked(id: Int?) -> Bool {
+        guard let id = id else { return false }
+
+        let bm = getBookmarks().compactMap { $0.id }
+        return bm.contains(id)
+    }
+
+    func listBookmarks() {
+//        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
+//            print("bookmarks:")
+//            print(array)
+//        } else {
+//            print("bookmarks empty")
+//        }
+
+        let bm = getBookmarks()
+        print(bm)
+
+    }
+
+    func getBookmarks() -> [Bookmark] {
+        if let savedPerson = UserDefaults.standard.object(forKey: "SavedPerson") as? Data {
+            let decoder = JSONDecoder()
+            if let loadedPerson = try? decoder.decode([Bookmark].self, from: savedPerson) {
+                return loadedPerson
+            }
+            return []
+        }
+        return []
+    }
+
+    func saveBookmarks(_ list: [Bookmark]) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(list) {
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: "SavedPerson")
+        }
+    }
+
+}
+
+
 private extension MainViewController {
 
     func setup() {
@@ -270,37 +316,7 @@ private extension MainViewController {
 
     static let keyBookmarks = "bookmarks"
 
-    func listBookmarks() {
-//        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
-//            print("bookmarks:")
-//            print(array)
-//        } else {
-//            print("bookmarks empty")
-//        }
 
-        let bm = getBookmarks()
-        print(bm)
-
-    }
-
-    func getBookmarks() -> [Bookmark] {
-        if let savedPerson = UserDefaults.standard.object(forKey: "SavedPerson") as? Data {
-            let decoder = JSONDecoder()
-            if let loadedPerson = try? decoder.decode([Bookmark].self, from: savedPerson) {
-                return loadedPerson
-            }
-            return []
-        }
-        return []
-    }
-
-    func saveBookmarks(_ list: [Bookmark]) {
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(list) {
-            let defaults = UserDefaults.standard
-            defaults.set(encoded, forKey: "SavedPerson")
-        }
-    }
 
     func updateNav() {
         let buttons = barButtonItem(screen)
@@ -326,14 +342,14 @@ private extension MainViewController {
 
 //            if let bookmark = bookmark {
                         if let id = bookmark?.id {
-                var bm = getBookmarks()
+                            var bm = BookmarksCache.shared.getBookmarks()
 
                             bm = bm.filter { $0.id ?? 0 != id }
-                            saveBookmarks(bm)
+                            BookmarksCache.shared.saveBookmarks(bm)
 
             }
 
-            listBookmarks()
+            BookmarksCache.shared.listBookmarks()
         } else {
 //            listBookmarks()
 //            print("todo add bookmark")
@@ -350,11 +366,11 @@ private extension MainViewController {
 //            UserDefaults.standard.setValue(bookmarks, forKey: MainViewController.keyBookmarks)
 
             if let bookmark = bookmark {
-            var bm = getBookmarks()
+                var bm = BookmarksCache.shared.getBookmarks()
             bm.append(bookmark)
-            saveBookmarks(bm)
+                BookmarksCache.shared.saveBookmarks(bm)
 
-            listBookmarks()
+                BookmarksCache.shared.listBookmarks()
             }
         }
 
@@ -411,11 +427,12 @@ private extension MainViewController {
 
 private extension MainViewController {
     var isBookmarkBookmarked: Bool {
+        return BookmarksCache.shared.isBookmarked(id: bookmark?.id)
 
-        guard let id = bookmark?.id else { return false }
-
-        let bm = getBookmarks().compactMap { $0.id }
-        return bm.contains(id)
+//        guard let id = bookmark?.id else { return false }
+//
+//        let bm = BookmarksCache.shared.getBookmarks().compactMap { $0.id }
+//        return bm.contains(id)
 //        var bookmarks: [Int] = []
 //        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
 //            bookmarks = array
