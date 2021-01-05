@@ -267,15 +267,15 @@ extension MainViewController {
 
 private extension MainViewController {
 
-    func updateNav() {
-        let buttons = barButtonItem(screen)
+    func updateNav(_ kind: Bookmark.Kind? = nil) {
+        let buttons = barButtonItems(screen: screen, kind: kind)
         navigationItem.rightBarButtonItems = buttons
     }
 
     @objc
     func bookmarkAction() {
         guard let bookmark = bookmark else { return }
-        if isBookmarkBookmarked {
+        if BookmarksCache.shared.isBookmarked(id: bookmark.id) {
             var bm = BookmarksCache.shared.getBookmarks()
             bm = bm.filter { $0.id ?? 0 != bookmark.id ?? 0 }
             BookmarksCache.shared.saveBookmarks(bm)
@@ -284,10 +284,10 @@ private extension MainViewController {
             bm.append(bookmark)
             BookmarksCache.shared.saveBookmarks(bm)
         }
-        
+
         BookmarksCache.shared.listBookmarks()
 
-        updateNav()
+        updateNav(bookmark.kind)
     }
 
     @objc
@@ -337,11 +337,8 @@ private extension MainViewController {
 }
 
 private extension MainViewController {
-    var isBookmarkBookmarked: Bool {
-        return BookmarksCache.shared.isBookmarked(id: bookmark?.id)
-    }
 
-    func barButtonItem(_ screen: ScreenType) -> [UIBarButtonItem] {
+    func barButtonItems(screen: ScreenType, kind: Bookmark.Kind?) -> [UIBarButtonItem] {
         if screen == .landing {
             let image = UIImage(systemName: "ellipsis")
             return [UIBarButtonItem(title: nil, image: image, primaryAction: nil, menu: barMenu)]
@@ -350,12 +347,16 @@ private extension MainViewController {
             let image = UIImage(systemName: "house")
             let houseButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(goHome))
 
-            let image2 = isBookmarkBookmarked ?
-            UIImage(systemName: "bookmark.fill") :
-            UIImage(systemName: "bookmark")
-            let bookmarkButton = UIBarButtonItem(image: image2, style: .plain, target: self, action: #selector(bookmarkAction))
+            var buttons: [UIBarButtonItem] = [houseButton]
 
-            return [houseButton, bookmarkButton]
+            if let kind = kind,
+               kind == .tv {
+                let bookmarkImage = BookmarksCache.shared.bookmarkImage(id: bookmark?.id)
+                let bookmarkButton = UIBarButtonItem(image: bookmarkImage, style: .plain, target: self, action: #selector(bookmarkAction))
+                buttons.append(bookmarkButton)
+            }
+
+            return buttons
         }
     }
 
@@ -596,7 +597,7 @@ private extension MainViewController {
             self.bookmark = Bookmark(id: id,
                                      title: tv.name,
                                      kind: .tv)
-            self.updateNav()
+            self.updateNav(.tv)
         }
     }
 
@@ -652,6 +653,12 @@ class BookmarksCache {
     static let shared = BookmarksCache()
 
     static let keyBookmarks = "bookmarks"
+
+    func bookmarkImage(id: Int?) -> UIImage? {
+        return isBookmarked(id: id) ?
+            UIImage(systemName: "bookmark.fill") :
+            UIImage(systemName: "bookmark")
+    }
 
     func isBookmarked(id: Int?) -> Bool {
         guard let id = id else { return false }
