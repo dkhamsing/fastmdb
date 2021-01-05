@@ -129,52 +129,6 @@ class MainViewController: UIViewController {
 
 }
 
-class BookmarksCache {
-
-    static let shared = BookmarksCache()
-
-    func isBookmarked(id: Int?) -> Bool {
-        guard let id = id else { return false }
-
-        let bm = getBookmarks().compactMap { $0.id }
-        return bm.contains(id)
-    }
-
-    func listBookmarks() {
-//        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
-//            print("bookmarks:")
-//            print(array)
-//        } else {
-//            print("bookmarks empty")
-//        }
-
-        let bm = getBookmarks()
-        print(bm)
-
-    }
-
-    func getBookmarks() -> [Bookmark] {
-        if let savedPerson = UserDefaults.standard.object(forKey: "SavedPerson") as? Data {
-            let decoder = JSONDecoder()
-            if let loadedPerson = try? decoder.decode([Bookmark].self, from: savedPerson) {
-                return loadedPerson
-            }
-            return []
-        }
-        return []
-    }
-
-    func saveBookmarks(_ list: [Bookmark]) {
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(list) {
-            let defaults = UserDefaults.standard
-            defaults.set(encoded, forKey: "SavedPerson")
-        }
-    }
-
-}
-
-
 private extension MainViewController {
 
     func setup() {
@@ -314,10 +268,6 @@ extension MainViewController {
 
 private extension MainViewController {
 
-    static let keyBookmarks = "bookmarks"
-
-
-
     func updateNav() {
         let buttons = barButtonItem(screen)
         navigationItem.rightBarButtonItems = buttons
@@ -326,48 +276,18 @@ private extension MainViewController {
     @objc
     func bookmarkAction() {
         if isBookmarkBookmarked {
-//            listBookmarks()
-//            print("todo remove bookmark")
+            if let id = bookmark?.id {
+                var bm = BookmarksCache.shared.getBookmarks()
 
-//            var bookmarks: [Int] = []
-//            if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
-//                bookmarks = array
-//            }
-//
-//            if let id = bookmark?.id {
-//                bookmarks = bookmarks.filter { $0 != id }
-//            }
-//
-//            UserDefaults.standard.setValue(bookmarks, forKey: MainViewController.keyBookmarks)
-
-//            if let bookmark = bookmark {
-                        if let id = bookmark?.id {
-                            var bm = BookmarksCache.shared.getBookmarks()
-
-                            bm = bm.filter { $0.id ?? 0 != id }
-                            BookmarksCache.shared.saveBookmarks(bm)
+                bm = bm.filter { $0.id ?? 0 != id }
+                BookmarksCache.shared.saveBookmarks(bm)
 
             }
-
             BookmarksCache.shared.listBookmarks()
         } else {
-//            listBookmarks()
-//            print("todo add bookmark")
-
-//            var bookmarks: [Int] = []
-//            if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
-//                bookmarks = array
-//            }
-//
-//            if let id = bookmark?.id {
-//                bookmarks.append(id)
-//            }
-//
-//            UserDefaults.standard.setValue(bookmarks, forKey: MainViewController.keyBookmarks)
-
             if let bookmark = bookmark {
                 var bm = BookmarksCache.shared.getBookmarks()
-            bm.append(bookmark)
+                bm.append(bookmark)
                 BookmarksCache.shared.saveBookmarks(bm)
 
                 BookmarksCache.shared.listBookmarks()
@@ -428,20 +348,6 @@ private extension MainViewController {
 private extension MainViewController {
     var isBookmarkBookmarked: Bool {
         return BookmarksCache.shared.isBookmarked(id: bookmark?.id)
-
-//        guard let id = bookmark?.id else { return false }
-//
-//        let bm = BookmarksCache.shared.getBookmarks().compactMap { $0.id }
-//        return bm.contains(id)
-//        var bookmarks: [Int] = []
-//        if let array = UserDefaults.standard.value(forKey: MainViewController.keyBookmarks) as? [Int] {
-//            bookmarks = array
-//
-//
-//        }
-//
-//        return bookmarks.contains(id)
-
     }
 
     func barButtonItem(_ screen: ScreenType) -> [UIBarButtonItem] {
@@ -705,17 +611,6 @@ private extension MainViewController {
 
 }
 
-struct Bookmark: Codable {
-    var id: Int?
-    var title: String?
-    var kind: Kind = .tv
-
-    enum Kind: Int, Codable {
-        case tv,
-             movie
-    }
-}
-
 //extension MainViewController: UIContextMenuInteractionDelegate {
 //
 //    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
@@ -760,4 +655,53 @@ struct Updater {
 //    var buttonUrl: URL?
     var dataSource: [ItemSection]?
     
+}
+
+class BookmarksCache {
+    static let shared = BookmarksCache()
+
+    static let keyBookmarks = "bookmarks"
+
+    func isBookmarked(id: Int?) -> Bool {
+        guard let id = id else { return false }
+
+        let bm = getBookmarks().compactMap { $0.id }
+        return bm.contains(id)
+    }
+
+    func listBookmarks() {
+        let bm = getBookmarks()
+        print(bm)
+    }
+
+    func getBookmarks() -> [Bookmark] {
+        if let savedPerson = UserDefaults.standard.object(forKey: BookmarksCache.keyBookmarks) as? Data {
+            let decoder = JSONDecoder()
+            if let loadedPerson = try? decoder.decode([Bookmark].self, from: savedPerson) {
+                return loadedPerson
+            }
+            return []
+        }
+        return []
+    }
+
+    func saveBookmarks(_ list: [Bookmark]) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(list) {
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: BookmarksCache.keyBookmarks)
+        }
+    }
+
+}
+
+struct Bookmark: Codable {
+    var id: Int?
+    var title: String?
+    var kind: Kind = .tv
+
+    enum Kind: Int, Codable {
+        case tv,
+             movie
+    }
 }
