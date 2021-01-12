@@ -240,6 +240,13 @@ extension Media {
         return Item(id: id, title: titleDisplay, subtitle: sub, destination: .movie, color: ratingColor)
     }
 
+    var listItemWithVotes: Item {
+        var sub = listItemSub
+        sub.append("\(vote_count) votes")
+
+        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .movie, color: ratingColor)
+    }
+
     var listItemImage: Item {
         let sub = listItemSub.joined(separator: Tmdb.separator)
         let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)

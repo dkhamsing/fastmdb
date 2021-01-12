@@ -43,16 +43,30 @@ private extension ItemSection {
 
         var sections: [ItemSection] = []
 
-        let english = movie.results.filter { $0.original_language == "en" }.map { $0.listItem }
+        var results = movie.results
+
+        if kind == .top_rated {
+            results = results.filter { $0.vote_count > 5000 }
+        }
+
+        let english = results.filter { $0.original_language == "en" }.map { $0.listItemWithVotes }
         if english.count > 0 {
             let section = ItemSection(header: "movies\(Tmdb.separator)English\(Tmdb.separator)\(kind.title)", items: english)
             sections.append(section)
         }
 
-        let notEnglish = movie.results.filter { $0.original_language != "en" }.map { $0.listItem }
+        let notEnglish = results.filter { $0.original_language != "en" }.map { $0.listItemWithVotes }
         if notEnglish.count > 0 {
             let section = ItemSection(header: "movies\(Tmdb.separator)Not English\(Tmdb.separator)\(kind.title)", items: notEnglish)
             sections.append(section)
+        }
+
+        if kind == .top_rated {
+            let lessVotes = movie.results.filter { $0.vote_count < 5001 }.map { $0.listItemWithVotes }
+            if !lessVotes.isEmpty {
+                let section = ItemSection(header: "also Top Rated", items: lessVotes)
+                sections.append(section)
+            }
         }
 
         guard sections.count > 0 else { return nil }
