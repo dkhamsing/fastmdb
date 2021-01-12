@@ -64,7 +64,7 @@ private extension ItemSection {
         if kind == .top_rated {
             let lessVotes = movie.results.filter { $0.vote_count < 5001 }.map { $0.listItemWithVotes }
             if !lessVotes.isEmpty {
-                let section = ItemSection(header: "also Top Rated", items: lessVotes)
+                let section = ItemSection(header: "movies\(Tmdb.separator)also top rated", items: lessVotes)
                 sections.append(section)
             }
         }
