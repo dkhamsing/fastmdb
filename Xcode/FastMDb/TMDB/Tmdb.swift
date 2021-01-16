@@ -370,10 +370,19 @@ extension Tmdb {
     }
 
     static func tvURL(kind: TvType) -> URL? {
+        if kind == .top_rated {
+            return tvTopRatedEnglish()
+        }
+
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.tv)/\(kind.rawValue)"
 
         return urlComponents.url
+    }
+
+    static func tvTopRatedEnglish() -> URL? {
+        let string = "https://api.themoviedb.org/3/discover/tv?api_key=\(Constant.apiKey)&language=en-US&sort_by=vote_average.desc&vote_count.gte=1000&include_null_first_air_dates=false&with_original_language=en"
+        return URL.init(string: string )
     }
 
 }
