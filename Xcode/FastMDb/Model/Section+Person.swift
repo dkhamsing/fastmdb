@@ -639,6 +639,10 @@ private extension Credit {
             }
         }
 
+        if items.count == 0 {
+            items = temp
+        }
+
         guard items.count > 0 else { return nil }
 
         var total: String?
