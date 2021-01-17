@@ -43,16 +43,32 @@ private extension ItemSection {
 
         var sections: [ItemSection] = []
 
-        let english = movie.results.filter { $0.original_language == "en" }.map { $0.listItem }
+        var results = movie.results
+
+        let voteLimit = 5000
+
+        if kind == .top_rated {
+            results = results.filter { $0.vote_count > voteLimit }
+        }
+
+        let english = results.filter { $0.original_language == "en" }.map { kind == .top_rated ? $0.listItemWithVotes : $0.listItem }
         if english.count > 0 {
             let section = ItemSection(header: "movies\(Tmdb.separator)English\(Tmdb.separator)\(kind.title)", items: english)
             sections.append(section)
         }
 
-        let notEnglish = movie.results.filter { $0.original_language != "en" }.map { $0.listItem }
+        let notEnglish = results.filter { $0.original_language != "en" }.map { kind == .top_rated ? $0.listItemWithVotes : $0.listItem }
         if notEnglish.count > 0 {
             let section = ItemSection(header: "movies\(Tmdb.separator)Not English\(Tmdb.separator)\(kind.title)", items: notEnglish)
             sections.append(section)
+        }
+
+        if kind == .top_rated {
+            let lessVotes = movie.results.filter { $0.vote_count < (voteLimit + 1) }.map { $0.listItemWithVotes }
+            if !lessVotes.isEmpty {
+                let section = ItemSection(header: "movies\(Tmdb.separator)also top rated", items: lessVotes)
+                sections.append(section)
+            }
         }
 
         guard sections.count > 0 else { return nil }
@@ -65,17 +81,33 @@ private extension ItemSection {
 
         var sections: [ItemSection] = []
 
-        let english = tv.results.filter { $0.original_language == "en" }.map { $0.listItem }
+        var results = tv.results
+
+        let voteLimit = 1000
+
+        if kind == .top_rated {
+            results = results.filter { $0.vote_count > voteLimit }
+        }
+
+        let english = results.filter { $0.original_language == "en" }.map { kind == .top_rated ? $0.listItemWithVotes : $0.listItem }
 
         if english.count > 0 {
             let section = ItemSection(header: "tv\(Tmdb.separator)English\(Tmdb.separator)\(kind.tv?.title ?? "")", items: english)
             sections.append(section)
         }
 
-        let notEnglish = tv.results.filter { $0.original_language != "en" }.map { $0.listItem }
+        let notEnglish = results.filter { $0.original_language != "en" }.map { kind == .top_rated ? $0.listItemWithVotes : $0.listItem }
         if notEnglish.count > 0 {
             let section = ItemSection(header: "tv\(Tmdb.separator)Not English\(Tmdb.separator)\(kind.tv?.title ?? "")", items: notEnglish)
             sections.append(section)
+        }
+
+        if kind == .top_rated {
+            let lessVotes = tv.results.filter { $0.vote_count < (voteLimit + 1) }.map { $0.listItemWithVotes }
+            if !lessVotes.isEmpty {
+                let section = ItemSection(header: "tv\(Tmdb.separator)also top rated", items: lessVotes)
+                sections.append(section)
+            }
         }
 
         guard sections.count > 0 else { return nil }

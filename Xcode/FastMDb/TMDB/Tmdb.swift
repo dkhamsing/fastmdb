@@ -136,6 +136,18 @@ struct Tmdb {
         return urlComponents.url
     }
 
+    static func tvURL(original_language: String, voteCountGreaterThanOrEqual: Int, sortBy: String) -> URL? {
+        var urlComponents = baseComponents
+        urlComponents.path = "\(Path.tvDiscover)"
+
+        let qi1 = URLQueryItem(name: "sort_by", value: sortBy)
+        let qi2 = URLQueryItem(name: "with_original_language", value: original_language)
+        let qi3 = URLQueryItem(name: "vote_count.gte", value: String(voteCountGreaterThanOrEqual))
+        urlComponents.queryItems = [ Tmdb.keyQueryItem, qi1, qi2, qi3 ]
+
+        return urlComponents.url
+    }
+
     static func movieURL(movieId: Int?, append: String = "credits,videos,external_ids,recommendations,similar,reviews,release_dates,watch/providers,images") -> URL? {
         guard let movieId = movieId else { return nil }
 
@@ -370,6 +382,10 @@ extension Tmdb {
     }
 
     static func tvURL(kind: TvType) -> URL? {
+        if kind == .top_rated {
+            return tvURL(original_language: "en", voteCountGreaterThanOrEqual: 1000, sortBy: Tmdb.byVote)
+        }
+
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.tv)/\(kind.rawValue)"
 
@@ -384,6 +400,7 @@ extension Tmdb {
     }
 
     static let byRevenue = "revenue.desc"
+    static let byVote = "vote_average.desc"
 
     static let separator = " · "
 

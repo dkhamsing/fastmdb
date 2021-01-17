@@ -144,6 +144,21 @@ extension TV {
         return item
     }
 
+    var listItemWithVotes: Item {
+        var item = listItemNoSub
+
+        var sub: [String] = []
+        if first_air_date.yearDisplay != "" {
+            sub.append(first_air_date.yearDisplay)
+        }
+        sub.append(contentsOf: subtitleLanguageCountry)
+        sub.append("\(vote_count) votes")
+
+        item.subtitle = sub.joined(separator: Tmdb.separator)
+
+        return item
+    }
+
     var listItemWithoutYear: Item {
         var item = listItemNoSub
         item.subtitle = subtitleLanguageCountry.joined(separator: Tmdb.separator)
