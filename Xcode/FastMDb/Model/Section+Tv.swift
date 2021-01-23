@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension TV {
     
@@ -346,9 +347,16 @@ private extension TV {
     }
 
     var ratingSection: ItemSection? {
-        guard let rating = ratingDisplay else { return nil }
+        let rating = "\(vote_average)/10"
 
-        let item = Item(title: rating, subtitle: voteDisplay, color: vote_average.color)
+        let vote = "\(vote_count) votes"
+
+        var color: UIColor?
+        if vote_count > Tmdb.voteThreshold {
+            color = vote_average.color
+        }
+
+        let item = Item(title: rating, subtitle: vote, color: color)
         let section = ItemSection(header: "rating", items: [item])
         
         return section
@@ -495,18 +503,6 @@ private extension TV {
         default:
             return false
         }
-    }
-
-    var ratingDisplay: String? {
-        guard vote_count > Tmdb.voteThreshold else { return nil }
-
-        return "\(vote_average)/10"
-    }
-
-    var voteDisplay: String? {
-        guard vote_count > Tmdb.voteThreshold else { return nil }
-
-        return "\(vote_count) votes"
     }
 
     var remappedSeasonItems: [Item] {
