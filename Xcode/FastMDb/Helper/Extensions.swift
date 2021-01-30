@@ -288,7 +288,7 @@ extension String {
 
     static func googleSearchUrlWithQuery(_ query: String) -> URL? {
         let baseUrl = "https://www.google.com/search?q="
-        let item = query.replacingOccurrences(of: " ", with: "+")
+        guard let item = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return nil }
 
         return URL(string: "\(baseUrl)\(item)")
     }
