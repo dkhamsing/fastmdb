@@ -298,7 +298,7 @@ extension Tmdb {
                 return self.rawValue.capitalizingFirstLetter()
 
             case .airing_today:
-                return "Airing Today"
+                return "Airing Soon"
 
             case .on_the_air:
                 return "On The Air"
