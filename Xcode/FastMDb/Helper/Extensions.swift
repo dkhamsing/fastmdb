@@ -288,7 +288,7 @@ extension String {
 
     static func googleSearchUrlWithQuery(_ query: String) -> URL? {
         let baseUrl = "https://www.google.com/search?q="
-        guard let item = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return nil }
+        guard let item = query.addingPercentEncoding else { return nil }
 
         return URL(string: "\(baseUrl)\(item)")
     }
@@ -311,25 +311,33 @@ extension String {
 
     var letterboxdUrl: URL? {
         let baseUrl = "https://letterboxd.com/search/"
-        let item = self.replacingOccurrences(of: " ", with: "+")
+        guard let item = self.addingPercentEncoding else { return nil }
 
         return URL(string: "\(baseUrl)\(item)")
     }
 
     var rottenTomatoestUrl: URL? {
         let baseUrl = "https://www.rottentomatoes.com/search?search="
-        let item = self.replacingOccurrences(of: " ", with: "+")
+        guard let item = self.addingPercentEncoding else { return nil }
 
         return URL(string: "\(baseUrl)\(item)")
     }
 
     var wikipediaUrl: URL? {
         let baseUrl = "https://en.wikipedia.org/wiki"
-        guard let item = self.replacingOccurrences(of: " ", with: "_").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return nil }
+        guard let item = self.replacingOccurrences(of: " ", with: "_").addingPercentEncoding else { return nil }
         
         return URL(string: "\(baseUrl)/\(item)")
     }
 
+}
+
+private extension String {
+
+    var addingPercentEncoding: String? {
+        return self.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+    }
+    
 }
 
 /// Credits: https://www.avanderlee.com/swift/unique-values-removing-duplicates-array/
