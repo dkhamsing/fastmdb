@@ -347,6 +347,13 @@ private extension TV {
     }
 
     var ratingSection: ItemSection? {
+        guard vote_count > 0 else {
+            let item = Item(subtitle: "Unrated")
+            let section = ItemSection(header: "rating", items: [item])
+
+            return section
+        }
+
         let rating = "\(vote_average)/10"
 
         let vote = "\(vote_count) votes"
