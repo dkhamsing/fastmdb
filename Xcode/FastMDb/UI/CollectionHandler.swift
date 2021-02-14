@@ -9,7 +9,7 @@
 import UIKit
 import SafariServices
 
-protocol CollectionListener: class {
+protocol CollectionListener: AnyObject {
 
     func doTapItem(_ item: Item)
 

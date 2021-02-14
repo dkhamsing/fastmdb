@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SelectKind: class {
+protocol SelectKind: AnyObject {
     func didselectKind(_ kind: SearchKind)
 }
 
