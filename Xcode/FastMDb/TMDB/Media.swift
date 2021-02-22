@@ -174,8 +174,8 @@ extension WatchSearch {
     ]
 
     func watchItems(_ name: String?) -> [Item]? {
-        guard let country = results["US"] else { return watchItemsGoogle(name) }
-        guard let providers = country.flatrate else { return watchItemsGoogle(name) }
+        guard let country = results["US"],
+              let providers = country.flatrate else { return watchItemsGoogleJustWatch(name) }
 
         let items: [Item] = providers
             .map { $0.provider_name }
@@ -185,17 +185,18 @@ extension WatchSearch {
             .sorted { $0 < $1 }
             .map { Item(title: $0, url: country.link, destination: .url, image: Item.linkImage) }
 
-        guard items.count > 0 else { return watchItemsGoogle(name) }
+        guard items.count > 0 else { return watchItemsGoogleJustWatch(name) }
 
         return items
     }
 
-    func watchItemsGoogle(_ name: String?) -> [Item]? {
+    func watchItemsGoogleJustWatch(_ name: String?) -> [Item]? {
         guard let name = name,
               name != "" else { return nil }
 
-        let item = Item(title: "Google Search", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
-        return [item]
+        let google = Item(title: "Google Search", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
+        let justWatch = Item(title: "JustWatch", url: URL(string: "https://justwatch.com"), destination: .url, image: Item.linkImage)
+        return [google, justWatch]
     }
 
     func watchSection(_ name: String?) -> ItemSection? {
