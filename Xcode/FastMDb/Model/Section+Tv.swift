@@ -349,9 +349,7 @@ private extension TV {
     var ratingSection: ItemSection? {
         guard vote_count > 0 else {
             let item = Item(subtitle: "Unrated")
-            let section = ItemSection(header: "rating", items: [item])
-
-            return section
+            return ItemSection(header: "rating", items: [item])
         }
 
         let rating = "\(vote_average)/10"
@@ -364,9 +362,7 @@ private extension TV {
         }
 
         let item = Item(title: rating, subtitle: vote, color: color)
-        let section = ItemSection(header: "rating", items: [item])
-        
-        return section
+        return ItemSection(header: "rating", items: [item])
     }
 
     var recommendedSection: ItemSection? {
