@@ -17,18 +17,18 @@ extension ItemSection {
             sections.append(s)
         }
 
+        if let people = people {
+            let items = people.results.map { $0.listItemPopular }
+            let section = ItemSection(header: "people\(Tmdb.separator)\(kind.title)", items: items, display: .portraitImage)
+            sections.append(section)
+        }
+
         if let s = movieSections(movie: movie, kind: kind) {
             sections.append(contentsOf: s)
         }
 
         if let s = tvSections(tv: tv, kind: kind) {
             sections.append(contentsOf: s)
-        }
-
-        if let people = people {
-            let items = people.results.map { $0.listItemPopular }
-            let section = ItemSection(header: "people\(Tmdb.separator)\(kind.title)", items: items, display: .portraitImage)
-            sections.append(section)
         }
 
         return sections
