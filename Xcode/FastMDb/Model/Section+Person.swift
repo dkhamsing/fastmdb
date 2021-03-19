@@ -767,7 +767,7 @@ private extension Credit {
         sub.append(contentsOf: movieCastSubtitles)
 
         let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
-        return Item(id: id, destination: .movie, color: ratingColor, imageUrl: imageUrl, strings: sub)
+        return Item(id: id, title: titleDisplay, destination: .movie, color: ratingColor, imageUrl: imageUrl, strings: sub)
     }
 
     var movieCastSubtitles: [String] {
