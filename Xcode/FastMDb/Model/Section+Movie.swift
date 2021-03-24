@@ -323,6 +323,7 @@ private extension Media {
     }
 
     var watchSection: ItemSection? {
+        guard status ?? "" == "Released" else { return nil }        
         return watch?.watchSection(title)
     }
 

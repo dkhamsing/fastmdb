@@ -421,7 +421,18 @@ private extension TV {
         return nil
     }
 
+    var validWatchStatus: Bool {
+        switch status ?? "" {
+        case "In Production",
+             "Planned":
+            return false
+        default:
+            return true
+        }
+    }
+
     var watchSection: ItemSection? {
+        guard validWatchStatus else { return nil }
         return watch?.watchSection(name)
     }
 
