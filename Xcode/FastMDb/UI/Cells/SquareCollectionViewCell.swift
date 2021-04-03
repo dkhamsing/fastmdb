@@ -33,6 +33,7 @@ class SquareCollectionViewCell: UICollectionViewCell {
 
     func load(_ item: Item) {
         let size = SquareCollectionViewCell.size
+        imageView.layer.cornerRadius = item.imageCornerRadius
         imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
     }
 
@@ -40,7 +41,6 @@ class SquareCollectionViewCell: UICollectionViewCell {
         imageView.backgroundColor = .systemGray5
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = SquareCollectionViewCell.size.width / 2
         imageView.layer.masksToBounds = true
 
         [imageView].forEach {

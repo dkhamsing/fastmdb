@@ -234,13 +234,13 @@ extension Tmdb {
         return url
     }
 
-//    static func logoUrl(path: String?, size: LogoSize) -> URL? {
-//        guard
-//            let path = path,
-//            let url = URL(string: "\(Constant.imageBaseUrl)\(size.rawValue)\(path)") else { return nil }
-//
-//        return url
-//    }
+    static func logoUrl(path: String?, size: LogoSize) -> URL? {
+        guard
+            let path = path,
+            let url = URL(string: "\(Constant.imageBaseUrl)\(size.rawValue)\(path)") else { return nil }
+
+        return url
+    }
 
 }
 
@@ -273,15 +273,15 @@ enum BackdropSize: String {
     case original = "original"
 }
 
-//enum LogoSize: String {
-//    case tiny = "w45",
-//         small = "w92",
-//         medium = "w154",
-//         large = "w185",
-//         xl = "w300",
-//         xxl = "w500",
-//         original = "original"
-//}
+enum LogoSize: String {
+    case tiny = "w45",
+         small = "w92",
+         medium = "w154",
+         large = "w185",
+         xl = "w300",
+         xxl = "w500",
+         original = "original"
+}
 
 extension Tmdb {
 

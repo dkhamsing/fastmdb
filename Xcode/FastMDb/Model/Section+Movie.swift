@@ -205,7 +205,7 @@ private extension Media {
 
         guard items.count > 0 else { return nil }
 
-        return ItemSection(items: items, display: .squareImage)
+        return ItemSection(header: "links", items: items, display: .squareImage)
     }
 
     func mediaSection(albums: [iTunes.Album]?) -> ItemSection? {

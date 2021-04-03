@@ -213,7 +213,7 @@ private extension TV {
             items.append(item)
         }
 
-        return ItemSection(items: items, display: .squareImage)
+        return ItemSection(header: "links", items: items, display: .squareImage)
     }
 
     func mediaSection(albums: [iTunes.Album]?) -> ItemSection? {

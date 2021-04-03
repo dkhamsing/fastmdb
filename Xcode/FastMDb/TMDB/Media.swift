@@ -173,36 +173,39 @@ extension WatchSearch {
         "spectrum on demand"
     ]
 
-    func watchItems(_ name: String?) -> [Item]? {
+    func watchSectionProvider(_ name: String?) -> ItemSection? {
         guard let country = results["US"],
-              let providers = country.flatrate else { return watchItemsGoogleJustWatch(name) }
+              let providers = country.flatrate else { return watchSectionGoogleJustWatch(name) }
 
-        let items: [Item] = providers
-            .map { $0.provider_name }
-            .unique
-            .filter { !WatchSearch.providersNotInterested.contains($0.lowercased()) }
-            .filter { !$0.lowercased().contains("amazon channel") }
-            .sorted { $0 < $1 }
-            .map { Item(title: $0, url: country.link, destination: .url, image: Item.linkImage) }
+        let myProviders = providers
+            .filter { !WatchSearch.providersNotInterested.contains($0.provider_name.lowercased()) }
+            .filter { !$0.provider_name.lowercased().contains("amazon channel") }
+            .sorted { $0.provider_name < $1.provider_name }
 
-        guard items.count > 0 else { return watchItemsGoogleJustWatch(name) }
+        let items: [Item] = myProviders.map {
+            Item(title: $0.provider_name, url: country.link, destination: .url, imageUrl: $0.iconImageUrl, imageCornerRadius: 12)
+        }
 
-        return items
+        guard items.count > 0 else { return watchSectionGoogleJustWatch(name) }
+
+        return ItemSection(header: "Watch", items: items, display: .squareImage)
     }
 
-    func watchItemsGoogleJustWatch(_ name: String?) -> [Item]? {
+    func watchSectionGoogleJustWatch(_ name: String?) -> ItemSection? {
         guard let name = name,
               name != "" else { return nil }
 
         let google = Item(title: "Google Search", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
         let justWatch = Item(title: "JustWatch", url: URL(string: "https://justwatch.com"), destination: .url, image: Item.linkImage)
-        return [google, justWatch]
+        let items = [google, justWatch]
+
+        return ItemSection(header: "Watch", items: items)
     }
 
     func watchSection(_ name: String?) -> ItemSection? {
-        guard let items = watchItems(name) else { return nil }
+        guard let sect = watchSectionProvider(name) else { return nil }
 
-        return ItemSection(header: "Watch", items: items)
+        return sect
     }
 }
 
@@ -213,11 +216,14 @@ struct Watch: Codable {
 
 struct Provider: Codable {
     var provider_name: String
+    var logo_path: String
+
+    var iconImageUrl: URL? {
+        return Tmdb.logoUrl(path: logo_path, size: .small)
+    }
 }
 
 extension Media {
-
-
 
     var listItemSub: [String] {
         var sub: [String] = []

@@ -36,6 +36,8 @@ struct Item {
     var display: Display?
 
     var strings: [String]?
+
+    var imageCornerRadius: CGFloat = SquareCollectionViewCell.size.width / 2
 }
 
 extension Item: Equatable {
