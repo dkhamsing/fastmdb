@@ -210,7 +210,8 @@ extension Credit {
             sub.append(c)
         }
 
-        if let episodes = episode_count {
+        if let episodes = episode_count,
+           episodes > 0 {
             let epString = "\(episodes) episode\(episodes > 1 ? "s" : "")"
             sub.append(epString)
         }
