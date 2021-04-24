@@ -11,6 +11,7 @@ import UIKit
 
 struct Item {
     var id: Int?
+    var identifier: String?
     var title: String?
     var subtitle: String?
     var url: URL?

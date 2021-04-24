@@ -68,11 +68,6 @@ extension ItemSection {
 }
 
 private extension Episode {
-    var episodeRatingColor: UIColor? {
-        guard vote_count > Tmdb.voteThreshold else { return nil }
-
-        return vote_average.color
-    }
 
     func listItem(_ tvId: Int?) -> Item {
         var sub: [String] = []

@@ -475,7 +475,7 @@ private extension Credit {
         if isImage {
             imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
         }
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tv, color: ratingColor, imageUrl: imageUrl, strings: sub2)
+        return Item(id: id, identifier: credit_id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tvCredit, color: ratingColor, imageUrl: imageUrl, strings: sub2)
     }
 
     var tvCastSectionLatest: ItemSection? {

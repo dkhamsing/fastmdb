@@ -60,6 +60,7 @@
 		65883ACE2472F2FF00C1A55A /* Section+Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883ACD2472F2FF00C1A55A /* Section+Content.swift */; };
 		65883AD02472F39600C1A55A /* Section+Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883ACF2472F39600C1A55A /* Section+Season.swift */; };
 		65883AD2247348E100C1A55A /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883AD1247348E100C1A55A /* Destination.swift */; };
+		659919A926349BEC0045E20E /* CreditResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659919A826349BEC0045E20E /* CreditResult.swift */; };
 		65AFACE425A1134D00F841B0 /* TagsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AFACE325A1134D00F841B0 /* TagsCollectionViewCell.swift */; };
 		65B7496024B18DA600C8997C /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B7495F24B18DA600C8997C /* ImageCache.swift */; };
 		65D47DB325954EEB009701BB /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D47DB225954EEB009701BB /* ImageDownloader.swift */; };
@@ -137,6 +138,7 @@
 		65883ACD2472F2FF00C1A55A /* Section+Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Content.swift"; sourceTree = "<group>"; };
 		65883ACF2472F39600C1A55A /* Section+Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Season.swift"; sourceTree = "<group>"; };
 		65883AD1247348E100C1A55A /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
+		659919A826349BEC0045E20E /* CreditResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditResult.swift; sourceTree = "<group>"; };
 		65AFACE325A1134D00F841B0 /* TagsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsCollectionViewCell.swift; sourceTree = "<group>"; };
 		65B7495F24B18DA600C8997C /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		65D47DB225954EEB009701BB /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 			children = (
 				6519236E2595030C00E36A51 /* ContentRating.swift */,
 				654D0F84246B16C800B2A968 /* Credit.swift */,
+				659919A826349BEC0045E20E /* CreditResult.swift */,
 				654D0F85246B16C800B2A968 /* Credits.swift */,
 				65530BA7246E4DC30045DC1B /* Episode.swift */,
 				654D0F8A246B16C800B2A968 /* ExternalIds.swift */,
@@ -445,6 +448,7 @@
 				654D0F7A246B16BA00B2A968 /* MainListCell.swift in Sources */,
 				654D0F77246B16BA00B2A968 /* Section+Person.swift in Sources */,
 				65AFACE425A1134D00F841B0 /* TagsCollectionViewCell.swift in Sources */,
+				659919A926349BEC0045E20E /* CreditResult.swift in Sources */,
 				654D0F93246B16C900B2A968 /* Extensions.swift in Sources */,
 				65D47DB325954EEB009701BB /* ImageDownloader.swift in Sources */,
 				65D47DC525955D9F009701BB /* CollectionHandler.swift in Sources */,

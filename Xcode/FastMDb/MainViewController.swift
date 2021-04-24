@@ -224,16 +224,57 @@ extension MainViewController {
 //        self.kind = kind
     }
 
-    func updateScreen(_ updater: Updater?) {
-//        updateTableHeaderHeader(image: updater?.image, buttonUrl: updater?.buttonUrl)
+    func updateCredit(id: Int?, creditId: String?) {
+        screen = .list
+        spinner.startAnimating()
 
-        spinner.stopAnimating()
+        let url = Tmdb.creditURL(creditId: creditId)
+        url?.apiGet { (result: Result<CreditResult, NetError>) in
+            guard case.success(let cr) = result else { return }
 
-        if let ds = updater?.dataSource {
-            dataSource = ds
+            var sections: [ItemSection] = []
+
+            if let section = cr.media.imagesSection {
+                sections.append(section)
+            }
+
+            let items = [Item(
+                id: id,
+                title: cr.media.original_name,
+                destination: .tv
+            )]
+            sections.append(ItemSection(items: items))
+
+            if let season = cr.media.seasons {
+                let items = season
+                    .sorted { $0.season_number < $1.season_number }
+                    .map { $0.listItem(tvId: id) }
+                if !items.isEmpty {
+                    sections.append(ItemSection(
+                                        header: "\(season.count) season\(season.count.pluralized)",
+                                        items: items))
+                }
+            }
+
+            if let episodes = cr.media.episodes {
+                let items = episodes.sorted {
+                    if $0.season_number ?? 0 != $1.season_number ?? 0 {
+                        return $0.season_number ?? 0 < $1.season_number ?? 0
+                    }
+                    return $0.episode_number ?? 0 < $1.episode_number ?? 0
+                }
+                .map { $0.listItem }
+                if !items.isEmpty {
+                    sections.append(ItemSection(
+                                        header: "\(episodes.count) episode\(episodes.count.pluralized)",
+                                        items: items))
+                }
+            }
+
+
+            let u = Updater(dataSource: sections)
+            self.updateScreen(u)
         }
-
-        tableView.reloadData()
     }
 
     func updateEpisode(tvId: Int?, episode: Episode?) {
@@ -260,6 +301,18 @@ extension MainViewController {
                 self.updateScreen(nil)
             }
         })
+    }
+
+    func updateScreen(_ updater: Updater?) {
+//        updateTableHeaderHeader(image: updater?.image, buttonUrl: updater?.buttonUrl)
+
+        spinner.stopAnimating()
+
+        if let ds = updater?.dataSource {
+            dataSource = ds
+        }
+
+        tableView.reloadData()
     }
 
 }
@@ -576,6 +629,32 @@ private extension MainViewController {
 //    }
 //
 //}
+
+private extension Episode {
+    var listItem: Item {
+        var call: String = "" // TODO: call is reused?
+        if let season = season_number {
+            season_number == 0 ?
+                call.append("Special, "):
+                call.append("Season \(season), ")
+        }
+
+        if let episodeNumber = episode_number {
+            call.append("Episode \(episodeNumber)")
+        }
+
+        var sub: [String] = []
+        if !call.isEmpty {
+            sub.append(call)
+        }
+
+        if let airDate = air_date?.dateDisplay {
+            sub.append(airDate)
+        }
+
+        return Item(id: id, title: name, subtitle: sub.joined(separator: "\n"), destination: .episode, episode: self, color: episodeRatingColor)
+    }
+}
 
 private extension Credit {
 

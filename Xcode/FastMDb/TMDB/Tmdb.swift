@@ -31,6 +31,16 @@ struct Tmdb {
         return urlComponents.url
     }
 
+    static func creditURL(creditId: String?) -> URL? {
+        guard let creditId = creditId else { return nil }
+
+        var urlComponents = baseComponents
+        urlComponents.path = "\(Path.credit)/\(creditId)"
+        urlComponents.queryItems = [ Tmdb.keyQueryItem ]
+
+        return urlComponents.url
+    }
+
     static func searchURL(type: SearchType, query: String) -> URL? {
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.search)\(type.rawValue)"
@@ -418,6 +428,7 @@ private extension Tmdb {
 
     enum Path {
         static let collection = "/3/collection"
+        static let credit = "/3/credit"
         static let discover = "/3/discover/movie"
         static let movie = "/3/movie"
         static let person = "/3/person"

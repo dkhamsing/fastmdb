@@ -92,6 +92,29 @@ extension Media {
     }
 }
 
+extension Media {
+    // TODO: this is duplicated in tv
+    var imagesSection: ItemSection? {
+        var items: [Item] = []
+
+        if !(poster_path ?? "").isEmpty {
+            let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
+            let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .large)
+            let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)
+            items.append(posterItem)
+        }
+
+        if let it = images?.backdropItems {
+            items.append(contentsOf: it)
+        }
+
+        guard items.count > 0 else { return nil }
+
+        return ItemSection(items: items, display: .images)
+    }
+
+}
+
 private extension Media {
 
     var boxOfficeSection: ItemSection? {
@@ -134,26 +157,6 @@ private extension Media {
         guard items.count > 0 else { return nil }
 
         return ItemSection(header: "google", items: items)
-    }
-
-    // TODO: this is duplicated in tv
-    var imagesSection: ItemSection? {
-        var items: [Item] = []
-        
-        if !(poster_path ?? "").isEmpty {
-            let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
-            let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .large)
-            let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)
-            items.append(posterItem)
-        }
-        
-        if let it = images?.backdropItems {
-            items.append(contentsOf: it)
-        }
-        
-        guard items.count > 0 else { return nil }
-        
-        return ItemSection(items: items, display: .images)
     }
 
     var languageSection: ItemSection? {

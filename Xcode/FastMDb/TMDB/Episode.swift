@@ -5,9 +5,10 @@
 //  Copyright © 2020 dk. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct Episode: Codable {
+    var id: Int?
     var air_date: String?
     var name: String?
     var overview: String?
@@ -47,6 +48,13 @@ extension Episode {
 
         return Item(title: display, subtitle: inNumberOfDays)
     }
+
+    var episodeRatingColor: UIColor? {
+        guard vote_count > Tmdb.voteThreshold else { return nil }
+
+        return vote_average.color
+    }
+
 }
 
 private extension Date {

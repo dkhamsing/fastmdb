@@ -252,6 +252,11 @@ private extension MainViewController {
             controller.title = item.title
             controller.tvId = item.id
             navigationController?.pushViewController(controller, animated: true)
+        case .tvCredit:
+            let controller = MainViewController()
+            controller.title = item.title        
+            controller.updateCredit(id: item.id, creditId: item.identifier)
+            navigationController?.pushViewController(controller, animated: true)
         case .url:
             guard let url = item.url else { return }
             UIApplication.shared.open(url)
