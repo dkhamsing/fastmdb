@@ -47,4 +47,10 @@ extension Season {
 
         return sub
     }
+
+    static func seasonName(_ season: Int) -> String {
+        return season == 0 ?
+            "Specials":
+            "Season \(season)"
+    }
 }

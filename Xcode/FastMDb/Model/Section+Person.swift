@@ -269,7 +269,8 @@ private extension Credit {
 
 private extension Credit {
 
-    static func collapsedTvCredits(_ list: [Credit]) -> [Credit] {
+    static func collapsedTvCredits(_ list: [Credit],
+                                   job: String = "Writer") -> [Credit] {
         let uniqueTitles = list
             .map { $0.name }
             .unique
@@ -279,7 +280,10 @@ private extension Credit {
             let crews = list.filter { $0.name == title }
             let jobs = crews.compactMap { $0.job }.unique
 
-            if var item = crews.first {
+            if var item = crews.first(where: { $0.job == job }) {
+                item.job = jobs.joined(separator: ", ")
+                items.append(item)
+            } else if var item = crews.first {
                 item.job = jobs.joined(separator: ", ")
                 items.append(item)
             }
@@ -475,7 +479,15 @@ private extension Credit {
         if isImage {
             imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
         }
-        return Item(id: id, identifier: credit_id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tvCredit, color: ratingColor, imageUrl: imageUrl, strings: sub2)
+
+        return Item(id: id,
+                    identifier: credit_id,
+                    title: titleDisplay,
+                    subtitle: sub.joined(separator: Tmdb.separator),
+                    destination: .tvCredit,
+                    color: ratingColor,
+                    imageUrl: imageUrl,
+                    strings: sub2)
     }
 
     var tvCastSectionLatest: ItemSection? {

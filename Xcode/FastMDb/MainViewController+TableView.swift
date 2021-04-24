@@ -254,7 +254,6 @@ private extension MainViewController {
             navigationController?.pushViewController(controller, animated: true)
         case .tvCredit:
             let controller = MainViewController()
-            controller.title = item.title        
             controller.updateCredit(id: item.id, creditId: item.identifier)
             navigationController?.pushViewController(controller, animated: true)
         case .url:
