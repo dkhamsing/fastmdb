@@ -457,11 +457,8 @@ private extension Credit {
         return sections
     }
 
-    var tvCrewItem: Item {
-        return tvCrewItem()
-    }
-
-    func tvCrewItem(isImage: Bool = false) -> Item {
+    func tvCrewItem(isImage: Bool = false,
+                    isCredit: Bool = true) -> Item {
         var sub: [String] = []
         if first_air_date.yearDisplay != "" {
             sub.append(first_air_date.yearDisplay)
@@ -484,7 +481,7 @@ private extension Credit {
                     identifier: credit_id,
                     title: titleDisplay,
                     subtitle: sub.joined(separator: Tmdb.separator),
-                    destination: .tvCredit,
+                    destination: isCredit ? .tvCredit : .tv,
                     color: ratingColor,
                     imageUrl: imageUrl,
                     strings: sub2)
@@ -613,7 +610,7 @@ private extension Credit {
 
                 return releaseDateInFuture || noRelease
             }
-            .map { $0.tvCrewItem }
+            .map { $0.tvCrewItem(isCredit: false) }
 
         guard items.count > 0 else { return nil }
 
@@ -640,7 +637,7 @@ private extension Credit {
                     return !releaseDateInFuture
             }
             .sorted { $0.first_air_date ?? "" > $1.first_air_date ?? ""}
-            .map { $0.tvCrewItem }
+            .map { $0.tvCrewItem() }
 
         var items: [Item] = []
         for item in temp {

@@ -35,10 +35,22 @@ extension CreditResult {
         if let season = media.seasons {
             let items = season
                 .sorted { $0.season_number < $1.season_number }
+
+            let specials = items
+                .filter { $0.season_number == 0 }
                 .map { $0.listItem(tvId: id) }
-            if !items.isEmpty {
+            if !specials.isEmpty {
+                sections.append(ItemSection(items: specials))
+            }
+
+            let regularSeasons = items
+                .filter { $0.season_number > 0 }
+
+            if !regularSeasons.isEmpty {
+                let regularItems = regularSeasons.map { $0.listItem(tvId: id) }
+
                 var strings: [String] = [
-                    "\(season.count) season\(season.count.pluralized)",
+                    "\(regularSeasons.count) season\(regularSeasons.count.pluralized)",
                 ]
 
                 if let value = media.episodes,
@@ -49,9 +61,7 @@ extension CreditResult {
                     )
                 }
 
-                sections.append(ItemSection(
-                                    header: strings.joined(separator: ", "),
-                                    items: items))
+                sections.append(ItemSection(header: strings.joined(separator: ", "), items: regularItems))
             }
         }
 
