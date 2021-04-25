@@ -274,6 +274,7 @@ extension String {
     var validStatus: String? {
         switch self {
         case
+        "Canceled",
         "In Production",
         "Planned",
         "Post Production",
