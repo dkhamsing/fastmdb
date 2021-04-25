@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 struct Credit: Codable {
-    var id: Int
+    var id: Int?
     var credit_id: String?
 
     var name: String?
