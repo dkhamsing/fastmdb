@@ -247,6 +247,11 @@ private extension MainViewController {
             controller.title = item.title
             controller.seasonItem = item
             navigationController?.pushViewController(controller, animated: true)
+        case .sections:
+            let controller = MainViewController()
+            controller.title = item.destinationTitle
+            controller.sections = item.sections
+            navigationController?.pushViewController(controller, animated: true)
         case .tv:
             let controller = MainViewController()
             controller.title = item.title
@@ -267,8 +272,8 @@ private extension MainViewController {
             let contentView = VideoView(items: items)
             let controller = UIHostingController(rootView: contentView)
             navigationController?.pushViewController(controller, animated: true)
-        default:
-            print("todo for \(item)")
+//        default:
+//            print("todo for \(item)")
         }
     }
 

@@ -270,22 +270,26 @@ private extension Credit {
 private extension Credit {
 
     static func collapsedTvCredits(_ list: [Credit],
-                                   job: String = "Writer") -> [Credit] {
+                                   job: String = "Writer") -> [CreditWrapper] {
         let uniqueTitles = list
             .map { $0.name }
             .unique
 
-        var items: [Credit] = []
+        var items: [CreditWrapper] = []
         for title in uniqueTitles {
             let crews = list.filter { $0.name == title }
             let jobs = crews.compactMap { $0.job }.unique
 
             if var item = crews.first(where: { $0.job == job }) {
                 item.job = jobs.joined(separator: ", ")
-                items.append(item)
+                items.append(
+                    CreditWrapper(credit: item, additional: crews)
+                )
             } else if var item = crews.first {
                 item.job = jobs.joined(separator: ", ")
-                items.append(item)
+                items.append(
+                    CreditWrapper(credit: item, additional: crews)
+                )
             }
         }
 
@@ -458,7 +462,9 @@ private extension Credit {
     }
 
     func tvCrewItem(isImage: Bool = false,
-                    isCredit: Bool = true) -> Item {
+                    isCredit: Bool = true,
+                    additional: [Credit] = []
+                    ) -> Item {
         var sub: [String] = []
         if first_air_date.yearDisplay != "" {
             sub.append(first_air_date.yearDisplay)
@@ -472,16 +478,46 @@ private extension Credit {
             sub2.insert(value, at: 0)
         }
 
-        var imageUrl: URL?
-        if isImage {
-            imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
+        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+
+        var sections: [ItemSection] = []
+        sections.append(
+            ItemSection(items: [ Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage) ],
+                        display: .images)
+        )
+
+        sections.append(
+            ItemSection(items: [Item(id: id, title: titleDisplay, destination: .tv)] )
+        )
+
+        let items = additional.map {
+            Item(id: id,
+                 identifier: $0.credit_id,
+                 title: $0.job,
+                 destination: .tvCredit)
+        }
+
+        sections.append(
+            ItemSection(items: items)
+        )
+
+        var destination: Destination
+        if items.count == 0 {
+            destination = .tv
+        } else if items.count == 1 {
+            destination = .tvCredit
+        } else {
+            destination = isCredit ? .sections : .tv
         }
 
         return Item(id: id,
                     identifier: credit_id,
                     title: titleDisplay,
                     subtitle: sub.joined(separator: Tmdb.separator),
-                    destination: isCredit ? .tvCredit : .tv,
+                    destination: destination,
+                    destinationTitle: titleDisplay,
+                    sections: sections,
                     color: ratingColor,
                     imageUrl: imageUrl,
                     strings: sub2)
@@ -576,19 +612,19 @@ private extension Credit {
         guard let crew = tv_credits?.crew else { return nil }
 
         let items = Credit.collapsedTvCredits(crew)
-            .filter { ($0.job ?? "").contains("Creator") }
-            .filter { $0.first_air_date ?? "" != "" }
+            .filter { ($0.credit.job ?? "").contains("Creator") }
+            .filter { $0.credit.first_air_date ?? "" != "" }
             .filter {
                 var releaseDateInFuture = false
-                if let inFuture = $0.first_air_date?.inFuture,
+                if let inFuture = $0.credit.first_air_date?.inFuture,
                    inFuture == false {
                     releaseDateInFuture = true
                 }
 
                 return releaseDateInFuture
             }
-            .sorted { $0.first_air_date ?? "" > $1.first_air_date ?? "" }
-            .map { $0.tvCrewItem() }
+            .sorted { $0.credit.first_air_date ?? "" > $1.credit.first_air_date ?? "" }
+            .map { $0.credit.tvCrewItem(additional: $0.additional) }
 
         guard items.count > 0 else { return nil }
 
@@ -599,6 +635,7 @@ private extension Credit {
         guard let crew = tv_credits?.crew else { return nil }
 
         let items = Credit.collapsedTvCredits(crew)
+            .map { $0.credit }
             .filter {
                 let noRelease = $0.first_air_date ?? "" == ""
 
@@ -626,18 +663,18 @@ private extension Credit {
         guard let crew = tv_credits?.crew else { return nil }
 
         let temp = Credit.collapsedTvCredits(crew)
-            .filter { $0.first_air_date ?? "" != "" }
+            .filter { $0.credit.first_air_date ?? "" != "" }
             .filter {
                     var releaseDateInFuture = false
-                    if let inFuture = $0.first_air_date?.inFuture,
+                    if let inFuture = $0.credit.first_air_date?.inFuture,
                         inFuture == true {
                         releaseDateInFuture = true
                     }
 
                     return !releaseDateInFuture
             }
-            .sorted { $0.first_air_date ?? "" > $1.first_air_date ?? ""}
-            .map { $0.tvCrewItem() }
+            .sorted { $0.credit.first_air_date ?? "" > $1.credit.first_air_date ?? ""}
+            .map { $0.credit.tvCrewItem(additional: $0.additional) }
 
         var items: [Item] = []
         for item in temp {

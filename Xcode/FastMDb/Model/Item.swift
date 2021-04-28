@@ -24,6 +24,7 @@ struct Item {
     var episode: Episode?
     var seasonNumber: Int?
     var items: [Item]?
+    var sections: [ItemSection]?
     var image: UIImage?
 
     var color: UIColor?

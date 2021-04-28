@@ -76,7 +76,7 @@ extension CreditResult {
 
             let seasons = sorted.map { $0.season_number ?? 0 }.unique
             for season in seasons {
-                let it = sorted.filter { $0.season_number ?? 0 == season }.map { $0.listItem }
+                let it = sorted.filter { $0.season_number ?? 0 == season }.map { $0.listItem(id) }
                 sections.append(ItemSection(header: "\(Season.seasonName(season)): \(it.count) episode\(it.count.pluralized)", items: it))
             }
 
@@ -93,7 +93,7 @@ private extension Episode {
         return Season.seasonName(season)
     }
 
-    var listItem: Item {
+    func listItem(_ id: Int?) -> Item {
         var call: String = "" // TODO: call is reused elsewhere?
 
         call.append(seasonName + ", ")
