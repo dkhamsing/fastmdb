@@ -136,10 +136,9 @@ extension TV {
             sub.append(first_air_date.yearDisplay)
         }
         sub.append(contentsOf: subtitleLanguageCountry)
-
         item.subtitle = sub.joined(separator: Tmdb.separator)
 
-        item.imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        item.metadata = Metadata(id: id, destination: .tv, imageUrl: Tmdb.mediaPosterUrl(path: poster_path, size: .medium))
 
         return item
     }
@@ -186,7 +185,8 @@ private extension TV {
     }
 
     var listItemNoSub: Item {
-        return Item(id: id, title: displayName, destination: .tv, color: ratingColor)
+        return Item(title: displayName, color: ratingColor,
+                    metadata: Metadata(id: id, destination: .tv))
     }
 
     var ratingColor: UIColor? {

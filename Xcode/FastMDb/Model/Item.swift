@@ -10,62 +10,22 @@ import Foundation
 import UIKit
 
 struct Item {
-    var id: Int?
-    var identifier: String?
     var title: String?
     var subtitle: String?
-    var url: URL?
-    var destination: Destination?
-    var destinationTitle: String?
-
-    var sortedBy: String?
-    var releaseYear: String?
-
-    var episode: Episode?
-    var seasonNumber: Int?
-    var items: [Item]?
-    var sections: [ItemSection]?
-    var image: UIImage?
-
     var color: UIColor?
 
-    var albums: [iTunes.Album]?
-
-    var imageUrl: URL?
-
-    var imageCenterText: String?
-
-    var display: Display?
-
-    var strings: [String]?
-
-    var imageCornerRadius: CGFloat = SquareCollectionViewCell.size.width / 2
+    var metadata: Metadata?
 }
 
 extension Item: Equatable {
     static func == (lhs: Item, rhs: Item) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.metadata?.id ?? 0 == rhs.metadata?.id ?? 0
     }
 }
 
 extension Item {
-    static func ImageItem(
-        url: URL?,
-        imageUrl: URL?) -> Item {
-        return Item(url: url,
-                    destination: .safarivc,
-                    imageUrl: imageUrl)
-    }
-
-    static var linkImage: UIImage? {
-        return UIImage(systemName: "link.circle.fill")
-    }
-
-    static var mapImage: UIImage? {
-        return UIImage(systemName: "mappin.circle.fill")
-    }
-
-    static var videoImage: UIImage? {
-        return UIImage(systemName: "play.circle.fill")
+    static func imageItem(url: URL?, imageUrl: URL?) -> Item {
+        let metadata = Metadata(url: url, destination: .safarivc, imageUrl: imageUrl)
+        return Item(metadata: metadata)
     }
 }

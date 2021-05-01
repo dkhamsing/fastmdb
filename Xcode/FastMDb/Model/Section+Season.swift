@@ -33,7 +33,8 @@ extension ItemSection {
             let cast = season?.credits?.cast,
             cast.count > 0 {
             let items = cast.map { $0.listItemCast }
-            let section = ItemSection(header: "cast", items: items, display: .portraitImage)
+            let section = ItemSection(header: "cast", items: items,
+                                      metadata: Metadata(display: .portraitImage))
 
             sections.append(section)
         }
@@ -50,8 +51,7 @@ extension ItemSection {
             let section = ItemSection(header: "crew",
                                   items: [item],
                                   footer: crew.count > limit ? String.allCreditsText(crew.count) : String.allCreditsText(),
-                                  destination: .items,
-                                  destinationItems: crew.map { $0.listItemCrew })
+                                  metadata: Metadata(destination: .items, items: crew.map { $0.listItemCrew }))
 
             sections.append(section)
         }
@@ -80,7 +80,8 @@ private extension Episode {
             sub.append(airDate)
         }
 
-        return Item(id: tvId, title: name, subtitle: sub.joined(separator: Tmdb.separator), destination: .episode, episode: self, color: episodeRatingColor)
+        return Item(title: name, subtitle: sub.joined(separator: Tmdb.separator), color: episodeRatingColor,
+                    metadata: Metadata(id: tvId, destination: .episode, episode: self))
     }
 }
 

@@ -101,6 +101,6 @@ private extension Credit {
             }
         }
 
-        return Item(id: id, title: name, subtitle: sub.joined(separator: ": "), destination: .person)
+        return Item(title: name, subtitle: sub.joined(separator: ": "), metadata: Metadata(id: id, destination: .person))
     }
 }

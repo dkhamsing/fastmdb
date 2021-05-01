@@ -14,7 +14,7 @@ struct Production: Codable {
 
 extension Production {
     var listItem: Item {
-        return Item(id: id, title: name, destination: .production)
+        return Item(title: name, metadata: Metadata(id: id, destination: .production))
     }
 }
 

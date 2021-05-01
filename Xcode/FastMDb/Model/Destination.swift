@@ -9,23 +9,22 @@
 import Foundation
 
 enum Destination {
-    case
-    collection,
-    episode,
-    genreMovie,
-    genreTv,
-    items,
-    movie,
-    music,
-    moviesSortedBy,
-    person,
-    network,
-    production,
-    safarivc,
-    sections,
-    season,
-    tv,
-    tvCredit,
-    videos,
-    url
+    case collection,
+         episode,
+         genreMovie,
+         genreTv,
+         items,
+         movie,
+         music,
+         moviesSortedBy,
+         person,
+         network,
+         production,
+         safarivc,
+         sections,
+         season,
+         tv,
+         tvCredit,
+         videos,
+         url
 }

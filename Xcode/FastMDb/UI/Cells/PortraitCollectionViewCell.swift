@@ -45,7 +45,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
     }
 
     func load(_ item: Item) {
-        if let strings = item.strings {
+        if let strings = item.metadata?.strings {
             label3HeightConstraint.constant = PortraitCollectionViewCell.height
 
             label.text = strings.first
@@ -64,11 +64,11 @@ class PortraitCollectionViewCell: UICollectionViewCell {
         }
 
         let size = PortraitCollectionViewCell.size
-        imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared) {
+        imageView.load(urlString: item.metadata?.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared) {
             self.initials.isHidden = self.imageView.image != nil
         }
 
-        initials.text = item.imageCenterText
+        initials.text = item.metadata?.imageCenterText
 
         if let color = item.color {
             ratingLabel.backgroundColor = color

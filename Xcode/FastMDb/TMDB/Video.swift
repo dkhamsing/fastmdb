@@ -17,7 +17,8 @@ struct Video: Codable {
 extension Video {
     var listItem: Item {
         let sub = [site, type]
-        return Item(title: name, subtitle: sub.joined(separator: Tmdb.separator), url: url, destination: .url, image: Item.videoImage)
+        return Item(title: name, subtitle: sub.joined(separator: Tmdb.separator),
+                    metadata: Metadata(url: url, destination: .url, link: .video))
     }
 
     var url: URL? {

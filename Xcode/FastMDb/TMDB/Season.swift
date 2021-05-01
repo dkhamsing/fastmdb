@@ -27,7 +27,7 @@ extension Season {
         let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
 
         let text = season_number > 0 ? "\(season_number)" : ""
-        return Item(id: tvId, title: name, destination: .season, seasonNumber: season_number, imageUrl: imageUrl, imageCenterText: text, strings: strings)
+        return Item(title: name, metadata: Metadata(id: tvId, destination: .season, seasonNumber: season_number, imageUrl: imageUrl, imageCenterText: text, strings: strings))
     }
 
     var strings: [String] {

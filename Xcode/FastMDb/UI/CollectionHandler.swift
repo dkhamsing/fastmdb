@@ -40,7 +40,7 @@ class GenericCollectionHandler: NSObject, UICollectionViewDataSource, UICollecti
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: { () -> UIViewController? in
             let item = self.items[indexPath.row]
-            guard let url = item.url else { return nil }
+            guard let url = item.metadata?.url else { return nil }
 
             let sfvc = SFSafariViewController(url: url)
 

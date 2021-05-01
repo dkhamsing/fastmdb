@@ -15,7 +15,7 @@ extension Article {
             let articles = articles,
             articles.count > 0 else { return nil }
 
-        let items = articles.map { $0.listItemWithTimeAgo }
+        let items = articles.map { $0.listItem(hasTimeAgo: true) }
         let latest = Array(items.prefix(limit))
 
         var footer: String?
@@ -25,7 +25,8 @@ extension Article {
 
         let sec = sectionsGroupedByTime(articles)
 
-        return ItemSection(header: "news", items: latest, footer: footer, destination: .sections, destinationSections: sec, destinationTitle: "News")
+        return ItemSection(header: "news", items: latest, footer: footer,
+                           metadata: Metadata(destination: .sections, destinationTitle: "News", sections: sec))
     }
 
 }
@@ -38,7 +39,7 @@ private extension Article {
 
         var sec: [ItemSection] = []
         for header in headers.unique {
-            let items = articles?.filter { $0.relativeTimeAgo == header }.map { $0.listItem }
+            let items = articles?.filter { $0.relativeTimeAgo == header }.map { $0.listItem() }
             sec.append(
                 ItemSection(header: header, items: items)
             )
@@ -47,36 +48,25 @@ private extension Article {
         return sec
     }
 
-    var listItem: Item {
-        var item = Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator))
-
-        if let u = url,
-           let url = URL(string: u) {
-            item.url = url
-            item.destination = .url
+    func listItem(hasTimeAgo: Bool = false) -> Item {
+        var strings: [String] = []
+        if hasTimeAgo,
+           let ago = publishedAt?.shortTimeAgoSinceDate {
+            strings.append(ago)
         }
+        strings.append(contentsOf: sub)
+
+        var met: Metadata?
+        if let string = url,
+           let url = URL(string: string) {
+            met = Metadata(url: url, destination: .url)
+        }
+
+        let item = Item(title: titleDisplay, subtitle: strings.joined(separator: Tmdb.separator),
+                        metadata: met)
 
         return item
     }
-
-    var listItemWithTimeAgo: Item {
-        var s: [String] = []
-        if let ago = publishedAt?.shortTimeAgoSinceDate {
-            s.append(ago)
-        }
-        s.append(contentsOf: sub)
-
-        var item =  Item(title: titleDisplay, subtitle: s.joined(separator: Tmdb.separator))
-
-        if let u = url,
-           let url = URL(string: u) {
-            item.url = url
-            item.destination = .url
-        }
-
-        return item
-    }
-
 
     var relativeTimeAgo: String? {
         guard let p = publishedAt else { return nil }

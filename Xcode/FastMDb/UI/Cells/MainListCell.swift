@@ -13,8 +13,8 @@ class MainListCell: UITableViewCell {
         didSet {
             textLabel?.text = item?.title
             detailTextLabel?.text = item?.subtitle
-            accessoryType = item?.destination == nil ? .none : .disclosureIndicator
-            imageView?.image = item?.image
+            accessoryType = item?.metadata?.destination == nil ? .none : .disclosureIndicator
+            imageView?.image = item?.metadata?.link?.image
 
             if let c = item?.color {
                 backgroundColor = c

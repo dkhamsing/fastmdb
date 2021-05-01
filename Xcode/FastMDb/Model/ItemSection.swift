@@ -1,5 +1,5 @@
 //
-//  Section.swift // TODO: rename file
+//  ItemSection.swift
 //
 //  Created by Daniel on 5/7/20.
 //  Copyright © 2020 dk. All rights reserved.
@@ -12,19 +12,5 @@ struct ItemSection {
     var items: [Item]?
     var footer: String?
 
-    var destination: Destination?
-    var destinationItems: [Item]?
-    var destinationSections: [ItemSection]?
-    var destinationTitle: String?
-
-    var display: Display = .text
-}
-
-enum Display {
-    case tags,
-         text,
-         images,
-         portraitImage,
-         thumbnailImage,
-         squareImage
+    var metadata: Metadata?
 }

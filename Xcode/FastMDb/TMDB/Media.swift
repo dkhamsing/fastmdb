@@ -69,7 +69,7 @@ extension Images {
         let items: [Item] = filtered.map {
             let url = Tmdb.backdropImageUrl(path: $0.file_path, size: .original)
             let imageUrl = Tmdb.backdropImageUrl(path: $0.file_path, size: .medium)
-            return Item.ImageItem(url: url, imageUrl: imageUrl)
+            return Item.imageItem(url: url, imageUrl: imageUrl)
         }
 
         return items
@@ -80,7 +80,7 @@ extension Images {
 
         guard items.count > 0 else { return nil }
 
-        return ItemSection(items: items, display: .thumbnailImage)
+        return ItemSection(items: items, metadata: Metadata(display: .thumbnailImage))
     }
 
     var postersSection: ItemSection? {
@@ -92,12 +92,12 @@ extension Images {
         let items: [Item] = filtered.map {
             let url = Tmdb.castProfileUrl(path: $0.file_path, size: .large)
             let imageUrl = Tmdb.castProfileUrl(path: $0.file_path, size: .medium)
-            var item = Item.ImageItem(url: url, imageUrl: imageUrl)
-            item.display = .portraitImage
+            var item = Item.imageItem(url: url, imageUrl: imageUrl)
+            item.metadata?.display = .portraitImage
             return item
         }
 
-        return ItemSection(items: items, display: .images)
+        return ItemSection(items: items, metadata: Metadata(display: .images))
     }
 
     var profilesSection: ItemSection? {
@@ -107,12 +107,12 @@ extension Images {
         let items: [Item] = profiles.map {
             let url = Tmdb.castProfileUrl(path: $0.file_path, size: .large)
             let imageUrl = Tmdb.castProfileUrl(path: $0.file_path, size: .medium)
-            var item = Item.ImageItem(url: url, imageUrl: imageUrl)
-            item.display = .portraitImage
+            var item = Item.imageItem(url: url, imageUrl: imageUrl)
+            item.metadata?.display = .portraitImage
             return item
         }
 
-        return ItemSection(items: items, display: .images)
+        return ItemSection(items: items, metadata: Metadata(display: .images))
     }
 
     var stillsSection: ItemSection? {
@@ -122,10 +122,10 @@ extension Images {
         let items: [Item] = stills.map {
             let url = Tmdb.stillImageUrl(path: $0.file_path, size: .original)
             let imageUrl = Tmdb.stillImageUrl(path: $0.file_path, size: .original)
-            return Item.ImageItem(url: url, imageUrl: imageUrl)
+            return Item.imageItem(url: url, imageUrl: imageUrl)
         }
 
-        return ItemSection(items: items, display: .thumbnailImage)
+        return ItemSection(items: items, metadata: Metadata(display: .thumbnailImage))
     }
 }
 
@@ -189,20 +189,22 @@ extension WatchSearch {
             .sorted { $0.provider_name < $1.provider_name }
 
         let items: [Item] = myProviders.map {
-            Item(title: $0.provider_name, url: country.link, destination: .url, imageUrl: $0.iconImageUrl, imageCornerRadius: 12)
+            Item(title: $0.provider_name, metadata: Metadata(url: country.link, destination: .url, imageUrl: $0.iconImageUrl, imageCornerRadius: 12))
         }
 
         guard items.count > 0 else { return watchSectionGoogleJustWatch(name) }
 
-        return ItemSection(header: "Watch", items: items, display: .squareImage)
+        return ItemSection(header: "Watch", items: items, metadata: Metadata(display: .squareImage))
     }
 
     func watchSectionGoogleJustWatch(_ name: String?) -> ItemSection? {
         guard let name = name,
               name != "" else { return nil }
 
-        let google = Item(title: "Google Search", url: name.googleSearchWatchUrl, destination: .url, image: Item.linkImage)
-        let justWatch = Item(title: "JustWatch", url: URL(string: "https://justwatch.com"), destination: .url, image: Item.linkImage)
+        let google = Item(title: "Google Search",
+                          metadata: Metadata(url: name.googleSearchWatchUrl, destination: .url, link: .link))
+        let justWatch = Item(title: "JustWatch",
+                             metadata: Metadata(url: URL(string: "https://justwatch.com"), destination: .url, link: .link))
         let items = [google, justWatch]
 
         return ItemSection(header: "Watch", items: items)
@@ -250,21 +252,24 @@ extension Media {
     var listItem: Item {
         let sub = listItemSub.joined(separator: Tmdb.separator)
 
-        return Item(id: id, title: titleDisplay, subtitle: sub, destination: .movie, color: ratingColor)
+        return Item(title: titleDisplay, subtitle: sub, color: ratingColor,
+                    metadata: Metadata(id: id, destination: .movie))
     }
 
     var listItemWithVotes: Item {
         var sub = listItemSub
         sub.append("\(vote_count) votes")
 
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .movie, color: ratingColor)
+        return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), color: ratingColor,
+                    metadata: Metadata(id: id, destination: .movie))
     }
 
     var listItemImage: Item {
         let sub = listItemSub.joined(separator: Tmdb.separator)
         let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
 
-        return Item(id: id, title: titleDisplay, subtitle: sub, destination: .movie, color: ratingColor, imageUrl: imageUrl)
+        return Item(title: titleDisplay, subtitle: sub, color: ratingColor,
+                    metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl))
     }
 
     var listItemCollection: Item {
@@ -279,7 +284,8 @@ extension Media {
             }
         }
 
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .movie, color: ratingColor)
+        return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), color: ratingColor,
+                    metadata: Metadata(id: id, destination: .movie))
     }
 
     var released: Bool {

@@ -19,7 +19,8 @@ extension ItemSection {
 
         if let people = people {
             let items = people.results.map { $0.listItemPopular }
-            let section = ItemSection(header: "people\(Tmdb.separator)\(kind.title)", items: items, display: .portraitImage)
+            let section = ItemSection(header: "people\(Tmdb.separator)\(kind.title)", items: items,
+                                      metadata: Metadata(display: .portraitImage))
             sections.append(section)
         }
 
@@ -128,7 +129,8 @@ private extension Credit {
             sub.append(known)
         }
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: name, destination: .person, imageUrl: url, imageCenterText: initials, strings: sub)
+        return Item(title: name,
+                    metadata: Metadata(id: id, destination: .person, imageUrl: url, imageCenterText: initials, strings: sub))
     }
 
 }

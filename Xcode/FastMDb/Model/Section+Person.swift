@@ -137,9 +137,7 @@ private extension Credit {
           var item = Item(title: birthday.age, subtitle: sub.joined(separator: "\n"))
 
           if let url = place_of_birth?.mapUrl {
-              item.url = url
-              item.destination = .url
-              item.image = Item.mapImage
+            item.metadata = Metadata(url: url, destination: .url, link: .map)
           }
 
           return ItemSection(header: "age", items: [item])
@@ -168,8 +166,7 @@ private extension Credit {
             var bornItem = Item(title: "Born \(bday)", subtitle: pob)
 
             if let url = place_of_birth?.mapUrl {
-                bornItem.url = url
-                bornItem.destination = .url
+                bornItem.metadata = Metadata(url: url, destination: .url)
             }
 
             bioItems.append(bornItem)
@@ -189,7 +186,8 @@ private extension Credit {
         var items: [Item] = []
 
         if let name = name {
-            let item = Item(title: "Awards & Nominations", url: name.googleSearchAwardsUrl, destination: .url, image: Item.linkImage)
+            let item = Item(title: "Awards & Nominations",
+                            metadata: Metadata(url: name.googleSearchAwardsUrl, destination: .url, link: .link))
             items.append(item)
         }
 
@@ -228,7 +226,7 @@ private extension Credit {
             let i = items,
             i.count > 0 else { return nil }
 
-        return ItemSection(header: "known for", items: i, display: .portraitImage)
+        return ItemSection(header: "known for", items: i, metadata: Metadata(display: .portraitImage))
     }
 
     var linksSection: ItemSection? {
@@ -237,32 +235,36 @@ private extension Credit {
         if let instagram = external_ids?.validInstagramId {
             let url = Instagram.url(instagram)
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "Instagram", subtitle: instagram, url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "Instagram", subtitle: instagram,
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
         if let twitter = external_ids?.validTwitterId {
             let url = Twitter.url(twitter)
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "Twitter", subtitle: Twitter.username(twitter), url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "Twitter", subtitle: Twitter.username(twitter),
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
         if let name = name {
             let url = name.wikipediaUrl
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "Wikipedia", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "Wikipedia",
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
         if let id = external_ids?.validImdbId {
             let url = Imdb.url(id: id, kind: .person)
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "IMDb", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "IMDb",
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
-        return ItemSection(items: items, display: .squareImage)
+        return ItemSection(items: items, metadata: Metadata(display: .squareImage))
     }
 
 }
@@ -384,7 +386,8 @@ private extension Credit {
             castTotal = String.allCreditsText(cast.count)
         }
 
-        let section = ItemSection(header: "movies\(Tmdb.separator)latest", items: topItems, footer: castTotal, destination: .items, destinationItems: cast.map { $0.movieCastItem }, destinationTitle: "Movies")
+        let section = ItemSection(header: "movies\(Tmdb.separator)latest", items: topItems, footer: castTotal,
+                                  metadata: Metadata(destination: .items, destinationTitle: "Movies", items: cast.map { $0.movieCastItem }))
 
         return section
     }
@@ -430,7 +433,8 @@ private extension Credit {
             total = String.allCreditsText(collapsedItems.count)
         }
 
-        let section = ItemSection(header: "movie credits\(Tmdb.separator)latest", items: Array(collapsedItems.prefix(limit)), footer: total, destination: .items, destinationItems: collapsedItems, destinationTitle: "Movies")
+        let section = ItemSection(header: "movie credits\(Tmdb.separator)latest", items: Array(collapsedItems.prefix(limit)), footer: total,
+                                  metadata: Metadata(destination: .items, destinationTitle: "Movies", items: collapsedItems))
 
         return section
     }
@@ -464,6 +468,10 @@ private extension Credit {
     func tvCrewItem(isImage: Bool = false,
                     isCredit: Bool = true,
                     additional: [Credit] = []) -> Item? {
+        if isImage, Tmdb.mediaPosterUrl(path: poster_path, size: .medium) == nil {
+            return nil
+        }
+
         var sub: [String] = []
         if first_air_date.yearDisplay != "" {
             sub.append(first_air_date.yearDisplay)
@@ -478,30 +486,23 @@ private extension Credit {
         }
 
         let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
-        var imageUrl: URL?
-        if isImage {
-            if let u = Tmdb.mediaPosterUrl(path: poster_path, size: .medium) {
-                imageUrl = u
-            } else {
-                return nil
-            }
-        }
+        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
 
         var sections: [ItemSection] = []
         sections.append(
-            ItemSection(items: [ Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage) ],
-                        display: .images)
+            ItemSection(items: [ Item(metadata: Metadata(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)) ],
+                        metadata: Metadata(display: .images))
         )
 
         sections.append(
-            ItemSection(items: [Item(id: id, title: titleDisplay, destination: .tv)] )
+            ItemSection(items: [Item(title: titleDisplay, metadata: Metadata(id: id, destination: .tv))] )
         )
 
         let items = additional.map {
-            Item(id: id,
-                 identifier: $0.credit_id,
-                 title: $0.job,
-                 destination: .tvCredit)
+            Item(title: $0.job,
+                 metadata: Metadata(id: id,
+                                    identifier: $0.credit_id,
+                                    destination: .tvCredit))
         }
 
         sections.append(
@@ -517,16 +518,16 @@ private extension Credit {
             destination = isCredit ? .sections : .tv
         }
 
-        return Item(id: id,
-                    identifier: credit_id,
-                    title: titleDisplay,
+        return Item(title: titleDisplay,
                     subtitle: sub.joined(separator: Tmdb.separator),
-                    destination: destination,
-                    destinationTitle: titleDisplay,
-                    sections: sections,
                     color: ratingColor,
-                    imageUrl: imageUrl,
-                    strings: sub2)
+                    metadata: Metadata(id: id,
+                                       identifier: credit_id,
+                                       destination: destination,
+                                       destinationTitle: titleDisplay,
+                                       sections: sections,
+                                       imageUrl: imageUrl,
+                                       strings: sub2))
     }
 
     var tvCastSectionLatest: ItemSection? {
@@ -585,7 +586,8 @@ private extension Credit {
 
         let prefix = Array(items.prefix(limit))
 
-        let section = ItemSection(header: "tv\(Tmdb.separator)more", items: prefix, footer: total, destination: .items, destinationItems: c.cast.compactMap { $0.listItemTv }, destinationTitle: "TV")
+        let section = ItemSection(header: "tv\(Tmdb.separator)more", items: prefix, footer: total,
+                                  metadata: Metadata(destination: .items, destinationTitle: "TV", items: c.cast.compactMap { $0.listItemTv }))
 
         if items.count > 0 {
             sections.append(section)
@@ -662,7 +664,8 @@ private extension Credit {
             total = String.allCreditsText(items.count)
         }
 
-        return ItemSection(header: "tv credits\(Tmdb.separator)upcoming", items: Array(items.prefix(limit)), footer: total, destination: .items, destinationItems: items, destinationTitle: "TV")
+        return ItemSection(header: "tv credits\(Tmdb.separator)upcoming", items: Array(items.prefix(limit)), footer: total,
+                           metadata: Metadata(destination: .items, destinationTitle: "TV", items: items))
     }
 
     func TvCrewSectionLatest(limit: Int) -> ItemSection? {
@@ -702,7 +705,8 @@ private extension Credit {
             total = String.allCreditsText(items.count)
         }
 
-        return ItemSection(header: "tv credits\(Tmdb.separator)latest", items: Array(items.prefix(limit)), footer: total, destination: .items, destinationItems: items, destinationTitle: "TV")
+        return ItemSection(header: "tv credits\(Tmdb.separator)latest", items: Array(items.prefix(limit)), footer: total,
+                           metadata: Metadata(destination: .items, destinationTitle: "TV", items: items))
     }
 
 }
@@ -808,7 +812,8 @@ private extension Credit {
     }
     
     var movieCastItem: Item {
-        return Item(id: id, title: titleDisplay, subtitle: movieCastSubtitle, destination: .movie, color: ratingColor)
+        return Item(title: titleDisplay, subtitle: movieCastSubtitle, color: ratingColor,
+                    metadata: Metadata(id: id, destination: .movie))
     }
 
     var movieCastImageItem: Item {
@@ -819,7 +824,8 @@ private extension Credit {
         sub.append(contentsOf: movieCastSubtitles)
 
         let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
-        return Item(id: id, title: titleDisplay, destination: .movie, color: ratingColor, imageUrl: imageUrl, strings: sub)
+        return Item(title: titleDisplay, color: ratingColor,
+                    metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl, strings: sub))
     }
 
     var movieCastSubtitles: [String] {
@@ -868,7 +874,8 @@ private extension Credit {
                 return nil
             }
         }
-        return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .movie, color: ratingColor, imageUrl: imageUrl, strings: sub2)
+        return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), color: ratingColor, 
+                    metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl, strings: sub2))
     }
 
 }

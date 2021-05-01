@@ -33,8 +33,10 @@ class SquareCollectionViewCell: UICollectionViewCell {
 
     func load(_ item: Item) {
         let size = SquareCollectionViewCell.size
-        imageView.layer.cornerRadius = item.imageCornerRadius
-        imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
+        if let corner = item.metadata?.imageCornerRadius {
+            imageView.layer.cornerRadius = corner
+        }
+        imageView.load(urlString: item.metadata?.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
     }
 
     func setup() {

@@ -34,7 +34,7 @@ class ImagesCollectionViewCell: UICollectionViewCell {
 
     func load(_ item: Item) {
         let size = item.imageSize
-        imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
+        imageView.load(urlString: item.metadata?.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared)
     }
 
     func setup() {
@@ -62,7 +62,7 @@ extension Item {
     var imageSize: CGSize {
         var size = ImagesCollectionViewCell.size
 
-        if let display = display,
+        if let display = metadata?.display,
            display == .portraitImage {
             size.width = ImagesCollectionViewCell.portraitWidth
         }

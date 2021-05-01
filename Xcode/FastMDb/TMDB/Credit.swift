@@ -152,11 +152,12 @@ extension Credit {
             let url = Tmdb.backdropImageUrl(path: item.media.backdrop_path, size: .original)
             let imageUrl = Tmdb.backdropImageUrl(path: item.media.backdrop_path, size: .medium)
             return Item(
-                id: item.media.id,
                 title: item.media.titleDisplay,
-                url: url,
-                destination: .safarivc,
-                imageUrl:imageUrl)
+                metadata: Metadata(
+                    id: item.media.id,
+                    url: url,
+                    destination: .safarivc,
+                    imageUrl:imageUrl))
         }
 
         var unique: [Item] = []
@@ -166,12 +167,13 @@ extension Credit {
             }
         }
 
-        return ItemSection(items: unique, display: .thumbnailImage)
+        return ItemSection(items: unique, metadata: Metadata(display: .thumbnailImage))
     }
 
     var listItemCast: Item {
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: titleDisplay, subtitle: character, destination: .person, imageUrl: url, imageCenterText: initials)
+        return Item(title: titleDisplay, subtitle: character,
+                    metadata: Metadata(id: id, destination: .person, imageUrl: url, imageCenterText: initials))
     }
 
     var listItemCastAggregated: Item {
@@ -182,11 +184,11 @@ extension Credit {
         sub.append(contentsOf: aggregated)
 
         let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(id: id, title: name, destination: .person, imageUrl: url, imageCenterText: initials, strings: sub)
+        return Item(title: name, metadata: Metadata(id: id, destination: .person, imageUrl: url, imageCenterText: initials, strings: sub))
     }
 
     var listItemCrew: Item {
-        return Item(id: id, title: name, subtitle: job, destination: .person)
+        return Item(title: name, subtitle: job, metadata: Metadata(id: id, destination: .person))
     }
 
     var listItemTv: Item? {
@@ -231,7 +233,9 @@ extension Credit {
             }
         }
 
-        return Item(id: id, identifier: credit_id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .tvCredit, color: ratingColor, imageUrl: imageUrl, strings: sub2)
+        return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), color: ratingColor, 
+                    metadata: Metadata(id: id, identifier: credit_id, destination: .tvCredit, imageUrl: imageUrl, strings: sub2)
+        )
     }
 
     var ratingColor: UIColor? {

@@ -100,7 +100,7 @@ extension Media {
         if !(poster_path ?? "").isEmpty {
             let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
             let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .large)
-            let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)
+            let posterItem = Item(metadata: Metadata(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage))
             items.append(posterItem)
         }
 
@@ -110,7 +110,7 @@ extension Media {
 
         guard items.count > 0 else { return nil }
 
-        return ItemSection(items: items, display: .images)
+        return ItemSection(items: items, metadata: Metadata(display: .images))
     }
 
 }
@@ -127,10 +127,8 @@ extension Media {
         if let count = reviews?.results.count,
            count > 1 {
             let reviewItems = reviews?.results.map { $0.listItem }
-            section.destinationItems = reviewItems
-            section.destinationTitle = "Reviews"
-            section.destination = .items
             section.footer = "\(count) reviews"
+            section.metadata = Metadata(destination: .items, destinationTitle: "Reviews", items: reviewItems)
         }
 
         return section
@@ -143,7 +141,8 @@ private extension Media {
         if let revenue = revenue,
             revenue > 0 {
 
-            let item = Item(title: revenue.display, subtitle: budgetDisplay, destination: .moviesSortedBy, sortedBy: Tmdb.byRevenue, releaseYear: releaseYear, color: boxOfficeColor)
+            let item = Item(title: revenue.display, subtitle: budgetDisplay, color: boxOfficeColor,
+                            metadata: Metadata(destination: .moviesSortedBy, sortedBy: Tmdb.byRevenue, releaseYear: releaseYear))
             return ItemSection(header: "box office", items: [item])
         }
 
@@ -159,20 +158,23 @@ private extension Media {
         guard let genre = genres,
               genre.count > 0 else { return nil }
 
-        let items = genre.map { Item(id: $0.id, title: $0.name, destination: .genreMovie) }
-        return ItemSection(header: "genre", items: items, display: .tags)
+        let items = genre.map { Item(title: $0.name,
+                                     metadata: Metadata(id: $0.id, destination: .genreMovie)) }
+        return ItemSection(header: "genre", items: items, metadata: Metadata(display: .tags))
     }
 
     var googleSection: ItemSection? {
         var items: [Item] = []
 
         if let name = title {
-            let item = Item(title: "Awards & Nominations", url: name.googleSearchAwardsUrl, destination: .url, image: Item.linkImage)
+            let item = Item(title: "Awards & Nominations",
+                            metadata: Metadata(url: name.googleSearchAwardsUrl, destination: .url, link: .link))
             items.append(item)
         }
 
         if let name = title {
-            let item = Item(title: "Music", url: name.googleSearchMusicUrl, destination: .url, image: Item.linkImage)
+            let item = Item(title: "Music",
+                            metadata: Metadata(url: name.googleSearchMusicUrl, destination: .url, link: .link))
             items.append(item)
         }
 
@@ -195,14 +197,16 @@ private extension Media {
             homepage != "" {
             let url = URL(string: homepage)
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: homepageDisplay, url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: homepageDisplay,
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
         if let name = title {
             let url = name.wikipediaUrl
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "Wikipedia", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "Wikipedia",
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
@@ -210,27 +214,30 @@ private extension Media {
             let id = external_ids?.validImdbId {
             let url = Imdb.url(id: id, kind: .title)
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "IMDb", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "IMDb",
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
         if let name = title {
             let url = name.rottenTomatoestUrl
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "Rotten Tomatoes", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "Rotten Tomatoes",
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
         if let name = title {
             let url = name.letterboxdUrl
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "Letterboxd", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "Letterboxd",
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
         guard items.count > 0 else { return nil }
 
-        return ItemSection(header: "links", items: items, display: .squareImage)
+        return ItemSection(header: "links", items: items, metadata: Metadata(display: .squareImage))
     }
 
     func mediaSection(albums: [iTunes.Album]?) -> ItemSection? {
@@ -239,12 +246,14 @@ private extension Media {
         if
             let videos = videos?.results,
             videos.count > 0 {
-            let item = Item(title: "Video Clips", destination: .videos, items: videos.map { $0.listItem }, image: Item.videoImage)
+            let item = Item(title: "Video Clips",
+                            metadata: Metadata(destination: .videos, items: videos.map { $0.listItem }, link: .video))
             items.append(item)
         }
 
         if let albums = albums {
-            let item = Item(title: "Apple Music",  destination: .music, image: Item.videoImage, albums: albums)
+            let item = Item(title: "Apple Music",
+                            metadata: Metadata(destination: .music, albums: albums, link: .video))
             items.append(item)
         }
 
@@ -267,9 +276,8 @@ private extension Media {
         }
 
         // countries
-        if
-            let countries = production_countries,
-            countries.count > 0 {
+        if let countries = production_countries,
+           countries.count > 0 {
             metadata.append(countries.map { $0.name }.joined(separator: ", "))
         }
 
@@ -297,7 +305,7 @@ private extension Media {
         }
 
         if let c = belongs_to_collection {
-            let item = Item(id: c.id, title: c.name, destination: .collection)
+            let item = Item(title: c.name, metadata: Metadata(id: c.id, destination: .collection))
             items.append(item)
         }
 
@@ -309,7 +317,7 @@ private extension Media {
               companies.count > 0 else { return nil }
 
         let items: [Item] = companies.map { $0.listItem }
-        return ItemSection(header: "production", items: items, display: .tags)
+        return ItemSection(header: "production", items: items, metadata: Metadata(display: .tags))
     }
 
     var ratingSection: ItemSection? {
@@ -321,10 +329,8 @@ private extension Media {
         if let count = reviews?.results.count,
            count > 1 {
             let reviewItems = reviews?.results.map { $0.listItem }
-            section.destinationItems = reviewItems
-            section.destinationTitle = "Reviews"
-            section.destination = .items
             section.footer = "\(count) reviews"
+            section.metadata = Metadata(destination: .items, destinationTitle: "Reviews", items: reviewItems)
         }
 
         return section
@@ -336,7 +342,7 @@ private extension Media {
 
         let items: [Item] = recs.map { $0.listItemImage }
 
-        return ItemSection(header: "Recommendations", items: items, display: .portraitImage)
+        return ItemSection(header: "Recommendations", items: items, metadata: Metadata(display: .portraitImage))
     }
 
     var similarSection: ItemSection? {
@@ -344,7 +350,7 @@ private extension Media {
               recs.count > 0 else { return nil }
 
         let items: [Item] = recs.map { $0.listItemImage }
-        return ItemSection(header: "Similar", items: items, display: .portraitImage)
+        return ItemSection(header: "Similar", items: items, metadata: Metadata(display: .portraitImage))
     }
 
     var watchSection: ItemSection? {
@@ -393,7 +399,8 @@ private extension Credits {
 
         let items = cast.map { $0.listItemCast }
 
-        return ItemSection(header: "cast", items: items, destination: .items, destinationTitle: "Cast", display: .portraitImage)
+        return ItemSection(header: "cast", items: items,
+                           metadata: Metadata(destination: .items, destinationTitle: "Cast", display: .portraitImage))
     }
 
     func creditsSection(limit: Int) -> ItemSection? {
@@ -412,7 +419,7 @@ private extension Credits {
 
             var item = Item()
             if let c = crew.first {
-                item = Item(id: c.id, title: c.name, destination: .person)
+                item = Item(title: c.name, metadata: Metadata(id: c.id, destination: .person))
             }
 
             let jobs = crew.map { $0.job ?? "" }
@@ -433,7 +440,8 @@ private extension Credits {
 
         let prefixed = Array(items.prefix(limit))
 
-        return ItemSection(header: "crew", items: prefixed, footer: crewTotal, destination: .items, destinationItems: items, destinationTitle: "Crew")
+        return ItemSection(header: "crew", items: prefixed, footer: crewTotal,
+                           metadata: Metadata(destination: .items, destinationTitle: "Crew", items: items))
     }
 
     var directorSection: ItemSection? {

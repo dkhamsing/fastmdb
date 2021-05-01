@@ -237,19 +237,14 @@ final class ProductionDataProvider: DataProvider {
 final class SeasonDataProvider: DataProvider {
 
     func get(_ seasonItem: Item?, completion: @escaping (Season?, UIImage?) -> Void) {
-        guard let item = seasonItem else { return }
+        guard let item = seasonItem,
+              let number = item.metadata?.seasonNumber else { return }
 
         var season: Season?
-//        var image: UIImage?
 
-        let url = Tmdb.tvURL(tvId: item.id, seasonNumber: item.seasonNumber)
+        let url = Tmdb.tvURL(tvId: item.metadata?.id, seasonNumber: number)
         fetchItem(url: url) { (item: Season?) in
             season = item
-
-//            let imageUrl = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large)
-//            self.fetchImage(url: imageUrl) { i in
-//                image = i
-//            }
         }
 
         group.notify(queue: .main) {
@@ -263,22 +258,14 @@ final class TvDataProvider: DataProvider {
     func get(_ id: Int?, completion: @escaping (TV?, UIImage?, [Article]?, [iTunes.Album]?) -> Void) {
         var tv: TV?
         var articles: [Article]?
-//        var image: UIImage?
         var albums: [iTunes.Album]?
 
         let url = Tmdb.tvURL(tvId: id)
         fetchItem(url: url) { (item: TV?) in
             tv = item
 
-//            if let url = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large) {
-//                self.fetchImage(url: url) { i in
-//                    image = i
-//                }
-//            }
-
-            if
-                let name = item?.name,
-                let url = NewsApi.urlForQuery("\(name) tv") {
+            if let name = item?.name,
+               let url = NewsApi.urlForQuery("\(name) tv") {
                 self.fetchArticles(url: url) { a in
                     articles = a
                 }

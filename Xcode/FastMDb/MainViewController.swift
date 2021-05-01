@@ -527,7 +527,7 @@ private extension MainViewController {
 
         let provider = SeasonDataProvider()
         provider.get(seasonItem) { (season, image) in
-            let sections = ItemSection.seasonSections(tvId: seasonItem?.id, season: season)
+            let sections = ItemSection.seasonSections(tvId: seasonItem?.metadata?.id, season: season)
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
@@ -554,7 +554,7 @@ private extension MainViewController {
                 footer = "See all time highest grossing"
             }
 
-            let sections = [ ItemSection(items: items, footer: footer, destination: .moviesSortedBy) ]
+            let sections = [ ItemSection(items: items, footer: footer, metadata: Metadata(destination: .moviesSortedBy)) ]
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }

@@ -22,8 +22,9 @@ extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let s = dataSource[section]
+        let display = s.metadata?.display ?? .text
 
-        switch s.display {
+        switch display {
         case .text:
             return s.items?.count ?? 0
         case .portraitImage, .thumbnailImage, .squareImage, .images, .tags:
@@ -35,8 +36,9 @@ extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let section = dataSource[indexPath.section]
+        let display = section.metadata?.display ?? .text
 
-        switch section.display {
+        switch display {
         case .text:
             guard let items = section.items else { return UITableViewCell() }
 
@@ -88,7 +90,9 @@ extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let section = dataSource[indexPath.section]
-        switch section.display {
+        let display = section.metadata?.display ?? .text
+        
+        switch display {
         case .tags:
             return TagsCollectionViewCell.size.height
         case .images:
@@ -112,7 +116,7 @@ extension MainViewController: UITableViewDelegate {
         let s = dataSource[indexPath.section]
         if let items = s.items {
             let item = items[indexPath.row]
-            if let _ = item.destination {
+            if let _ = item.metadata?.destination {
                 return true
             }
         }
@@ -168,39 +172,39 @@ extension MainViewController: CollectionListener {
 private extension MainViewController {
 
     func loadDestination(_ item: Item) {
-        guard let destination = item.destination else { return }
+        guard let destination = item.metadata?.destination else { return }
 
         switch destination {
         case .collection:
             let controller = MainViewController()
             controller.title = item.title
-            controller.collectionId = item.id
+            controller.collectionId = item.metadata?.id
             navigationController?.pushViewController(controller, animated: true)
         case .episode:
             let controller = MainViewController()
             controller.title = item.title
-            controller.updateEpisode(tvId: item.id, episode: item.episode)
+            controller.updateEpisode(tvId: item.metadata?.id, episode: item.metadata?.episode)
             navigationController?.pushViewController(controller, animated: true)
         case .genreMovie:
             let controller = MainViewController()
             controller.title = item.title
-            controller.genreMovieId = item.id
+            controller.genreMovieId = item.metadata?.id
             navigationController?.pushViewController(controller, animated: true)
         case .genreTv:
             let controller = MainViewController()
             controller.title = item.title
-            controller.genreTvId = item.id
+            controller.genreTvId = item.metadata?.id
             navigationController?.pushViewController(controller, animated: true)
         case .items:
             let controller = MainViewController()
-            controller.title = item.destinationTitle
-            controller.items = item.items
+            controller.title = item.metadata?.destinationTitle
+            controller.items = item.metadata?.items
             navigationController?.pushViewController(controller, animated: true)
         case .movie:
             // MARK: known issue that the rating in api list and api detail is sometimes different
             let controller = MainViewController()
             controller.title = item.title
-            controller.movieId = item.id
+            controller.movieId = item.metadata?.id
             navigationController?.pushViewController(controller, animated: true)
         case .moviesSortedBy:
             // TODO: able to load more than one page of highest grossing
@@ -208,16 +212,16 @@ private extension MainViewController {
 
             var thisTitle = "Highest Grossing"
 
-            if let releaseYear = item.releaseYear {
+            if let releaseYear = item.metadata?.releaseYear {
                 thisTitle += " (\(releaseYear))"
             }
 
             controller.title = thisTitle
-            controller.releaseYear = item.releaseYear
-            controller.sortedBy = item.sortedBy
+            controller.releaseYear = item.metadata?.releaseYear
+            controller.sortedBy = item.metadata?.sortedBy
             navigationController?.pushViewController(controller, animated: true)
         case .music:
-            guard let albums = item.albums else { return }
+            guard let albums = item.metadata?.albums else { return }
 
             let contentView = MusicView(albums: albums)
             let controller = UIHostingController(rootView: contentView)
@@ -225,20 +229,20 @@ private extension MainViewController {
         case .network:
             let controller = MainViewController()
             controller.title = item.title
-            controller.networkId = item.id
+            controller.networkId = item.metadata?.id
             navigationController?.pushViewController(controller, animated: true)
         case .person:
             let controller = MainViewController()
             controller.title = item.title
-            controller.personId = item.id
+            controller.personId = item.metadata?.id
             navigationController?.pushViewController(controller, animated: true)
         case .production:
             let controller = MainViewController()
             controller.title = item.title
-            controller.productionId = item.id
+            controller.productionId = item.metadata?.id
             navigationController?.pushViewController(controller, animated: true)
         case .safarivc:
-            guard let url = item.url else { return }
+            guard let url = item.metadata?.url else { return }
             let sfvc = SFSafariViewController(url: url)
             sfvc.modalPresentationStyle = .formSheet
             present(sfvc, animated: true, completion: nil)
@@ -249,24 +253,24 @@ private extension MainViewController {
             navigationController?.pushViewController(controller, animated: true)
         case .sections:
             let controller = MainViewController()
-            controller.title = item.destinationTitle
-            controller.sections = item.sections
+            controller.title = item.metadata?.destinationTitle
+            controller.sections = item.metadata?.sections
             navigationController?.pushViewController(controller, animated: true)
         case .tv:
             let controller = MainViewController()
             controller.title = item.title
-            controller.tvId = item.id
+            controller.tvId = item.metadata?.id
             navigationController?.pushViewController(controller, animated: true)
         case .tvCredit:
             let controller = MainViewController()
-            controller.updateCredit(id: item.id, creditId: item.identifier)
+            controller.updateCredit(id: item.metadata?.id, creditId: item.metadata?.identifier)
             navigationController?.pushViewController(controller, animated: true)
         case .url:
-            guard let url = item.url else { return }
+            guard let url = item.metadata?.url else { return }
             UIApplication.shared.open(url)
         case .videos:
             guard
-                let items = item.items,
+                let items = item.metadata?.items,
                 items.count > 0 else { return }
 
             let contentView = VideoView(items: items)
@@ -286,18 +290,18 @@ private extension MainViewController {
 
         guard
             let section = button.section,
-            let s = section.destination else { return }
+            let s = section.metadata?.destination else { return }
 
         switch s {
         case .items:
             let controller = MainViewController()
-            controller.title = section.destinationTitle
-            controller.items = section.destinationItems
+            controller.title = section.metadata?.destinationTitle
+            controller.items = section.metadata?.items
             navigationController?.pushViewController(controller, animated: true)
         case .sections:
             let controller = MainViewController()
-            controller.title = section.destinationTitle
-            controller.sections = section.destinationSections
+            controller.title = section.metadata?.destinationTitle
+            controller.sections = section.metadata?.sections
             navigationController?.pushViewController(controller, animated: true)
         case .moviesSortedBy:
             let controller = MainViewController()

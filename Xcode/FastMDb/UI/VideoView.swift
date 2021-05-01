@@ -38,7 +38,7 @@ struct VideoView: View {
         let group = DispatchGroup()
         var videoItems: [VideoItem] = []
         for item in items {
-            if let url = item.url {
+            if let url = item.metadata?.url {
                 group.enter()
                 print(url)
                 let provider = LPMetadataProvider()
@@ -65,7 +65,7 @@ struct VideoView: View {
             var sorted: [VideoItem] = []
             for item in items {
                 let filtered = videoItems
-                    .filter { $0.url?.absoluteString == item.url?.absoluteString }
+                    .filter { $0.url?.absoluteString == item.metadata?.url?.absoluteString }
 
                 if let f = filtered.first {
                     sorted.append(f)
@@ -123,7 +123,7 @@ struct VideoItem: Identifiable {
 
 extension Item {
     var videoItem: VideoItem {
-        return VideoItem(title: title ?? "", subtitle: subtitle, url: url)
+        return VideoItem(title: title ?? "", subtitle: subtitle, url: metadata?.url)
     }
 }
 
@@ -135,7 +135,8 @@ struct VideoView_Previews: PreviewProvider {
     }
 }
 
-let testData = [Item(id: nil, title: "Hamilton | Official Trailer | Disney+", subtitle: "YouTube · Trailer", url: URL.init(string: "https://www.youtube.com/watch/DSCKfXpAGHc"), destination: nil, destinationTitle: nil, sortedBy: nil, episode: nil, seasonNumber: nil, items: nil, image: nil, color: nil)]
+let testData = [Item(title: "Hamilton | Official Trailer | Disney+", subtitle: "YouTube · Trailer",
+                     metadata: Metadata(id: nil, url: URL(string: "https://www.youtube.com/watch/DSCKfXpAGHc")))]
 
 /**FastMDb.Item(id: nil, title: Optional("Hamilton | Official Trailer | Disney+"), subtitle: Optional("YouTube · Trailer"), url: Optional(https://www.youtube.com/watch/DSCKfXpAGHc), destination: Optional(FastMDb.Destination.url), destinationTitle: nil, sortedBy: nil, episode: nil, seasonNumber: nil, items: nil, image: Optional(<UIImage:0x600000d45cb0 symbol(system: play.circle.fill) {20, 19} baseline=3.5,contentInsets={1, 1.5, 1, 1.5},alignmentRectInsets={-0.5, 0, -0.5, 0} config=<(null), traits=(UserInterfaceIdiom = Phone, DisplayScale = 2, DisplayGamut = P3, HorizontalSizeClass = Compact, VerticalSizeClass = Regular, UserInterfaceStyle = Dark, UserInterfaceLayoutDirection = LTR, PreferredContentSizeCategory = L, AccessibilityContrast = Normal)>>), color: nil), FastMDb.Item(id: nil, title: Optional("\"Alexander Hamilton\" Clip | Hamilton | Disney+"), subtitle: Optional("YouTube · Clip"), url: Optional(https://www.youtube.com/watch/hrGwCJQoeVo), destination: Optional(FastMDb.Destination.url), destinationTitle: nil, sortedBy: nil, episode: nil, seasonNumber: nil, items: nil, image: Optional(<UIImage:0x600000d45cb0 symbol(system: play.circle.fill) {20, 19} baseline=3.5,contentInsets={1, 1.5, 1, 1.5},alignmentRectInsets={-0.5, 0, -0.5, 0} config=<(null), traits=(UserInterfaceIdiom = Phone, DisplayScale = 2, DisplayGamut = P3, HorizontalSizeClass = Compact, VerticalSizeClass = Regular, UserInterfaceStyle = Dark, UserInterfaceLayoutDirection = LTR, PreferredContentSizeCategory = L, AccessibilityContrast = Normal)>>), color: nil),
 

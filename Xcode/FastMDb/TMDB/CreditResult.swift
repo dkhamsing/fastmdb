@@ -22,7 +22,7 @@ extension CreditResult {
             sections.append(section)
         }
 
-        var items = [ Item(id: id, title: media.original_name, destination: .tv) ]
+        var items = [ Item(title: media.original_name, metadata: Metadata(id: id, destination: .tv)) ]
         if !media.overview.isEmpty {
             items.append(Item(subtitle: media.overview))
         }
@@ -111,7 +111,8 @@ private extension Episode {
             sub.append(airDate)
         }
 
-        return Item(id: id, title: name, subtitle: sub.joined(separator: "\n"), destination: .episode, episode: self, color: episodeRatingColor)
+        return Item(title: name, subtitle: sub.joined(separator: "\n"), color: episodeRatingColor,
+                    metadata: Metadata(id: id, destination: .episode, episode: self))
     }
 }
 

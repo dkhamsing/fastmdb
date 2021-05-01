@@ -103,7 +103,7 @@ private extension TV {
 
         let items = cast.map { $0.listItemCastAggregated }
 
-        return ItemSection(header: "cast", items: items, display: .portraitImage)
+        return ItemSection(header: "cast", items: items, metadata: Metadata(display: .portraitImage))
     }
 
     var createdBySection: ItemSection? {
@@ -130,9 +130,9 @@ private extension TV {
             let genres = genres,
             genres.count > 0 else { return nil }
 
-        let items = genres.map { Item(id: $0.id, title: $0.name, destination: .genreTv) }
+        let items = genres.map { Item(title: $0.name, metadata: Metadata(id: $0.id, destination: .genreTv)) }
 
-        return ItemSection(header: "genres", items: items, display: .tags)
+        return ItemSection(header: "genres", items: items, metadata: Metadata(display: .tags))
     }
 
     var imagesSection: ItemSection? {
@@ -141,7 +141,7 @@ private extension TV {
         if !(poster_path ?? "").isEmpty {            
             let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
             let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .large)
-            let posterItem = Item(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)
+            let posterItem = Item(metadata: Metadata(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage))
             items.append(posterItem)
         }
 
@@ -151,19 +151,21 @@ private extension TV {
 
         guard items.count > 0 else { return nil }
 
-        return ItemSection(items: items, display: .images)
+        return ItemSection(items: items, metadata: Metadata(display: .images))
     }
 
     var googleSection: ItemSection? {
         var items: [Item] = []
 
         if name != "" {
-            let item = Item(title: "Awards & Nominations", url: name.googleSearchAwardsUrl, destination: .url, image: Item.linkImage)
+            let item = Item(title: "Awards & Nominations",
+                            metadata: Metadata(url: name.googleSearchAwardsUrl, destination: .url, link: .link))
             items.append(item)
         }
 
         if name != "" {
-            let item = Item(title: "Music", url: name.googleSearchMusicUrl, destination: .url, image: Item.linkImage)
+            let item = Item(title: "Music",
+                            metadata: Metadata(url: name.googleSearchMusicUrl, destination: .url, link: .link))
             items.append(item)
         }
 
@@ -180,14 +182,16 @@ private extension TV {
             homepage != "" {
             let url = URL(string: homepage)
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: homepageDisplay, url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: homepageDisplay,
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
         if let instagram = external_ids?.validInstagramId {
             let url = Instagram.url(instagram)
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "Instagram", subtitle: instagram, url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "Instagram", subtitle: instagram,
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
@@ -195,25 +199,28 @@ private extension TV {
             twitter != "" {
             let url = Twitter.url(twitter)
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "Twitter", subtitle: "", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "Twitter", subtitle: "",
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
         if name != "" {
             let url = name.wikipediaUrl
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "Wikipedia", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "Wikipedia",
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
         if let imdb = external_ids?.validImdbId {
             let url = Imdb.url(id: imdb, kind: .title)
             let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "IMDb", url: url, destination: .url, image: Item.linkImage, imageUrl: imageUrl)
+            let item = Item(title: "IMDb",
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
             items.append(item)
         }
 
-        return ItemSection(header: "links", items: items, display: .squareImage)
+        return ItemSection(header: "links", items: items, metadata: Metadata(display: .squareImage))
     }
 
     func mediaSection(albums: [iTunes.Album]?) -> ItemSection? {
@@ -222,12 +229,14 @@ private extension TV {
         if
             let videos = videos?.results,
             videos.count > 0 {
-            let item = Item(title: "Video Clips", destination: .videos, items: videos.map { $0.listItem }, image: Item.videoImage)
+            let item = Item(title: "Video Clips",
+                            metadata: Metadata(destination: .videos, items: videos.map { $0.listItem }, link: .video))
             items.append(item)
         }
 
         if let albums = albums {
-            let item = Item(title: "Apple Music", destination: .music, image: Item.videoImage, albums: albums)
+            let item = Item(title: "Apple Music",
+                            metadata: Metadata(destination: .music, albums: albums, link: .video))
             items.append(item)
         }
 
@@ -241,7 +250,7 @@ private extension TV {
             let networks = networks,
             networks.count > 0 else { return nil }
 
-        let items = networks.map { Item(id: $0.id, title: $0.name, destination: .network) }
+        let items = networks.map { Item(title: $0.name, metadata: Metadata(id: $0.id, destination: .network)) }
 
         return ItemSection(header: "networks", items: items)
     }
@@ -255,14 +264,12 @@ private extension TV {
     var nextEpisodeItem: Item? {
         guard var item = next_episode_to_air?.dateItem else { return nil }
 
-        item.id = id
-        item.episode = next_episode_to_air
-        item.destination = .episode
-
         if let s = item.subtitle,
             let network = networks?.first?.name {
             item.subtitle = "\(s) on \(network)"
         }
+
+        item.metadata = Metadata(id: id, destination: .episode, episode: next_episode_to_air)
 
         return item
     }
@@ -343,7 +350,7 @@ private extension TV {
 
         let items = companies.map { $0.listItem }
 
-        return ItemSection(header: "production", items: items, display: .tags)
+        return ItemSection(header: "production", items: items, metadata: Metadata(display: .tags))
     }
 
     var ratingSection: ItemSection? {
@@ -371,7 +378,7 @@ private extension TV {
 
         let items = recs.map { $0.listItemImage }
 
-        return ItemSection(header: "recommended", items: items, display: .portraitImage)
+        return ItemSection(header: "recommended", items: items, metadata: Metadata(display: .portraitImage))
     }
 
     var seasonSection: ItemSection? {
@@ -380,7 +387,7 @@ private extension TV {
         guard items.count > 0 else { return nil }
 
         let header = "\(items.count) season\(items.count.pluralized)"
-        return ItemSection(header: header, items: items, display: .portraitImage)
+        return ItemSection(header: header, items: items, metadata: Metadata(display: .portraitImage))
     }
 
     var seasonSpecialSection: ItemSection? {
@@ -402,7 +409,7 @@ private extension TV {
 
         let items = recs.map { $0.listItemImage }
 
-        return ItemSection(header: "similar", items: items, display: .portraitImage)
+        return ItemSection(header: "similar", items: items, metadata: Metadata(display: .portraitImage))
     }
 
     var taglineOverviewItem: Item? {
@@ -440,7 +447,7 @@ private extension TV {
 
 private extension Credit {
     var creatorItem: Item {
-        return Item(id: id, title: name, destination: .person)
+        return Item(title: name, metadata: Metadata(id: id, destination: .person))
     }
 }
 

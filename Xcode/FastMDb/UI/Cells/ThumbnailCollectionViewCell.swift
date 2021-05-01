@@ -39,7 +39,7 @@ class ThumbnailCollectionViewCell: UICollectionViewCell {
         label2.text = item.subtitle
 
         let size = ThumbnailCollectionViewCell.size
-        imageView.load(urlString: item.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared) {
+        imageView.load(urlString: item.metadata?.imageUrl?.absoluteString, size: size, downloader: ImageDownloader.shared) {
             self.initials.isHidden = self.imageView.image != nil
         }
 
