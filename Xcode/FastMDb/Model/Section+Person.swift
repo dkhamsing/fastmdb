@@ -316,7 +316,7 @@ private extension Credit {
     }
 
     static func collapsedMovieCrewItems(_ crew: [Credit]) -> [Item] {
-        let items = Credit.collapsedCredits(crew).map { $0.movieCrewItem }
+        let items = Credit.collapsedCredits(crew).compactMap { $0.movieCrewItem }
         return items
     }
 
@@ -463,8 +463,7 @@ private extension Credit {
 
     func tvCrewItem(isImage: Bool = false,
                     isCredit: Bool = true,
-                    additional: [Credit] = []
-                    ) -> Item {
+                    additional: [Credit] = []) -> Item? {
         var sub: [String] = []
         if first_air_date.yearDisplay != "" {
             sub.append(first_air_date.yearDisplay)
@@ -479,7 +478,14 @@ private extension Credit {
         }
 
         let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
-        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        var imageUrl: URL?
+        if isImage {
+            if let u = Tmdb.mediaPosterUrl(path: poster_path, size: .medium) {
+                imageUrl = u
+            } else {
+                return nil
+            }
+        }
 
         var sections: [ItemSection] = []
         sections.append(
@@ -532,7 +538,7 @@ private extension Credit {
 
         let items = c.cast
             .sorted { $0.first_air_date ?? "" > $1.first_air_date ?? "" }
-            .map { $0.listItemTv }
+            .compactMap { $0.listItemTv }
             .prefix(limit)
 
         guard items.count > 0 else { return nil }
@@ -556,7 +562,7 @@ private extension Credit {
 
         let temp = c.cast
             .sorted { $0.episode_count ?? 0 > $1.episode_count ?? 0 }
-            .map { $0.listItemTv }
+            .compactMap { $0.listItemTv }
 
         var items: [Item] = []
         for item in temp {
@@ -579,7 +585,7 @@ private extension Credit {
 
         let prefix = Array(items.prefix(limit))
 
-        let section = ItemSection(header: "tv\(Tmdb.separator)more", items: prefix, footer: total, destination: .items, destinationItems: c.cast.map { $0.listItemTv }, destinationTitle: "TV")
+        let section = ItemSection(header: "tv\(Tmdb.separator)more", items: prefix, footer: total, destination: .items, destinationItems: c.cast.compactMap { $0.listItemTv }, destinationTitle: "TV")
 
         if items.count > 0 {
             sections.append(section)
@@ -624,7 +630,7 @@ private extension Credit {
                 return releaseDateInFuture
             }
             .sorted { $0.credit.first_air_date ?? "" > $1.credit.first_air_date ?? "" }
-            .map { $0.credit.tvCrewItem(additional: $0.additional) }
+            .compactMap { $0.credit.tvCrewItem(additional: $0.additional) }
 
         guard items.count > 0 else { return nil }
 
@@ -647,7 +653,7 @@ private extension Credit {
 
                 return releaseDateInFuture || noRelease
             }
-            .map { $0.tvCrewItem(isCredit: false) }
+            .compactMap { $0.tvCrewItem(isCredit: false) }
 
         guard items.count > 0 else { return nil }
 
@@ -674,7 +680,7 @@ private extension Credit {
                     return !releaseDateInFuture
             }
             .sorted { $0.credit.first_air_date ?? "" > $1.credit.first_air_date ?? ""}
-            .map { $0.credit.tvCrewItem(additional: $0.additional) }
+            .compactMap { $0.credit.tvCrewItem(additional: $0.additional) }
 
         var items: [Item] = []
         for item in temp {
@@ -720,7 +726,7 @@ private extension Credits {
                 .sorted{ $0.episode_count ?? 0 > $1.episode_count ?? 0 }
                 .prefix(limit)
 
-            let tvItems: [Item] = Array(sorted).map { $0.listItemTv(isImage: true) }
+            let tvItems: [Item] = Array(sorted).compactMap { $0.listItemTv(isImage: true) }
             items.append(contentsOf: tvItems)
         }
 
@@ -731,12 +737,12 @@ private extension Credits {
         var items: [Item] = []
 
         if let media = movie_credits?.crew.prefix(limit) {
-            items = Array(media).map { $0.movieCrewItem(isImage: true) }
+            items = Array(media).compactMap { $0.movieCrewItem(isImage: true) }
         }
 
         if let media = tv_credits?.crew {
             let collapsedCredits = Credit.collapsedCredits(media).prefix(limit)
-            items.append(contentsOf: Array(collapsedCredits).map { $0.tvCrewItem(isImage: true) })
+            items.append(contentsOf: Array(collapsedCredits).compactMap { $0.tvCrewItem(isImage: true) })
         }
 
         return items
@@ -753,12 +759,12 @@ private extension Credits {
     }
 
     var movieDirectingItems: [Item] {
-        let items = topDirectingCredits.map { $0.movieCrewItem(isImage: true) }
+        let items = topDirectingCredits.compactMap { $0.movieCrewItem(isImage: true) }
         return items
     }
 
     var tvDirectingItems: [Item] {
-        let items = topDirectingCredits.map { $0.tvCrewItem(isImage: true) }
+        let items = topDirectingCredits.compactMap { $0.tvCrewItem(isImage: true) }
         return items
     }
 
@@ -773,12 +779,12 @@ private extension Credits {
     }
 
     var movieWritingItems: [Item] {
-        let items = topWritingCredits.map { $0.movieCrewItem(isImage: true) }
+        let items = topWritingCredits.compactMap { $0.movieCrewItem(isImage: true) }
         return items
     }
 
     var tvWritingItems: [Item] {
-        let items: [Item] = topWritingCredits.map { $0.tvCrewItem(isImage: true) }
+        let items: [Item] = topWritingCredits.compactMap { $0.tvCrewItem(isImage: true) }
         return items
     }
 
@@ -836,11 +842,11 @@ private extension Credit {
         return movieCastSubtitles.joined(separator: Tmdb.separator)
     }
 
-    var movieCrewItem: Item {
+    var movieCrewItem: Item? {
         return movieCrewItem()
     }
 
-    func movieCrewItem(isImage: Bool = false) -> Item {
+    func movieCrewItem(isImage: Bool = false) -> Item? {
         var sub: [String] = []
         if let year = releaseYear {
             sub.append(year)
@@ -856,7 +862,11 @@ private extension Credit {
 
         var imageUrl: URL?
         if isImage {
-            imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+            if let url = Tmdb.mediaPosterUrl(path: poster_path, size: .medium) {
+                imageUrl = url
+            } else {
+                return nil
+            }
         }
         return Item(id: id, title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), destination: .movie, color: ratingColor, imageUrl: imageUrl, strings: sub2)
     }
