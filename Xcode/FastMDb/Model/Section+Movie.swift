@@ -195,6 +195,12 @@ private extension Media {
             items.append(item)
         }
 
+        if let url = tmdbUrl {
+            let imageUrl = url.urlToSourceLogo
+            let item = Item(metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
+            items.append(item)
+        }
+
         if
             let id = external_ids?.validImdbId {
             let url = Imdb.url(id: id, kind: .title)
@@ -373,6 +379,10 @@ private extension Media {
         }
 
         return "Release date not available"
+    }
+
+    var tmdbUrl: URL? {
+        return Tmdb.Web.movie.detail(id)
     }
 
 }

@@ -197,6 +197,12 @@ private extension TV {
             items.append(item)
         }
 
+        if let url = tmdbUrl {
+            let imageUrl = url.urlToSourceLogo
+            let item = Item(metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
+            items.append(item)
+        }
+
         if let imdb = external_ids?.validImdbId {
             let url = Imdb.url(id: imdb, kind: .title)
             let imageUrl = url?.urlToSourceLogo
@@ -411,6 +417,10 @@ private extension TV {
         }
 
         return nil
+    }
+
+    var tmdbUrl: URL? {
+        return Tmdb.Web.tv.detail(id)
     }
 
     var validWatchStatus: Bool {

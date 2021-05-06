@@ -256,6 +256,12 @@ private extension Credit {
             items.append(item)
         }
 
+        if let url = tmdbUrl {
+            let imageUrl = url.urlToSourceLogo
+            let item = Item(metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
+            items.append(item)
+        }
+
         if let id = external_ids?.validImdbId {
             let url = Imdb.url(id: id, kind: .person)
             let imageUrl = url?.urlToSourceLogo
@@ -463,6 +469,10 @@ private extension Credit {
         }
 
         return sections
+    }
+
+    var tmdbUrl: URL? {
+        return Tmdb.Web.person.detail(id)
     }
 
     func tvCrewItem(isImage: Bool = false,

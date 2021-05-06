@@ -208,6 +208,24 @@ struct Tmdb {
         return urlComponents.url
     }
 
+    static let webBase = "https://www.themoviedb.org/"
+
+    enum Web: String {
+        case movie, person, tv
+
+        func detail(_ id: Int?) -> URL? {
+            guard let id = id else { return nil }
+
+            let string = Tmdb.webBase + self.rawValue + "/\(id)"
+            return URL(string: string)
+//            switch self {
+//            default:
+//                return
+//            }
+        }
+
+    }
+
 }
 
 extension Tmdb {
