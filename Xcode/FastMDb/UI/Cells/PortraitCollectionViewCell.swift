@@ -99,6 +99,7 @@ class PortraitCollectionViewCell: UICollectionViewCell {
 
         ratingLabel.layer.cornerRadius = ratingWidth / 2
         ratingLabel.layer.masksToBounds = true
+        ratingLabel.alpha = 0.75
 
         [imageView, initials, label, label2, label3, ratingLabel].forEach {
             contentView.addSubviewForAutoLayout($0)
