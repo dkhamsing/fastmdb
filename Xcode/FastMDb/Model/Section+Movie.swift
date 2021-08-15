@@ -201,6 +201,14 @@ private extension Media {
             items.append(item)
         }
 
+        if let name = title {
+            let url = name.boxOfficeMojoUrl
+            let imageUrl = url?.urlToSourceLogo
+            let item = Item(title: "Box Office Mojo",
+                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
+            items.append(item)
+        }
+
         if
             let id = external_ids?.validImdbId {
             let url = Imdb.url(id: id, kind: .title)

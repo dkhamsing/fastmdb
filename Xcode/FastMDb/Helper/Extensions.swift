@@ -237,6 +237,13 @@ extension String {
         return "Seel all credits"
     }
 
+    var boxOfficeMojoUrl: URL? {
+        let baseUrl = "https://www.boxofficemojo.com/search/?q="
+        guard let item = self.addingPercentEncoding else { return nil }
+
+        return URL(string: "\(baseUrl)\(item)")
+    }
+
     var date: Date? {
         let formatter = Tmdb.dateFormatter
 
