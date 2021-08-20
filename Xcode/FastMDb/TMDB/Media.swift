@@ -256,6 +256,12 @@ extension Media {
                     metadata: Metadata(id: id, destination: .movie))
     }
 
+    var listItemUpcoming: Item {
+        let sub = upcomingDateDisplay
+        return Item(title: titleDisplay, subtitle: sub, color: ratingColor,
+                    metadata: Metadata(id: id, destination: .movie))
+    }
+
     var listItemWithVotes: Item {
         var sub = listItemSub
         sub.append("\(vote_count) votes")
@@ -312,6 +318,28 @@ extension Media {
         }
 
         return t
+    }
+
+    var upcomingDateDisplay: String? {
+        guard
+            let r = release_date,
+            let date = Tmdb.dateFormatter.date(from: r) else { return releaseYear  }
+
+        let calendar = Calendar.current
+        guard let interval = calendar.dateInterval(of: .day, for: date) else { return releaseYear }
+
+        let components = calendar.dateComponents([.day], from: Date(), to: interval.end)
+
+        guard let day = components.day, day > 0 else { return releaseYear }
+
+        var strings: [String] = []
+
+        if let year = releaseYear {
+            strings.append(year)
+        }
+
+        strings.append("To be released in \(day) day\(day.pluralized)")
+        return strings.joined(separator: Tmdb.separator)
     }
 }
 

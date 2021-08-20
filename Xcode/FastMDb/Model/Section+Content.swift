@@ -50,9 +50,20 @@ private extension ItemSection {
 
         if kind == .top_rated {
             results = results.filter { $0.vote_count > voteLimit }
-        }
+        } 
 
-        let english = results.filter { $0.original_language == "en" }.map { kind == .top_rated ? $0.listItemWithVotes : $0.listItem }
+        let english: [Item] = results
+            .filter { $0.original_language == "en" }
+            .map { item in
+                switch kind {
+                case .top_rated:
+                    return item.listItemWithVotes
+                case .upcoming:
+                    return item.listItemUpcoming
+                default:
+                    return item.listItem
+                }
+        }
         if english.count > 0 {
             let section = ItemSection(header: "movies\(Tmdb.separator)English\(Tmdb.separator)\(kind.title)", items: english)
             sections.append(section)
