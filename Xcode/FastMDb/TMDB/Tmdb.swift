@@ -326,10 +326,10 @@ extension Tmdb {
                 return self.rawValue.capitalizingFirstLetter()
 
             case .airing_today:
-                return "Airing Soon"
+                return "Airing Today"
 
             case .on_the_air:
-                return "On The Air"
+                return "Upcoming"
 
             case .top_rated:
                 return "Top Rated"
