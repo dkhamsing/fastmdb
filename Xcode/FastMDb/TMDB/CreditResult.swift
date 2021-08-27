@@ -11,6 +11,7 @@ import Foundation
 struct CreditResult: Codable {
     var media: Media
     var job: String?
+    var person: Credit?
 }
 
 extension CreditResult {
@@ -22,7 +23,18 @@ extension CreditResult {
             sections.append(section)
         }
 
-        var items = [ Item(title: media.original_name, metadata: Metadata(id: id, destination: .tv)) ]
+        var items: [Item] = []
+
+        if let name = person?.name {
+            items.append(
+                Item(title: name, subtitle: media.character)
+            )
+        }
+
+        items.append(
+            Item(title: media.original_name, metadata: Metadata(id: id, destination: .tv))
+        )
+
         if !media.overview.isEmpty {
             items.append(Item(subtitle: media.overview))
         }

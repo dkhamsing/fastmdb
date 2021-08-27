@@ -50,6 +50,7 @@ struct Media: Codable {
     // Credit
     var episodes: [Episode]?
     var seasons: [Season]?
+    var character: String?
 }
 
 struct Images: Codable {
@@ -142,6 +143,7 @@ extension Media {
              original_title,
              episodes,
              seasons,
+             character,
              backdrop_path,
              budget, revenue,
              vote_average,
