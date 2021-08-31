@@ -48,9 +48,14 @@ private extension ItemSection {
 
         let voteLimit = 5000
 
-        if kind == .top_rated {
+        switch kind {
+        case .top_rated:
             results = results.filter { $0.vote_count > voteLimit }
-        } 
+        case .upcoming:
+            results = results.sorted { $0.release_date ?? "" > $1.release_date ?? "" }
+        default:
+            break
+        }
 
         let english: [Item] = results
             .filter { $0.original_language == "en" }
