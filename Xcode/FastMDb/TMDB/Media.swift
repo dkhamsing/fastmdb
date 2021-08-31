@@ -267,6 +267,7 @@ extension Media {
     var listItemWithVotes: Item {
         var sub = listItemSub
         sub.append("\(vote_count) votes")
+        sub.append("\(vote_average)")
 
         return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), color: ratingColor,
                     metadata: Metadata(id: id, destination: .movie))

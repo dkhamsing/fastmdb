@@ -152,6 +152,7 @@ extension TV {
         }
         sub.append(contentsOf: subtitleLanguageCountry)
         sub.append("\(vote_count) votes")
+        sub.append("\(vote_average)")
 
         item.subtitle = sub.joined(separator: Tmdb.separator)
 
