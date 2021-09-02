@@ -82,14 +82,14 @@ class PortraitCollectionViewCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 8
         imageView.layer.masksToBounds = true
 
-        label.font = .preferredFont(forTextStyle: .caption1)
+        label.font = .preferredFont(forTextStyle: .caption2)
         label.textAlignment = .center
 
-        label2.font = .preferredFont(forTextStyle: .caption1)
+        label2.font = .preferredFont(forTextStyle: .caption2)
         label2.textAlignment = .center
         label2.textColor = .secondaryLabel
 
-        label3.font = .preferredFont(forTextStyle: .caption1)
+        label3.font = .preferredFont(forTextStyle: .caption2)
         label3.textAlignment = .center
         label3.textColor = .secondaryLabel
 
