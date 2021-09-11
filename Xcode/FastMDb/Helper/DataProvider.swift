@@ -345,21 +345,23 @@ private extension iTunes.Feed {
 
 extension URL {
 
-    func apiGet<T: Codable>(decoder: JSONDecoder = JSONDecoder(), completion: @escaping (Result<T, NetError>) -> Void) {
-        print("get: \(self.absoluteString)")
+    func apiGet<T: Codable>(decoder: JSONDecoder = JSONDecoder(),
+                            queue: DispatchQueue = DispatchQueue.main,
+                            completion: @escaping (Result<T, NetError>) -> Void) {
+        Log.log(#function + ": \(self.absoluteString)")
 
         let session = URLSession.shared
         session.dataTask(with: self) { data, _, error in
-            if error != nil {
-                DispatchQueue.main.async {
-                    completion(.failure(.session))
+            if let error = error {
+                queue.async {
+                    completion(.failure(.system(error)))
                 }
 
                 return
             }
 
             guard let unwrapped = data else {
-                DispatchQueue.main.async {
+                queue.async {
                     completion(.failure(.data))
                 }
 
@@ -367,13 +369,13 @@ extension URL {
             }
 
             guard let result = try? decoder.decode(T.self, from: unwrapped) else {
-                DispatchQueue.main.async {
+                queue.async {
                     completion(.failure(.json))
                 }
                 return
             }
 
-            DispatchQueue.main.async {
+            queue.async {
                 completion(.success(result))
             }
         }.resume()
@@ -385,4 +387,11 @@ enum NetError: Error {
     case data
     case json
     case session
+    case system(_ value: Error)
+}
+
+private struct Log {
+    static func log(_ value: String) {
+        print(value)
+    }
 }

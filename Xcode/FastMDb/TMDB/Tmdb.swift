@@ -323,7 +323,7 @@ extension Tmdb {
         var title: String {
             switch self {
             case .popular:
-                return self.rawValue.capitalizingFirstLetter()
+                return self.rawValue.capitalizingFirstLetter
 
             case .airing_today:
                 return "Airing Today"
@@ -348,7 +348,7 @@ extension Tmdb {
         var title: String {
             switch self {
             case .popular, .upcoming:
-                return self.rawValue.capitalizingFirstLetter()
+                return self.rawValue.capitalizingFirstLetter
 
             case .now_playing:
                 return "Now Playing"
@@ -471,11 +471,9 @@ private extension Tmdb {
 }
 
 private extension String {
-    func capitalizingFirstLetter() -> String {
+
+    var capitalizingFirstLetter: String {
         return prefix(1).capitalized + dropFirst()
     }
 
-    mutating func capitalizeFirstLetter() {
-        self = self.capitalizingFirstLetter()
-    }
 }
