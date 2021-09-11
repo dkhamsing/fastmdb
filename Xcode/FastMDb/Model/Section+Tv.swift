@@ -140,6 +140,8 @@ private extension TV {
     }
 
     var googleSection: ItemSection? {
+        guard isValidWatchStatus else { return nil }
+
         var items: [Item] = []
 
         if name != "" {
