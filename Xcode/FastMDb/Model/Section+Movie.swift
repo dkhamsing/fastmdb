@@ -145,7 +145,7 @@ private extension Media {
 
         let items = genre.map { Item(title: $0.name,
                                      metadata: Metadata(id: $0.id, destination: .genreMovie)) }
-        return ItemSection(header: "genre", items: items, metadata: Metadata(display: .tags))
+        return ItemSection(header: "genre", items: items, metadata: Metadata(display: .tags()))
     }
 
     var googleSection: ItemSection? {
@@ -238,7 +238,7 @@ private extension Media {
 
         guard items.count > 0 else { return nil }
 
-        return ItemSection(header: "links", items: items, metadata: Metadata(display: .squareImage))
+        return ItemSection(header: "links", items: items, metadata: Metadata(display: .squareImage()))
     }
 
     func mediaSection(albums: [iTunes.Album]?) -> ItemSection? {
@@ -318,7 +318,7 @@ private extension Media {
               companies.count > 0 else { return nil }
 
         let items: [Item] = companies.map { $0.listItem }
-        return ItemSection(header: "production", items: items, metadata: Metadata(display: .tags))
+        return ItemSection(header: "production", items: items, metadata: Metadata(display: .tags()))
     }
 
     var ratingSection: ItemSection? {
@@ -343,7 +343,7 @@ private extension Media {
 
         let items: [Item] = recs.map { $0.listItemImage }
 
-        return ItemSection(header: "Recommendations", items: items, metadata: Metadata(display: .portraitImage))
+        return ItemSection(header: "Recommendations", items: items, metadata: Metadata(display: .portraitImage()))
     }
 
     var similarSection: ItemSection? {
@@ -351,7 +351,7 @@ private extension Media {
               recs.count > 0 else { return nil }
 
         let items: [Item] = recs.map { $0.listItemImage }
-        return ItemSection(header: "Similar", items: items, metadata: Metadata(display: .portraitImage))
+        return ItemSection(header: "Similar", items: items, metadata: Metadata(display: .portraitImage()))
     }
 
     var watchSection: ItemSection? {
@@ -405,7 +405,7 @@ private extension Credits {
         let items = cast.map { $0.listItemCast }
 
         return ItemSection(header: "cast", items: items,
-                           metadata: Metadata(destination: .items, destinationTitle: "Cast", display: .portraitImage))
+                           metadata: Metadata(destination: .items, destinationTitle: "Cast", display: .portraitImage()))
     }
 
     func creditsSection(limit: Int) -> ItemSection? {

@@ -34,7 +34,7 @@ extension ItemSection {
             cast.count > 0 {
             let items = cast.map { $0.listItemCast }
             let section = ItemSection(header: "cast", items: items,
-                                      metadata: Metadata(display: .portraitImage))
+                                      metadata: Metadata(display: .portraitImage()))
 
             sections.append(section)
         }

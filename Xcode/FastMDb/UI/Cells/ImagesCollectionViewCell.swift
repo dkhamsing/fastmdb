@@ -62,9 +62,11 @@ extension Item {
     var imageSize: CGSize {
         var size = ImagesCollectionViewCell.size
 
-        if let display = metadata?.display,
-           display == .portraitImage {
+        switch metadata?.display {
+        case .portraitImage:
             size.width = ImagesCollectionViewCell.portraitWidth
+        default:
+            break
         }
 
         return size

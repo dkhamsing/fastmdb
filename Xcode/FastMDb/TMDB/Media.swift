@@ -81,7 +81,7 @@ extension Images {
 
         guard items.count > 0 else { return nil }
 
-        return ItemSection(items: items, metadata: Metadata(display: .thumbnailImage))
+        return ItemSection(items: items, metadata: Metadata(display: .thumbnailImage()))
     }
 
     var postersSection: ItemSection? {
@@ -94,11 +94,11 @@ extension Images {
             let url = Tmdb.castProfileUrl(path: $0.file_path, size: .large)
             let imageUrl = Tmdb.castProfileUrl(path: $0.file_path, size: .medium)
             var item = Item.imageItem(url: url, imageUrl: imageUrl)
-            item.metadata?.display = .portraitImage
+            item.metadata?.display = .portraitImage()
             return item
         }
 
-        return ItemSection(items: items, metadata: Metadata(display: .images))
+        return ItemSection(items: items, metadata: Metadata(display: .images()))
     }
 
     var profilesSection: ItemSection? {
@@ -109,11 +109,11 @@ extension Images {
             let url = Tmdb.castProfileUrl(path: $0.file_path, size: .large)
             let imageUrl = Tmdb.castProfileUrl(path: $0.file_path, size: .medium)
             var item = Item.imageItem(url: url, imageUrl: imageUrl)
-            item.metadata?.display = .portraitImage
+            item.metadata?.display = .portraitImage()
             return item
         }
 
-        return ItemSection(items: items, metadata: Metadata(display: .images))
+        return ItemSection(items: items, metadata: Metadata(display: .images()))
     }
 
     var stillsSection: ItemSection? {
@@ -126,7 +126,7 @@ extension Images {
             return Item.imageItem(url: url, imageUrl: imageUrl)
         }
 
-        return ItemSection(items: items, metadata: Metadata(display: .thumbnailImage))
+        return ItemSection(items: items, metadata: Metadata(display: .thumbnailImage()))
     }
 }
 
@@ -196,7 +196,7 @@ extension WatchSearch {
 
         guard items.count > 0 else { return watchSectionGoogleJustWatch(name) }
 
-        return ItemSection(header: "Watch", items: items, metadata: Metadata(display: .squareImage))
+        return ItemSection(header: "Watch", items: items, metadata: Metadata(display: .squareImage()))
     }
 
     func watchSectionGoogleJustWatch(_ name: String?) -> ItemSection? {

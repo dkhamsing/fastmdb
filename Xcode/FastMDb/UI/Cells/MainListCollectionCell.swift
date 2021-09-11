@@ -26,56 +26,39 @@ class MainListCollectionCell: UITableViewCell {
     }
 
     func load(display: Display, items: [Item]?) {
+
+        guard let items = items else { return }
+
         switch display {
         case .tags:
             collection.dataSource = tagsHandler
             collection.delegate = tagsHandler
-
-            if let items = items {
-                tagsHandler.items = items
-                collection.reloadData()
-            }
-
+            tagsHandler.items = items
+            collection.reloadData()
         case .portraitImage:
             collection.dataSource = portraitHandler
             collection.delegate = portraitHandler
-
-            if let items = items {
-                portraitHandler.items = items
-                collection.reloadData()
-            }
-
+            portraitHandler.items = items
+            collection.reloadData()
         case .thumbnailImage:
             collection.dataSource = thumbnailHandler
             collection.delegate = thumbnailHandler
-
-            if let items = items {
-                thumbnailHandler.items = items
-                collection.reloadData()
-            }
-
+            thumbnailHandler.items = items
+            collection.reloadData()
         case .squareImage:
             collection.dataSource = squareHandler
             collection.delegate = squareHandler
-
-            if let items = items {
-                squareHandler.items = items
-                collection.reloadData()
-            }
-
+            squareHandler.items = items
+            collection.reloadData()
         case .images:
-
             collection.dataSource = imagesHandler
             collection.delegate = imagesHandler
-
-            if let items = items {
-                imagesHandler.items = items
-                collection.reloadData()
-            }
-
+            imagesHandler.items = items
+            collection.reloadData()
         case .text, .textImage:
             break
         }
+
     }
 
     required init?(coder: NSCoder) {

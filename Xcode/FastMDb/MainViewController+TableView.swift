@@ -22,7 +22,7 @@ extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let s = dataSource[section]
-        let display = s.metadata?.display ?? .text
+        let display = s.metadata?.display ?? .text()
 
         switch display {
         case .text, .textImage:
@@ -36,59 +36,33 @@ extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let section = dataSource[indexPath.section]
-        let display = section.metadata?.display ?? .text
+        let display = section.metadata?.display ?? .text()
 
         switch display {
+
+        // table
         case .text:
             guard let items = section.items else { return UITableViewCell() }
-
             let item = items[indexPath.row]
-
-            if let _ = item.color {
-                let c = tableView.dequeueReusableCell(withIdentifier: CellType.color.rawValue, for: indexPath) as! MainListCell
-                c.item = item
-                return c
-            }
-            else {
-                let c = tableView.dequeueReusableCell(withIdentifier: CellType.regular.rawValue, for: indexPath) as! MainListCell
-                c.item = item
-                return c
-            }
+            let c = tableView.dequeueReusableCell(withIdentifier: CellType.plain.identifier, for: indexPath) as! MainListCell
+            c.item = item
+            return c
         case .textImage:
             guard let items = section.items else { return UITableViewCell() }
             let item = items[indexPath.row]
-            let c = tableView.dequeueReusableCell(withIdentifier: CellType.image.rawValue, for: indexPath) as! MainListCellImage
+            let c = tableView.dequeueReusableCell(withIdentifier: CellType.image().identifier, for: indexPath) as! MainListCellImage
             c.item = item
             return c
-        case .tags:
+
+        // collection
+        case .tags, .images, .portraitImage, .thumbnailImage, .squareImage:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.load(display: .tags, items: section.items)
+            c.load(display: display, items: section.items)
             c.tagsHandler.listener = self
-
-            return c
-        case .images:
-            let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.load(display: .images, items: section.items)
             c.imagesHandler.listener = self
-
-            return c
-        case .portraitImage:
-            let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.load(display: .portraitImage, items: section.items)
             c.portraitHandler.listener = self
-            
-            return c
-        case .thumbnailImage:
-            let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.load(display: .thumbnailImage, items: section.items)
             c.thumbnailHandler.listener = self
-
-            return c
-        case .squareImage:
-            let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
-            c.load(display: .squareImage, items: section.items)
             c.squareHandler.listener = self
-
             return c
         }
 
@@ -96,7 +70,7 @@ extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let section = dataSource[indexPath.section]
-        let display = section.metadata?.display ?? .text
+        let display = section.metadata?.display ?? .text()
         
         switch display {
         case .tags:

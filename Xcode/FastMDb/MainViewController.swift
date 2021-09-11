@@ -132,9 +132,10 @@ private extension MainViewController {
         navigationController?.navigationBar.tintColor = .systemTeal
 
         // table
-        tableView.register(MainListCell.self, forCellReuseIdentifier: CellType.regular.rawValue)
-        tableView.register(MainListCell.self, forCellReuseIdentifier: CellType.color.rawValue)
-        tableView.register(MainListCellImage.self, forCellReuseIdentifier: CellType.image.rawValue)
+        tableView.register(MainListCell.self, forCellReuseIdentifier: CellType.plain.identifier)
+        tableView.register(MainListCell.self, forCellReuseIdentifier: CellType.plain.identifier)
+        tableView.register(MainListCellImage.self, forCellReuseIdentifier: CellType.image().identifier)
+
         tableView.register(MainListCollectionCell.self, forCellReuseIdentifier: MainListCollectionCell.identifier)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
@@ -555,7 +556,7 @@ private extension MainViewController {
                 footer = "See all time highest grossing"
             }
 
-            let sections = [ ItemSection(items: items, footer: footer, metadata: Metadata(destination: .moviesSortedBy, display: .textImage)) ]
+            let sections = [ ItemSection(items: items, footer: footer, metadata: Metadata(destination: .moviesSortedBy, display: .textImage())) ]
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
@@ -607,12 +608,6 @@ private extension Credit {
 class ImageButton: UIButton {
 
     var url: URL?
-
-}
-
-enum CellType: String {
-
-    case regular, color, image
 
 }
 

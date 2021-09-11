@@ -20,7 +20,7 @@ extension ItemSection {
         if let people = people {
             let items = people.results.map { $0.listItemPopular }
             let section = ItemSection(header: "people\(Tmdb.separator)\(kind.title)", items: items,
-                                      metadata: Metadata(display: .portraitImage))
+                                      metadata: Metadata(display: .portraitImage()))
             sections.append(section)
         }
 
@@ -70,7 +70,7 @@ private extension ItemSection {
                 }
         }
         if english.count > 0 {
-            let section = ItemSection(header: "movies\(Tmdb.separator)English\(Tmdb.separator)\(kind.title)", items: english, metadata: Metadata(display: .textImage))
+            let section = ItemSection(header: "movies\(Tmdb.separator)English\(Tmdb.separator)\(kind.title)", items: english, metadata: Metadata(display: .textImage()))
             sections.append(section)
         }
 

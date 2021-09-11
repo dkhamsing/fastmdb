@@ -103,7 +103,7 @@ private extension TV {
 
         let items = cast.map { $0.listItemCastAggregated }
 
-        return ItemSection(header: "cast", items: items, metadata: Metadata(display: .portraitImage))
+        return ItemSection(header: "cast", items: items, metadata: Metadata(display: .portraitImage()))
     }
 
     var createdBySection: ItemSection? {
@@ -132,7 +132,7 @@ private extension TV {
 
         let items = genres.map { Item(title: $0.name, metadata: Metadata(id: $0.id, destination: .genreTv)) }
 
-        return ItemSection(header: "genres", items: items, metadata: Metadata(display: .tags))
+        return ItemSection(header: "genres", items: items, metadata: Metadata(display: .tags()))
     }
 
     var imagesSection: ItemSection? {
@@ -213,7 +213,7 @@ private extension TV {
             items.append(item)
         }
 
-        return ItemSection(header: "links", items: items, metadata: Metadata(display: .squareImage))
+        return ItemSection(header: "links", items: items, metadata: Metadata(display: .squareImage()))
     }
 
     func mediaSection(albums: [iTunes.Album]?) -> ItemSection? {
@@ -343,7 +343,7 @@ private extension TV {
 
         let items = companies.map { $0.listItem }
 
-        return ItemSection(header: "production", items: items, metadata: Metadata(display: .tags))
+        return ItemSection(header: "production", items: items, metadata: Metadata(display: .tags()))
     }
 
     var ratingSection: ItemSection? {
@@ -371,7 +371,7 @@ private extension TV {
 
         let items = recs.map { $0.listItemImage }
 
-        return ItemSection(header: "recommended", items: items, metadata: Metadata(display: .portraitImage))
+        return ItemSection(header: "recommended", items: items, metadata: Metadata(display: .portraitImage()))
     }
 
     var seasonSection: ItemSection? {
@@ -380,7 +380,7 @@ private extension TV {
         guard items.count > 0 else { return nil }
 
         let header = "\(items.count) season\(items.count.pluralized)"
-        return ItemSection(header: header, items: items, metadata: Metadata(display: .portraitImage))
+        return ItemSection(header: header, items: items, metadata: Metadata(display: .portraitImage()))
     }
 
     var seasonSpecialSection: ItemSection? {
@@ -402,7 +402,7 @@ private extension TV {
 
         let items = recs.map { $0.listItemImage }
 
-        return ItemSection(header: "similar", items: items, metadata: Metadata(display: .portraitImage))
+        return ItemSection(header: "similar", items: items, metadata: Metadata(display: .portraitImage()))
     }
 
     var taglineOverviewItem: Item? {

@@ -167,7 +167,7 @@ extension Credit {
             }
         }
 
-        return ItemSection(items: unique, metadata: Metadata(display: .thumbnailImage))
+        return ItemSection(items: unique, metadata: Metadata(display: .thumbnailImage()))
     }
 
     var listItemCast: Item {

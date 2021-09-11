@@ -226,7 +226,7 @@ private extension Credit {
             let i = items,
             i.count > 0 else { return nil }
 
-        return ItemSection(header: "known for", items: i, metadata: Metadata(display: .portraitImage))
+        return ItemSection(header: "known for", items: i, metadata: Metadata(display: .portraitImage()))
     }
 
     var linksSection: ItemSection? {
@@ -270,7 +270,7 @@ private extension Credit {
             items.append(item)
         }
 
-        return ItemSection(items: items, metadata: Metadata(display: .squareImage))
+        return ItemSection(items: items, metadata: Metadata(display: .squareImage()))
     }
 
 }
@@ -500,8 +500,8 @@ private extension Credit {
 
         var sections: [ItemSection] = []
         sections.append(
-            ItemSection(items: [ Item(metadata: Metadata(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage)) ],
-                        metadata: Metadata(display: .images))
+            ItemSection(items: [ Item(metadata: Metadata(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage())) ],
+                        metadata: Metadata(display: .images()))
         )
 
         sections.append(

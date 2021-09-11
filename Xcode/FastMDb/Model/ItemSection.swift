@@ -23,7 +23,7 @@ extension ItemSection {
         if !(poster_path ?? "").isEmpty {
             let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
             let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .large)
-            let posterItem = Item(metadata: Metadata(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage))
+            let posterItem = Item(metadata: Metadata(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage()))
             items.append(posterItem)
         }
 
@@ -33,6 +33,6 @@ extension ItemSection {
 
         guard items.count > 0 else { return nil }
 
-        return ItemSection(items: items, metadata: Metadata(display: .images))
+        return ItemSection(items: items, metadata: Metadata(display: .images()))
     }
 }
