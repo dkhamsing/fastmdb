@@ -478,9 +478,7 @@ private extension Media {
             revenue > 0 else { return nil }
 
         let color = revenue > budget ? UIColor.systemGreen : UIColor.systemRed
-
         let ratio = CGFloat(revenue - budget) / CGFloat(budget)
-//        print(ratio)
         switch ratio {
         case 0...1:
             return color.withAlphaComponent(ratio)

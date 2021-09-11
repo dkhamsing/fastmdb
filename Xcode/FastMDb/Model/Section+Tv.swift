@@ -423,18 +423,8 @@ private extension TV {
         return Tmdb.Web.tv.detail(id)
     }
 
-    var validWatchStatus: Bool {
-        switch status ?? "" {
-        case "In Production",
-             "Planned":
-            return false
-        default:
-            return true
-        }
-    }
-
     var watchSection: ItemSection? {
-        guard validWatchStatus else { return nil }
+        guard isValidWatchStatus else { return nil }
         return watch?.watchSection(name)
     }
 
@@ -491,6 +481,16 @@ private extension TV {
             return true
         default:
             return false
+        }
+    }
+
+    var isValidWatchStatus: Bool {
+        switch status ?? "" {
+        case "In Production",
+             "Planned":
+            return false
+        default:
+            return true
         }
     }
 

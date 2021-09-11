@@ -279,9 +279,8 @@ extension String {
             return self
         default:
 //            print("status = \(self)")
-            break
+            return nil
         }
-        return nil
     }
 
     static func googleSearchUrlWithQuery(_ query: String) -> URL? {
