@@ -25,7 +25,7 @@ extension MainViewController: UITableViewDataSource {
         let display = s.metadata?.display ?? .text
 
         switch display {
-        case .text:
+        case .text, .textImage:
             return s.items?.count ?? 0
         case .portraitImage, .thumbnailImage, .squareImage, .images, .tags:
             return 1
@@ -54,6 +54,12 @@ extension MainViewController: UITableViewDataSource {
                 c.item = item
                 return c
             }
+        case .textImage:
+            guard let items = section.items else { return UITableViewCell() }
+            let item = items[indexPath.row]
+            let c = tableView.dequeueReusableCell(withIdentifier: CellType.image.rawValue, for: indexPath) as! MainListCellImage
+            c.item = item
+            return c
         case .tags:
             let c = tableView.dequeueReusableCell(withIdentifier: MainListCollectionCell.identifier, for: indexPath) as! MainListCollectionCell
             c.load(display: .tags, items: section.items)
@@ -103,7 +109,7 @@ extension MainViewController: UITableViewDataSource {
             return PortraitCollectionViewCell.size.height
         case .thumbnailImage:
             return ThumbnailCollectionViewCell.size.height
-        case .text:
+        case .text, .textImage:
             return UITableView.automaticDimension
         }
     }

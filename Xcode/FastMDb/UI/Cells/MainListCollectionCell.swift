@@ -73,7 +73,7 @@ class MainListCollectionCell: UITableViewCell {
                 collection.reloadData()
             }
 
-        case .text:
+        case .text, .textImage:
             break
         }
     }

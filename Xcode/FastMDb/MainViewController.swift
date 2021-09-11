@@ -134,6 +134,7 @@ private extension MainViewController {
         // table
         tableView.register(MainListCell.self, forCellReuseIdentifier: CellType.regular.rawValue)
         tableView.register(MainListCell.self, forCellReuseIdentifier: CellType.color.rawValue)
+        tableView.register(MainListCellImage.self, forCellReuseIdentifier: CellType.image.rawValue)
         tableView.register(MainListCollectionCell.self, forCellReuseIdentifier: MainListCollectionCell.identifier)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
@@ -541,12 +542,12 @@ private extension MainViewController {
         url?.apiGet { (result: Result<MediaSearch, NetError>) in
             guard case .success(let search) = result else { return }
 
-            let temp = search.results.map { $0.listItem }
             var items: [Item] = []
-            for (index, element) in temp.enumerated() {
-                var tmp = element
-                tmp.title = "\(index + 1). " + (element.title ?? "")
-                items.append(tmp)
+            let list = search.results.map { $0.listItemTextImage }.enumerated()
+            for (index, element) in list {
+                var mElemented = element
+                mElemented.title = "\(index + 1). " + (element.title ?? "")
+                items.append(mElemented)
             }
 
             var footer: String?
@@ -554,7 +555,7 @@ private extension MainViewController {
                 footer = "See all time highest grossing"
             }
 
-            let sections = [ ItemSection(items: items, footer: footer, metadata: Metadata(destination: .moviesSortedBy)) ]
+            let sections = [ ItemSection(items: items, footer: footer, metadata: Metadata(destination: .moviesSortedBy, display: .textImage)) ]
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
@@ -611,7 +612,7 @@ class ImageButton: UIButton {
 
 enum CellType: String {
 
-    case regular, color
+    case regular, color, image
 
 }
 

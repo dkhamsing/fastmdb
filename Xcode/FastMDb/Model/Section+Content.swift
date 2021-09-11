@@ -66,11 +66,11 @@ private extension ItemSection {
                 case .upcoming:
                     return item.listItemUpcoming
                 default:
-                    return item.listItem
+                    return item.listItemTextImage
                 }
         }
         if english.count > 0 {
-            let section = ItemSection(header: "movies\(Tmdb.separator)English\(Tmdb.separator)\(kind.title)", items: english)
+            let section = ItemSection(header: "movies\(Tmdb.separator)English\(Tmdb.separator)\(kind.title)", items: english, metadata: Metadata(display: .textImage))
             sections.append(section)
         }
 

@@ -258,19 +258,27 @@ extension Media {
                     metadata: Metadata(id: id, destination: .movie))
     }
 
+    var listItemTextImage: Item {
+        let sub = listItemSub.joined(separator: Tmdb.separator)
+        let imageUrl = Tmdb.stillImageUrl(path: backdrop_path, size: .medium)
+        return Item(title: titleDisplay, subtitle: sub, color: ratingColor,
+                    metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl))
+    }
+
     var listItemUpcoming: Item {
         let sub = upcomingDateDisplay
+        let imageUrl = Tmdb.stillImageUrl(path: backdrop_path, size: .medium)
         return Item(title: titleDisplay, subtitle: sub, color: ratingColor,
-                    metadata: Metadata(id: id, destination: .movie))
+                    metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl))
     }
 
     var listItemWithVotes: Item {
         var sub = listItemSub
         sub.append("\(vote_count) votes")
         sub.append("\(vote_average)")
-
+        let imageUrl = Tmdb.stillImageUrl(path: backdrop_path, size: .medium)
         return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), color: ratingColor,
-                    metadata: Metadata(id: id, destination: .movie))
+                    metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl))
     }
 
     var listItemImage: Item {
