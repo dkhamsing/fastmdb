@@ -149,6 +149,8 @@ private extension Media {
     }
 
     var googleSection: ItemSection? {
+        guard status == "Released" else { return nil }
+
         var items: [Item] = []
 
         if let name = title {
