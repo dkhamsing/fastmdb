@@ -12,4 +12,5 @@ enum CrewJob: String, CaseIterable {
     case Screenplay
     case Teleplay
     case Writer
+    case Score = "Original Music Composer"
 }

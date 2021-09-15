@@ -64,6 +64,10 @@ extension Media {
             list.append(section)
         }
 
+        if let section = credits?.scoreSection {
+            list.append(section)
+        }
+
         if let section = productionSection {
             list.append(section)
         }
@@ -455,6 +459,14 @@ private extension Credits {
 
         let items = director.map { $0.listItemCrew }
         return ItemSection(header: "directed by", items: items)
+    }
+
+    var scoreSection: ItemSection? {
+        let score = crew.filter { $0.job == CrewJob.Score.rawValue }
+        guard score.count > 0 else { return nil }
+
+        let items = score.map { $0.listItemCrew }
+        return ItemSection(header: "score by", items: items)
     }
 
     var writerSection: ItemSection? {
