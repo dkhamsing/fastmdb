@@ -458,7 +458,8 @@ private extension Credits {
     }
 
     var scoreSection: ItemSection? {
-        return jobSection([CrewJob.Score.rawValue], "score by")
+        return jobSection([CrewJob.Score.rawValue,
+                           CrewJob.Music.rawValue], "score by")
     }
 
     var writerSection: ItemSection? {
