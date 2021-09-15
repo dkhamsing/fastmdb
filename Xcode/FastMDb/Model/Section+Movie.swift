@@ -454,28 +454,32 @@ private extension Credits {
     }
 
     var directorSection: ItemSection? {
-        let director = crew.filter { $0.job == CrewJob.Director.rawValue }
-        guard director.count > 0 else { return nil }
-
-        let items = director.map { $0.listItemCrew }
-        return ItemSection(header: "directed by", items: items)
+        return jobSection([CrewJob.Director.rawValue], "directed by")
     }
 
     var scoreSection: ItemSection? {
-        let score = crew.filter { $0.job == CrewJob.Score.rawValue }
-        guard score.count > 0 else { return nil }
-
-        let items = score.map { $0.listItemCrew }
-        return ItemSection(header: "score by", items: items)
+        return jobSection([CrewJob.Score.rawValue], "score by")
     }
 
     var writerSection: ItemSection? {
-        let writtenBy = crew.filter { $0.job == CrewJob.Screenplay.rawValue || $0.job == CrewJob.Teleplay.rawValue || $0.job == CrewJob.Writer.rawValue }
-        guard writtenBy.count > 0 else { return nil }
+        let jobs = [CrewJob.Screenplay.rawValue,
+                    CrewJob.Teleplay.rawValue,
+                    CrewJob.Writer.rawValue]
+        return jobSection(jobs, "written by")
+    }
 
-        let items = writtenBy.map { $0.listItemCrew }
+    func jobSection(_ jobs: [String], _ header: String) -> ItemSection? {
+        let job = crew.filter { item in
+            var condition: Bool = false
+            for job in jobs {
+                condition = condition || item.job == job
+            }
+            return condition
+        }
+        guard job.count > 0 else { return nil }
 
-        return ItemSection(header: "written by", items: items)
+        let items = job.map { $0.listItemCrew }
+        return ItemSection(header: header, items: items)
     }
 
 }
