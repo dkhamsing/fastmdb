@@ -206,17 +206,17 @@ private extension Credit {
         let limit = 5
         var items: [Item]?
         switch known {
-        case "Directing":
+        case Known.Directing.rawValue:
             items = movie_credits?.movieDirectingItems
             if let i = tv_credits?.tvDirectingItems {
                 items?.append(contentsOf: i)
             }
-        case "Writing":
+        case Known.Writing.rawValue:
             items = movie_credits?.movieWritingItems
             if let i = tv_credits?.tvWritingItems {
                 items?.append(contentsOf: i)
             }
-        case "Acting":
+        case Known.Acting.rawValue:
             items = Credits.actingItems(movie_credits: movie_credits, tv_credits: tv_credits, limit: limit)
         default:
             items = Credits.defaultItems(movie_credits: movie_credits, tv_credits: tv_credits, limit: limit)

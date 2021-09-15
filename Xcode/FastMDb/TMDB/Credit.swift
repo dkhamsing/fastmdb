@@ -80,6 +80,12 @@ struct Role: Codable {
 
 extension Credit {
 
+    enum Known: String {
+        case Directing,
+             Writing,
+             Acting
+    }
+
     var aggregatedRole: String? {
         guard let roles = roles else { return nil }
 
