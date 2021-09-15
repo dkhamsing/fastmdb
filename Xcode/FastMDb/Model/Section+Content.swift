@@ -133,20 +133,3 @@ private extension ItemSection {
     }
 
 }
-
-private extension Credit {
-
-    var listItemPopular: Item {
-        var sub: [String] = []
-        if let value = name {
-            sub.append(value)
-        }
-        if let known = known_for?.first?.titleDisplay {
-            sub.append(known)
-        }
-        let url = Tmdb.castProfileUrl(path: profile_path, size: .medium)
-        return Item(title: name,
-                    metadata: Metadata(id: id, destination: .person, imageUrl: url, imageCenterText: initials, strings: sub))
-    }
-
-}

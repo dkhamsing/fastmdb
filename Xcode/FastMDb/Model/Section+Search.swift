@@ -50,13 +50,15 @@ private extension MediaSearch {
 
 private extension PeopleSearch {
     var section: ItemSection? {
-        let items = self.results.map { $0.listItemSearch }
+        let items = self.results.map { $0.listItemPopular }
 
         guard items.count > 0 else { return nil }
 
         let count = self.total_results
 
-        return ItemSection(header: "People (\(count))", items: items)
+        return ItemSection(header: "People (\(count))",
+                           items: items,
+                           metadata: Metadata(display: .portraitImage()))
     }
 }
 
@@ -78,29 +80,5 @@ private extension TvSearch {
         let count = total_results
 
         return ItemSection(header: "TV (\(count))", items: items)
-    }
-}
-
-private extension Credit {
-    var listItemSearch: Item {
-        var sub: [String] = []
-
-        if let dept = known_for_department {
-            sub.append(dept)
-        }
-
-        if
-            let known = known_for,
-            known.count > 0 {
-            let movies = Array(known.prefix(3))
-                .map { $0.titleDisplay ?? "" }
-                .filter { $0.isEmpty == false }
-
-            if movies.count > 0 {
-                sub.append(movies.joined(separator: ", "))
-            }
-        }
-
-        return Item(title: name, subtitle: sub.joined(separator: ": "), metadata: Metadata(id: id, destination: .person))
     }
 }
