@@ -281,9 +281,6 @@ private extension TV {
                 let lang = Languages.List[country] {
                 sub.append(lang)
             }
-            else if let country = countryDisplay {
-                sub.append(country)
-            }
 
             if let s = statusDisplay {
                 sub.append(s)
@@ -311,9 +308,9 @@ private extension TV {
 
             var subt = sub.joined(separator: Tmdb.separator)
 
-            // countries
-            if countryDisplay == nil,
-                let countries = production_countries,
+            if let country = countryDisplay {
+                subt += "\n\(country)"
+            } else if let countries = production_countries,
                 countries.count > 0 {
                 subt += "\n" + countries.map { $0.name }.joined(separator: ", ")
             }
