@@ -280,22 +280,18 @@ private extension Media {
             metadata.append(r)
         }
 
-        // countries
-        if let countries = production_countries,
-           countries.count > 0 {
-            metadata.append(countries.map { $0.name }.joined(separator: ", "))
+        // rating
+        if let contentRating = release_dates?.contentRating("US") {
+            let text = "Rated " + contentRating
+            metadata.append(text)
         }
+
+        let metString = metadata.joined(separator: Tmdb.separator)
 
         var items: [Item] = []
 
-        var metString = metadata.joined(separator: Tmdb.separator)
-
-        if let contentRating = release_dates?.contentRating("US") {
-            metString += "\nRated " + contentRating
-        }
-
         items.append(
-            Item(title:titleDisplay, subtitle: metString)
+            Item(title: titleDisplay, subtitle: metString)
         )
 
         if let release = releaseDateDisplay {
@@ -309,12 +305,19 @@ private extension Media {
             items.append(item)
         }
 
+        if let countries = production_countries,
+           countries.count > 0 {
+            let item = Item(title: countries.map { $0.name }.joined(separator: ", "),
+                            subtitle: "Production Countries")
+            items.append(item)
+        }
+
         if let c = belongs_to_collection {
             let item = Item(title: c.name, metadata: Metadata(id: c.id, destination: .collection))
             items.append(item)
         }
 
-        return ItemSection(header: "movie", items: items)
+        return ItemSection(items: items)
     }
 
     var productionSection: ItemSection? {
