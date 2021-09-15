@@ -212,7 +212,7 @@ extension MainViewController {
             if let year = dc.year {
                 releaseYear = String(year)
             }
-            sortedBy = Tmdb.byRevenue
+            sortedBy = Tmdb.Sort.byRevenue.rawValue
             updateSortedBy(sortedBy, releaseYear)
         } else {
             let provider = ContentDataProvider()

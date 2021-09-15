@@ -411,7 +411,7 @@ extension Tmdb {
 
     static func tvURL(kind: TvType) -> URL? {
         if kind == .top_rated {
-            return tvURL(original_language: "en", voteCountGreaterThanOrEqual: 1000, sortBy: Tmdb.byVote)
+            return tvURL(original_language: "en", voteCountGreaterThanOrEqual: 1000, sortBy: Tmdb.Sort.byVote.rawValue)
         }
 
         var urlComponents = baseComponents
@@ -427,8 +427,10 @@ extension Tmdb {
         case movie, person, tv
     }
 
-    static let byRevenue = "revenue.desc"
-    static let byVote = "vote_average.desc"
+    enum Sort: String {
+        case byRevenue = "revenue.desc"
+        case byVote = "vote_average.desc"
+    }    
 
     static let separator = " · "
 

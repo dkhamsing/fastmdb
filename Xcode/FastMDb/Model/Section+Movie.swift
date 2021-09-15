@@ -131,7 +131,7 @@ private extension Media {
             revenue > 0 {
 
             let item = Item(title: revenue.display, subtitle: budgetDisplay, color: boxOfficeColor,
-                            metadata: Metadata(destination: .moviesSortedBy, sortedBy: Tmdb.byRevenue, releaseYear: releaseYear))
+                            metadata: Metadata(destination: .moviesSortedBy, sortedBy: Tmdb.Sort.byRevenue.rawValue, releaseYear: releaseYear))
             return ItemSection(header: "box office", items: [item])
         }
 
