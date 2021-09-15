@@ -307,10 +307,10 @@ extension String {
     }
 
     var letterboxdUrl: URL? {
-        let baseUrl = "https://letterboxd.com/search/"
-        guard let item = self.addingPercentEncoding else { return nil }
+        let baseUrl = "https://letterboxd.com/film/"
+        guard let item = self.replacingOccurrences(of: " ", with: "-").lowercased().addingPercentEncoding else { return nil }
 
-        return URL(string: "\(baseUrl)\(item)")
+        return URL(string: "\(baseUrl)/\(item)")
     }
 
     var rottenTomatoestUrl: URL? {
