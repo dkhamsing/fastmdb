@@ -60,6 +60,10 @@ extension Media {
             list.append(section)
         }
 
+        if let section = credits?.cinematographerSection {
+            list.append(section)
+        }
+
         if let section = credits?.writerSection {
             list.append(section)
         }
@@ -459,6 +463,11 @@ private extension Credits {
         return ItemSection(header: "crew", items: prefixed, footer: crewTotal,
                            metadata: Metadata(destination: .items, destinationTitle: "Crew", items: items))
     }
+
+    var cinematographerSection: ItemSection? {
+        return jobSection([CrewJob.Cinematographer.rawValue], "cinematography by")
+    }
+
 
     var directorSection: ItemSection? {
         return jobSection([CrewJob.Director.rawValue], "directed by")

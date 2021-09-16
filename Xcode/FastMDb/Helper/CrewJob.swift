@@ -9,6 +9,7 @@ import Foundation
 
 enum CrewJob: String, CaseIterable {
     case Director
+    case Cinematographer = "Director of Photography"
     case Screenplay
     case Teleplay
     case Writer
