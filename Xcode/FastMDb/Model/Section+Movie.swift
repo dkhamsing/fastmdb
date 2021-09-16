@@ -64,6 +64,10 @@ extension Media {
             list.append(section)
         }
 
+        if let section = credits?.storySection {
+            list.append(section)
+        }
+
         if let section = credits?.scoreSection {
             list.append(section)
         }
@@ -465,6 +469,12 @@ private extension Credits {
                            CrewJob.Music.rawValue], "score by")
     }
 
+    var storySection: ItemSection? {
+        return jobSection([CrewJob.Novel.rawValue,
+                           CrewJob.Story.rawValue,
+                           CrewJob.ShortStory.rawValue], "story")
+    }
+
     var writerSection: ItemSection? {
         let jobs = [CrewJob.Screenplay.rawValue,
                     CrewJob.Teleplay.rawValue,
@@ -472,19 +482,7 @@ private extension Credits {
         return jobSection(jobs, "written by")
     }
 
-    func jobSection(_ jobs: [String], _ header: String) -> ItemSection? {
-        let job = crew.filter { item in
-            var condition: Bool = false
-            for job in jobs {
-                condition = condition || item.job == job
-            }
-            return condition
-        }
-        guard job.count > 0 else { return nil }
 
-        let items = job.map { $0.listItemCrew }
-        return ItemSection(header: header, items: items)
-    }
 
 }
 

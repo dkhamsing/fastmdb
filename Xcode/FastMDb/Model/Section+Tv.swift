@@ -65,6 +65,10 @@ extension TV {
             list.append(section)
         }
 
+        if let section = storySection {
+            list.append(section)
+        }
+
         if let section = productionSection {
             list.append(section)
         }
@@ -116,6 +120,7 @@ private extension TV {
         return ItemSection(header: "created by", items: items)
     }
 
+    // TODO: filter out created by, story
     var crewSection: ItemSection? {
         guard let crew = credits?.crew else { return nil }
 
@@ -400,6 +405,14 @@ private extension TV {
         let items = recs.map { $0.listItemImage }
 
         return ItemSection(header: "similar", items: items, metadata: Metadata(display: .portraitImage()))
+    }
+
+    var storySection: ItemSection? {
+        guard let credits = credits else { return nil }
+
+        return credits.jobSection([CrewJob.Novel.rawValue,
+                           CrewJob.Story.rawValue,
+                           CrewJob.ShortStory.rawValue], "story")
     }
 
     var taglineOverviewItem: Item? {

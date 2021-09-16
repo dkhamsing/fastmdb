@@ -14,4 +14,7 @@ enum CrewJob: String, CaseIterable {
     case Writer
     case Score = "Original Music Composer"
     case Music
+    case Novel
+    case Story
+    case ShortStory = "Short Story"
 }
