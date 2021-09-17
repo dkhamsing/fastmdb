@@ -38,13 +38,13 @@ extension ItemSection {
 
 private extension MediaSearch {
     var section: ItemSection? {
-        let items = results.map { $0.listItem }
-
+        let items = results.map { $0.listItemTextImage }
         guard items.count > 0 else { return nil }
 
         let count = total_results
-
-        return ItemSection(header: "Movies (\(count))", items: items)
+        return ItemSection(header: "Movies (\(count))",
+                           items: items,
+                           metadata: Metadata(display: .textImage()))
     }
 }
 
