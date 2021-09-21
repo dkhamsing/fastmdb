@@ -40,12 +40,8 @@ extension ItemSection {
             sections.append(section)
         }
 
-        if let section = credit?.googleSection {
-            sections.append(section)
-        }
-
-        if let s = credit?.creditsSections(limit: limit) {
-            sections.append(contentsOf: s)
+        if let section = credit?.creditsSections(limit: limit) {
+            sections.append(contentsOf: section)
         }
 
         return sections
@@ -175,25 +171,19 @@ private extension Credit {
             bioItems.append(item)
         }
 
+        // awards
+        if let id = external_ids?.validImdbId {
+            let url = Imdb.awardsUrl(id: id, kind: .person)
+            let item = Item(title: "Awards & Nominations",
+                            metadata: Metadata(url: url, destination: .url))
+            bioItems.append(item)
+        }
+
         guard bioItems.count > 0 else { return nil }
         
         bioSection.items = bioItems
 
         return bioSection
-    }
-
-    var googleSection: ItemSection? {
-        var items: [Item] = []
-
-        if let name = name {
-            let item = Item(title: "Awards & Nominations",
-                            metadata: Metadata(url: name.googleSearchAwardsUrl, destination: .url, link: .link))
-            items.append(item)
-        }
-
-        guard items.count > 0 else { return nil }
-
-        return ItemSection(header: "google", items: items)
     }
 
     var knownForSection: ItemSection? {

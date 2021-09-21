@@ -290,10 +290,6 @@ extension String {
         return URL(string: "\(baseUrl)\(item)")
     }
 
-    var googleSearchAwardsUrl: URL? {
-        return String.googleSearchUrlWithQuery("\(self) awards nominations")
-    }
-
     var googleSearchMusicUrl: URL? { 
         return String.googleSearchUrlWithQuery("music \(self)")
     }

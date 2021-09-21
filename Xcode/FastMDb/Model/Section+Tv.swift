@@ -150,12 +150,6 @@ private extension TV {
         var items: [Item] = []
 
         if name != "" {
-            let item = Item(title: "Awards & Nominations",
-                            metadata: Metadata(url: name.googleSearchAwardsUrl, destination: .url, link: .link))
-            items.append(item)
-        }
-
-        if name != "" {
             let item = Item(title: "Music",
                             metadata: Metadata(url: name.googleSearchMusicUrl, destination: .url, link: .link))
             items.append(item)
@@ -332,6 +326,14 @@ private extension TV {
         }
 
         if let item = taglineOverviewItem {
+            items.append(item)
+        }
+
+        // awards
+        if let id = external_ids?.validImdbId {
+            let url = Imdb.awardsUrl(id: id, kind: .title)
+            let item = Item(title: "Awards & Nominations",
+                            metadata: Metadata(url: url, destination: .url))
             items.append(item)
         }
 

@@ -13,10 +13,25 @@ struct Imdb {
         case title = "title"
     }
 
+    static func awardsUrl(id: String?, kind: Kind) -> URL? {
+        guard var path = path(id: id, kind: kind) else { return nil }
+
+        path += "/awards"
+        return URL(string: path)
+    }
+
     static func url(id: String?, kind: Kind) -> URL? {
+        guard let path = path(id: id, kind: kind) else { return nil }
+
+        return URL(string: path)
+    }
+}
+
+private extension Imdb {
+    static func path(id: String?, kind: Kind) -> String? {
         guard let id = id else { return nil }
 
-        return URL(string: "https://www.imdb.com/\(kind.rawValue)/\(id)")
+        return "https://www.imdb.com/\(kind.rawValue)/\(id)"
     }
 }
 

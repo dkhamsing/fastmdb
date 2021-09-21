@@ -166,12 +166,6 @@ private extension Media {
         var items: [Item] = []
 
         if let name = title {
-            let item = Item(title: "Awards & Nominations",
-                            metadata: Metadata(url: name.googleSearchAwardsUrl, destination: .url, link: .link))
-            items.append(item)
-        }
-
-        if let name = title {
             let item = Item(title: "Music",
                             metadata: Metadata(url: name.googleSearchMusicUrl, destination: .url, link: .link))
             items.append(item)
@@ -317,6 +311,14 @@ private extension Media {
            countries.count > 0 {
             let item = Item(title: countries.map { $0.name }.joined(separator: ", "),
                             subtitle: "Production Countries")
+            items.append(item)
+        }
+
+        // awards
+        if let id = external_ids?.validImdbId {
+            let url = Imdb.awardsUrl(id: id, kind: .title)
+            let item = Item(title: "Awards & Nominations",
+                            metadata: Metadata(url: url, destination: .url))
             items.append(item)
         }
 
