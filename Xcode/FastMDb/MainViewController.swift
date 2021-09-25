@@ -493,10 +493,13 @@ private extension MainViewController {
         spinner.startAnimating()
 
         let provider = PersonDataProvider()
-        provider.get(personId) { (credit, articles, image) in
+        provider.get(personId) { (credit, articles, highGross) in
             guard let credit = credit else { return }
 
-            let sections = ItemSection.personSections(credit: credit, articles: articles, limit: limit)
+            let sections = ItemSection.personSections(credit: credit,
+                                                      articles: articles,
+                                                      highGross: highGross,
+                                                      limit: limit)
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
@@ -609,7 +612,7 @@ private extension Credit {
 
 }
 
-private extension MediaSearch {
+extension MediaSearch {
 
     var highestGrossingSections: [ItemSection]? {
         let items = results

@@ -9,7 +9,10 @@ import Foundation
 
 extension ItemSection {
 
-    static func personSections(credit: Credit?, articles: [Article]?, limit: Int) -> [ItemSection] {
+    static func personSections(credit: Credit?,
+                               articles: [Article]?,
+                               highGross: MediaSearch?,
+                               limit: Int) -> [ItemSection] {
         var sections: [ItemSection] = []
 
         if let section = credit?.images?.profilesSection {
@@ -37,6 +40,10 @@ extension ItemSection {
         }
 
         if let section = credit?.knownForSection {
+            sections.append(section)
+        }
+
+        if let section = highGross?.highestGrossingSections?.first {
             sections.append(section)
         }
 

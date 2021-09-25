@@ -184,31 +184,29 @@ final class MovieDataProvider: DataProvider {
 
 final class PersonDataProvider: DataProvider {
 
-    func get(_ id: Int?, completion: @escaping (Credit?, [Article]?, UIImage?) -> Void) {
+    func get(_ id: Int?, completion: @escaping (Credit?, [Article]?, MediaSearch?) -> Void) {
         var credit: Credit?
         var articles: [Article]?
-//        var image: UIImage?
+        var highGross: MediaSearch?
 
         let url = Tmdb.personURL(personId: id)
         fetchItem(url: url) { (item: Credit?) in
             credit = item
 
-            if
-                let name = item?.name,
+            if let name = item?.name,
                 let url = NewsApi.urlForQuery(name) {
                 self.fetchArticles(url: url) { a in
                     articles = a
                 }
             }
+        }
 
-//            let url = Tmdb.castProfileUrl(path: item?.profile_path, size: .large)
-//            self.fetchImage(url: url) { i in
-//                image = i
-//            }
+        fetchItem(url: Tmdb.moviesURL(sortedBy: Tmdb.Sort.byRevenue.rawValue, personId: id)) { (item: MediaSearch?) in
+            highGross = item
         }
 
         group.notify(queue: .main) {
-            completion(credit, articles, nil)
+            completion(credit, articles, highGross)
         }
     }
 }
@@ -227,7 +225,6 @@ final class ProductionDataProvider: DataProvider {
         fetchItem(url: Tmdb.tvURL(productionId: id)) { (item: TvSearch?) in
             tv = item
         }
-
 
         fetchItem(url: Tmdb.moviesURL(sortedBy: Tmdb.Sort.byRevenue.rawValue, productionId: id)) { (item: MediaSearch?) in
             highGross = item
