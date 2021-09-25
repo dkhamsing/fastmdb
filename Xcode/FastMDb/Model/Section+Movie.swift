@@ -409,7 +409,7 @@ private extension Media {
     }
 
     var tmdbUrl: URL? {
-        return Tmdb.Web.movie.detail(id)
+        return Tmdb.Web.movie.detailURL(id)
     }
 
 }

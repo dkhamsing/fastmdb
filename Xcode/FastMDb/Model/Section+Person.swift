@@ -462,7 +462,7 @@ private extension Credit {
     }
 
     var tmdbUrl: URL? {
-        return Tmdb.Web.person.detail(id)
+        return Tmdb.Web.person.detailURL(id)
     }
 
     func tvCrewItem(isImage: Bool = false,

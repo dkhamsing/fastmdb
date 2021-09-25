@@ -25,7 +25,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.collection)/\(collectionId)"
 
-        let appendQueryItem = URLQueryItem(name: "append_to_response", value: "images")
+        let appendQueryItem = URLQueryItem(name: QueryName.append.rawValue, value: "images")
         urlComponents.queryItems = [ Tmdb.keyQueryItem, appendQueryItem ]
 
         return urlComponents.url
@@ -57,7 +57,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = Path.discover
 
-        let genreQueryItem = URLQueryItem(name: "with_genres", value: String(genreId))
+        let genreQueryItem = URLQueryItem(name: QueryName.genre.rawValue, value: String(genreId))
         urlComponents.queryItems = [ Tmdb.keyQueryItem, genreQueryItem ]
 
         return urlComponents.url
@@ -69,7 +69,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = Path.discover
 
-        let genreQueryItem = URLQueryItem(name: "with_companies", value: String(genreId))
+        let genreQueryItem = URLQueryItem(name: QueryName.company.rawValue, value: String(genreId))
         urlComponents.queryItems = [ Tmdb.keyQueryItem, genreQueryItem ]
 
         return urlComponents.url
@@ -83,7 +83,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = Path.discover
 
-        let genreQueryItem = URLQueryItem(name: "sort_by", value: sortedBy)
+        let genreQueryItem = URLQueryItem(name: QueryName.sort.rawValue, value: sortedBy)
 
         var qi = [ Tmdb.keyQueryItem, genreQueryItem ]
 
@@ -95,7 +95,7 @@ struct Tmdb {
 
         if let productionId = productionId {
             qi.append(
-                URLQueryItem(name: "with_companies", value: String(productionId))
+                URLQueryItem(name: QueryName.company.rawValue, value: String(productionId))
             )
         }
 
@@ -108,8 +108,7 @@ struct Tmdb {
         guard let episode = episode,
               let episodeId = id,
               let seasonNumber = episode.season_number,
-              let episodeNumber = episode.episode_number
-              else { return nil }
+              let episodeNumber = episode.episode_number else { return nil }
 
         var urlComponents = baseComponents
         urlComponents.path = Path.tv + "/\(episodeId)/season/\(seasonNumber)/episode/\(episodeNumber)/images"
@@ -123,7 +122,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = Path.tvDiscover
 
-        let genreQueryItem = URLQueryItem(name: "with_genres", value: String(genreId))
+        let genreQueryItem = URLQueryItem(name: QueryName.genre.rawValue, value: String(genreId))
         urlComponents.queryItems = [ Tmdb.keyQueryItem, genreQueryItem ]
 
         return urlComponents.url
@@ -147,7 +146,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = Path.tvDiscover
 
-        let genreQueryItem = URLQueryItem(name: "with_companies", value: String(networkId))
+        let genreQueryItem = URLQueryItem(name: QueryName.company.rawValue, value: String(networkId))
         urlComponents.queryItems = [ Tmdb.keyQueryItem, genreQueryItem ]
 
         return urlComponents.url
@@ -157,7 +156,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.tvDiscover)"
 
-        let qi1 = URLQueryItem(name: "sort_by", value: sortBy)
+        let qi1 = URLQueryItem(name: QueryName.sort.rawValue, value: sortBy)
         let qi2 = URLQueryItem(name: "with_original_language", value: original_language)
         let qi3 = URLQueryItem(name: "vote_count.gte", value: String(voteCountGreaterThanOrEqual))
         urlComponents.queryItems = [ Tmdb.keyQueryItem, qi1, qi2, qi3 ]
@@ -171,7 +170,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.movie)/\(movieId)"
 
-        let appendQueryItem = URLQueryItem(name: "append_to_response", value: append)
+        let appendQueryItem = URLQueryItem(name: QueryName.append.rawValue, value: append)
         urlComponents.queryItems = [ Tmdb.keyQueryItem, appendQueryItem ]
 
         return urlComponents.url
@@ -183,7 +182,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.person)/\(personId)"
 
-        let appendQueryItem = URLQueryItem(name: "append_to_response", value: "movie_credits,tv_credits,external_ids,tagged_images,images")
+        let appendQueryItem = URLQueryItem(name: QueryName.append.rawValue, value: "movie_credits,tv_credits,external_ids,tagged_images,images")
         urlComponents.queryItems = [ Tmdb.keyQueryItem, appendQueryItem ]
 
         return urlComponents.url
@@ -195,7 +194,7 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.tv)/\(tvId)"
 
-        let appendQueryItem = URLQueryItem(name: "append_to_response", value: "aggregate_credits,credits,external_ids,recommendations,similar,videos,content_ratings,watch/providers,images")
+        let appendQueryItem = URLQueryItem(name: QueryName.append.rawValue, value: "aggregate_credits,credits,external_ids,recommendations,similar,videos,content_ratings,watch/providers,images")
         urlComponents.queryItems = [ Tmdb.keyQueryItem, appendQueryItem ]
 
         return urlComponents.url
@@ -209,33 +208,24 @@ struct Tmdb {
         var urlComponents = baseComponents
         urlComponents.path = "\(Path.tv)/\(tvId)/season/\(seasonNumber)"
 
-        let appendQueryItem = URLQueryItem(name: "append_to_response", value: "credits,images")
+        let appendQueryItem = URLQueryItem(name: QueryName.append.rawValue, value: "credits,images")
         urlComponents.queryItems = [ Tmdb.keyQueryItem, appendQueryItem ]
 
         return urlComponents.url
     }
 
-    static let webBase = "https://www.themoviedb.org/"
+    private static let webBase = "https://www.themoviedb.org/"
 
     enum Web: String {
         case movie, person, tv
 
-        func detail(_ id: Int?) -> URL? {
+        func detailURL(_ id: Int?) -> URL? {
             guard let id = id else { return nil }
 
             let string = Tmdb.webBase + self.rawValue + "/\(id)"
             return URL(string: string)
-//            switch self {
-//            default:
-//                return
-//            }
         }
-
     }
-
-}
-
-extension Tmdb {
 
     static func backdropImageUrl(path: String?, size: BackdropSize) -> URL? {
         guard
@@ -277,48 +267,44 @@ extension Tmdb {
         return url
     }
 
-}
+    enum PosterSize: String {
+        case tiny = "w92"
+        case small = "w154"
+        case medium = "w185"
+        case large = "w342"
+        case xl = "w500"
+        case xxl = "w780"
+    }
 
-enum PosterSize: String {
-    case tiny = "w92"
-    case small = "w154"
-    case medium = "w185"
-    case large = "w342"
-    case xl = "w500"
-    case xxl = "w780"
-}
+    enum ProfileSize: String {
+        case small = "w45"
+        case medium = "w185"
+        case large = "h632"
+    }
 
-enum ProfileSize: String {
-    case small = "w45"
-    case medium = "w185"
-    case large = "h632"
-}
+    enum StillSize: String {
+        case small = "w92"
+        case medium = "w185"
+        case large = "w300"
+        case original = "original"
+    }
 
-enum StillSize: String {
-    case small = "w92"
-    case medium = "w185"
-    case large = "w300"
-    case original = "original"
-}
+    enum BackdropSize: String {
+        case small = "w300"
+        case medium = "w780"
+        case large = "w1280"
+        case original = "original"
+    }
 
-enum BackdropSize: String {
-    case small = "w300"
-    case medium = "w780"
-    case large = "w1280"
-    case original = "original"
-}
-
-enum LogoSize: String {
-    case tiny = "w45",
-         small = "w92",
-         medium = "w154",
-         large = "w185",
-         xl = "w300",
-         xxl = "w500",
-         original = "original"
-}
-
-extension Tmdb {
+    enum LogoSize: String {
+        case tiny = "w45",
+             small = "w92",
+             medium = "w154",
+             large = "w185",
+             xl = "w300",
+             xxl = "w500",
+             original = "original"
+    }
 
     enum TvType: String, CaseIterable {
         case
@@ -427,9 +413,6 @@ extension Tmdb {
         return urlComponents.url
     }
 
-}
-
-extension Tmdb {
     enum SearchType: String {
         case movie, person, tv
     }
@@ -437,7 +420,7 @@ extension Tmdb {
     enum Sort: String {
         case byRevenue = "revenue.desc"
         case byVote = "vote_average.desc"
-    }    
+    }
 
     static let separator = " · "
 
@@ -449,6 +432,7 @@ extension Tmdb {
 
         return formatter
     }
+
 }
 
 private extension Tmdb {
@@ -475,6 +459,13 @@ private extension Tmdb {
 
     static var keyQueryItem: URLQueryItem {
         return URLQueryItem(name: "api_key", value: Constant.apiKey)
+    }
+
+    enum QueryName: String {
+        case append = "append_to_response"
+        case company = "with_companies"
+        case genre = "with_genres"
+        case sort = "sort_by"
     }
 
 }

@@ -434,7 +434,7 @@ private extension TV {
     }
 
     var tmdbUrl: URL? {
-        return Tmdb.Web.tv.detail(id)
+        return Tmdb.Web.tv.detailURL(id)
     }
 
     var watchSection: ItemSection? {
