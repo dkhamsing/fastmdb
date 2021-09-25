@@ -507,8 +507,12 @@ private extension MainViewController {
         spinner.startAnimating()
 
         let provider = ProductionDataProvider()
-        provider.get(productionId) { (movie, tv) in
+        provider.get(productionId) { (movie, tv, highGross) in
             var sections: [ItemSection] = []
+
+            if let s = highGross?.highestGrossingSections {
+                sections.append(contentsOf: s)
+            }
 
             if let s = movie?.productionSections {
                 sections.append(contentsOf: s)
@@ -602,6 +606,21 @@ private extension MainViewController {
 private extension Credit {
 
     static let numberOfEntries = 10
+
+}
+
+private extension MediaSearch {
+
+    var highestGrossingSections: [ItemSection]? {
+        let items = results
+            .filter { $0.released }
+            .map { $0.listItemImage }
+        guard items.count > 0 else { return nil }
+
+        return [
+            ItemSection(header: "highest grossing", items: items, metadata: Metadata(display: .portraitImage(.collection(.image(.portrait)))))
+        ]
+    }
 
 }
 

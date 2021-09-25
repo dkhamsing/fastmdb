@@ -215,9 +215,10 @@ final class PersonDataProvider: DataProvider {
 
 final class ProductionDataProvider: DataProvider {
 
-    func get(_ id: Int?, completion: @escaping (MediaSearch?, TvSearch?) -> Void) {
+    func get(_ id: Int?, completion: @escaping (MediaSearch?, TvSearch?, MediaSearch?) -> Void) {
         var movie: MediaSearch?
         var tv: TvSearch?
+        var highGross: MediaSearch?
 
         fetchItem(url: Tmdb.moviesURL(productionId: id)) { (item: MediaSearch?) in
             movie = item
@@ -227,8 +228,13 @@ final class ProductionDataProvider: DataProvider {
             tv = item
         }
 
+
+        fetchItem(url: Tmdb.moviesURL(sortedBy: Tmdb.Sort.byRevenue.rawValue, productionId: id)) { (item: MediaSearch?) in
+            highGross = item
+        }
+
         group.notify(queue: .main) {
-            completion(movie, tv)
+            completion(movie, tv, highGross)
         }
     }
 

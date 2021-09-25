@@ -76,7 +76,8 @@ struct Tmdb {
     }
 
     static func moviesURL(sortedBy: String?,
-                          releaseYear: String? = nil) -> URL? {
+                          releaseYear: String? = nil,
+                          productionId: Int? = nil) -> URL? {
         guard let sortedBy = sortedBy else { return nil }
 
         var urlComponents = baseComponents
@@ -89,6 +90,12 @@ struct Tmdb {
         if let releaseYear = releaseYear {
             qi.append(
                 URLQueryItem(name: "primary_release_year", value: releaseYear)
+            )
+        }
+
+        if let productionId = productionId {
+            qi.append(
+                URLQueryItem(name: "with_companies", value: String(productionId))
             )
         }
 
