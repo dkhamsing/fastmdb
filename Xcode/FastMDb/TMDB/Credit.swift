@@ -166,6 +166,8 @@ extension Credit {
                     imageUrl:imageUrl))
         }
 
+        guard items.count > 0 else { return nil }
+
         var unique: [Item] = []
         for item in items {
             if !unique.contains(item) {
