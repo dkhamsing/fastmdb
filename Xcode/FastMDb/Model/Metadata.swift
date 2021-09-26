@@ -18,7 +18,7 @@ struct Metadata {
 
     var destinationTitle: String?
 
-    var sortedBy: String?
+    var sortedBy: Tmdb.Url.Kind.Sort?
     var releaseYear: String?
 
     var episode: Episode?

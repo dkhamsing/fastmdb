@@ -9,7 +9,13 @@ import Foundation
 import UIKit
 
 class DataProvider {
+
     let group = DispatchGroup()
+
+    static func get<T: Codable>(_ url: URL?, completion: @escaping (Result<T, Error>) -> Void) {
+        url?.apiGet(completion: completion)
+    }
+
 }
 
 private extension DataProvider {
@@ -42,7 +48,7 @@ private extension DataProvider {
                               decoder: JSONDecoder = JSONDecoder(),
                               completion: @escaping (T?) -> Void) {
         group.enter()
-        url?.apiGet(decoder: decoder) { (result: Result<T,NetError>) in
+        url?.apiGet(decoder: decoder) { (result: Result<T,Error>) in
             if case .success(let item) = result {
                 completion(item)
             }
@@ -61,16 +67,15 @@ final class CollectionDataProvider: DataProvider {
         var movies: [Media] = []
         var images: Images?
 
-        fetchItem(url: Tmdb.collectionURL(collectionId: collectionId)) { (item: MediaCollection?) in
-            guard
-                let collection = item,
-                let list = item?.parts else { return }
+        fetchItem(url: Tmdb.Url.collection(collectionId: collectionId)) { (item: MediaCollection?) in
+            guard let collection = item,
+                  let list = item?.parts else { return }
 
             images = collection.images
 
             let movieIds = list.map { $0.id }
             for id in movieIds {
-                let url = Tmdb.movieURL(movieId: id, append: "credits")
+                let url = Tmdb.Url.movie(movieId: id, append: "credits")
                 self.fetchItem(url: url) { (movie: Media?) in
                     if let mResult = movie {
                         movies.append(mResult)
@@ -89,28 +94,27 @@ final class CollectionDataProvider: DataProvider {
 
 final class ContentDataProvider: DataProvider {
 
-    func get(_ kind: Tmdb.MoviesType, completion: @escaping (MediaSearch?, TvSearch?, PeopleSearch?, [Article]?) -> Void) {
+    func get(_ kind: Tmdb.Url.Kind.Movies, completion: @escaping (MediaSearch?, TvSearch?, PeopleSearch?, [Article]?) -> Void) {
         var movie: MediaSearch?
         var tv: TvSearch?
         var people: PeopleSearch?
         var articles: [Article]?
 
         if let kind = kind.tv,
-            let url = Tmdb.tvURL(kind: kind) {
+           let url = Tmdb.Url.tv(kind: kind) {
             fetchItem(url: url) { (item: TvSearch?) in
                 tv = item
             }
         }
 
-        if let url = Tmdb.moviesURL(kind: kind) {
+        if let url = Tmdb.Url.movies(kind: kind) {
             fetchItem(url: url) { (item: MediaSearch?) in
                 movie = item
             }
         }
 
-        if
-            kind == .popular,
-            let url = Tmdb.peoplePopularURL {
+        if kind == .popular,
+           let url = Tmdb.Url.people {
             fetchItem(url: url) { (item: PeopleSearch?) in
                 people = item
             }
@@ -143,25 +147,18 @@ final class MovieDataProvider: DataProvider {
     func get(_ id: Int?, completion: @escaping (Media?, [Article]?, UIImage?, [iTunes.Album]?) -> Void) {
         var movie: Media?
         var articles: [Article]?
-//        var image: UIImage?
         var albums: [iTunes.Album]?
 
-        let url = Tmdb.movieURL(movieId: id)
+        let url = Tmdb.Url.movie(movieId: id)
         fetchItem(url: url) { (item: Media?) in
             movie = item
 
-            if
-                let name = item?.title,
-                let url = NewsApi.urlForQuery("\(name) movie") {
+            if let name = item?.title,
+               let url = NewsApi.urlForQuery("\(name) movie") {
                 self.fetchArticles(url: url) { a in
                     articles = a
                 }
             }
-
-//            let url = Tmdb.mediaPosterUrl(path: item?.poster_path, size: .large)
-//            self.fetchImage(url: url) { i in
-//                image = i
-//            }
 
             if let name = item?.title,
                let url = name.itunesMusicSearchUrl {
@@ -189,7 +186,7 @@ final class PersonDataProvider: DataProvider {
         var articles: [Article]?
         var highGross: MediaSearch?
 
-        let url = Tmdb.personURL(personId: id)
+        let url = Tmdb.Url.person(personId: id)
         fetchItem(url: url) { (item: Credit?) in
             credit = item
 
@@ -201,7 +198,7 @@ final class PersonDataProvider: DataProvider {
             }
         }
 
-        fetchItem(url: Tmdb.moviesURL(sortedBy: Tmdb.Sort.byRevenue.rawValue, personId: id)) { (item: MediaSearch?) in
+        fetchItem(url: Tmdb.Url.movies(sortedBy: .byRevenue, personId: id)) { (item: MediaSearch?) in
             highGross = item
         }
 
@@ -218,15 +215,15 @@ final class ProductionDataProvider: DataProvider {
         var tv: TvSearch?
         var highGross: MediaSearch?
 
-        fetchItem(url: Tmdb.moviesURL(productionId: id)) { (item: MediaSearch?) in
+        fetchItem(url: Tmdb.Url.movies(productionId: id)) { (item: MediaSearch?) in
             movie = item
         }
 
-        fetchItem(url: Tmdb.tvURL(productionId: id)) { (item: TvSearch?) in
+        fetchItem(url: Tmdb.Url.tv(productionId: id)) { (item: TvSearch?) in
             tv = item
         }
 
-        fetchItem(url: Tmdb.moviesURL(sortedBy: Tmdb.Sort.byRevenue.rawValue, productionId: id)) { (item: MediaSearch?) in
+        fetchItem(url: Tmdb.Url.movies(sortedBy: .byRevenue, productionId: id)) { (item: MediaSearch?) in
             highGross = item
         }
 
@@ -245,7 +242,7 @@ final class SeasonDataProvider: DataProvider {
 
         var season: Season?
 
-        let url = Tmdb.tvURL(tvId: item.metadata?.id, seasonNumber: number)
+        let url = Tmdb.Url.tv(tvId: item.metadata?.id, seasonNumber: number)
         fetchItem(url: url) { (item: Season?) in
             season = item
         }
@@ -256,6 +253,33 @@ final class SeasonDataProvider: DataProvider {
     }
 }
 
+final class SearchDataProvider: DataProvider {
+
+    func get(_ query: String?, completion: @escaping (MediaSearch?, TvSearch?, PeopleSearch?, [Article]?) -> Void) {
+        guard let query = query else { return }
+
+        var movieSearch: MediaSearch?
+        var tvSearch: TvSearch?
+        var peopleSearch: PeopleSearch?
+        var articles: [Article]?
+
+        fetchItem(url: Tmdb.Url.searchMulti(query)) { (item: MultiSearch?) in
+            peopleSearch = item?.people
+            movieSearch = item?.movie
+            tvSearch = item?.tv
+        }
+
+        fetchArticles(url: NewsApi.urlForQuery(query)) { a in
+            articles = a
+        }
+
+        group.notify(queue: .main) {
+            completion(movieSearch, tvSearch, peopleSearch, articles)
+        }
+    }
+
+}
+
 final class TvDataProvider: DataProvider {
 
     func get(_ id: Int?, completion: @escaping (TV?, UIImage?, [Article]?, [iTunes.Album]?) -> Void) {
@@ -263,7 +287,7 @@ final class TvDataProvider: DataProvider {
         var articles: [Article]?
         var albums: [iTunes.Album]?
 
-        let url = Tmdb.tvURL(tvId: id)
+        let url = Tmdb.Url.tv(tvId: id)
         fetchItem(url: url) { (item: TV?) in
             tv = item
 
@@ -293,37 +317,53 @@ final class TvDataProvider: DataProvider {
 
 }
 
-final class SearchDataProvider: DataProvider {
+private extension URL {
 
-    func get(_ query: String?, completion: @escaping (MediaSearch?, TvSearch?, PeopleSearch?, [Article]?) -> Void) {
-        guard let query = query else { return }
+    func apiGet<T: Codable>(decoder: JSONDecoder = JSONDecoder(),
+                            queue: DispatchQueue = DispatchQueue.main,
+                            completion: @escaping (Result<T, Error>) -> Void) {
+        Log.log(#function + ": \(self.absoluteString)")
 
-        var movieSearch: MediaSearch?
-        var tvSearch: TvSearch?
-        var peopleSearch: PeopleSearch?
-        var articles: [Article]?
+        let session = URLSession.shared
+        session.dataTask(with: self) { data, _, error in
+            if let error = error {
+                queue.async {
+                    completion(.failure(error))
+                }
+                return
+            }
 
-        fetchItem(url: Tmdb.searchURL(type: .movie, query: query)) { (item: MediaSearch?) in
-            movieSearch = item
-        }
+            guard let unwrapped = data else {
+                queue.async {
+                    completion(.failure(NetError.data))
+                }
+                return
+            }
 
-        fetchItem(url: Tmdb.searchURL(type: .tv, query: query)) { (item: TvSearch?) in
-            tvSearch = item
-        }
+            guard let result = try? decoder.decode(T.self, from: unwrapped) else {
+                queue.async {
+                    completion(.failure(NetError.json))
+                }
+                return
+            }
 
-        fetchItem(url: Tmdb.searchURL(type: .person, query: query)) { (item: PeopleSearch?) in
-            peopleSearch = item
-        }
-
-        fetchArticles(url: NewsApi.urlForQuery(query)) { a in
-            articles = a
-        }
-
-        group.notify(queue: .main) {
-            completion(movieSearch, tvSearch, peopleSearch, articles)
-        }
+            queue.async {
+                completion(.success(result))
+            }
+        }.resume()
     }
 
+}
+
+private enum NetError: Error {
+    case data
+    case json    
+}
+
+private struct Log {
+    static func log(_ value: String) {
+        print(value)
+    }
 }
 
 private extension iTunes.Feed {
@@ -346,55 +386,20 @@ private extension iTunes.Feed {
 
 }
 
-extension URL {
+private extension NewsApi {
 
-    func apiGet<T: Codable>(decoder: JSONDecoder = JSONDecoder(),
-                            queue: DispatchQueue = DispatchQueue.main,
-                            completion: @escaping (Result<T, NetError>) -> Void) {
-        Log.log(#function + ": \(self.absoluteString)")
-
-        let session = URLSession.shared
-        session.dataTask(with: self) { data, _, error in
-            if let error = error {
-                queue.async {
-                    completion(.failure(.system(error)))
-                }
-
-                return
+    static func getArticles(url: URL?, completion: @escaping ([Article]?) -> Void) {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        url?.apiGet(decoder: decoder) { (result: Result<Headline, Error>) in
+            switch result {
+            case .success(let headline):
+                completion(headline.articles)
+            case .failure(let error):
+                Log.log(error.localizedDescription)
+                completion(nil)
             }
-
-            guard let unwrapped = data else {
-                queue.async {
-                    completion(.failure(.data))
-                }
-
-                return
-            }
-
-            guard let result = try? decoder.decode(T.self, from: unwrapped) else {
-                queue.async {
-                    completion(.failure(.json))
-                }
-                return
-            }
-
-            queue.async {
-                completion(.success(result))
-            }
-        }.resume()
+        }
     }
 
-}
-
-enum NetError: Error {
-    case data
-    case json
-    case session
-    case system(_ value: Error)
-}
-
-private struct Log {
-    static func log(_ value: String) {
-        print(value)
-    }
 }

@@ -5,8 +5,6 @@
 //  Copyright © 2020 dk. All rights reserved.
 //
 
-import UIKit
-
 struct Episode: Codable {
     var id: Int?
     var air_date: String?
@@ -24,48 +22,4 @@ struct Episode: Codable {
     var vote_count: Int
 
     var images: Images?
-}
-
-extension Episode {
-    var dateItem: Item? {
-        guard
-            let airdate = air_date,
-            let display = airdate.dateDisplay else { return nil }
-
-        var inNumberOfDays: String?
-        let formatter = Tmdb.dateFormatter
-        if let date = formatter.date(from: airdate),
-            let days = Date().daysDifferenceWithDate(date),
-            days >= 0 {
-            if days == 0 {
-                inNumberOfDays = "Today"
-            } else if days == 1 {
-                inNumberOfDays = "Tomorrow"
-            } else {
-                inNumberOfDays = "In \(days) days"
-            }
-        }
-
-        return Item(title: display, subtitle: inNumberOfDays)
-    }
-
-    var episodeRatingColor: UIColor? {
-        guard vote_count > Tmdb.voteThreshold else { return nil }
-
-        return vote_average.color
-    }
-
-}
-
-private extension Date {
-    func daysDifferenceWithDate(_ date: Date?) -> Int? {
-        guard let date = date else { return nil }
-
-        let calendar = Calendar.current
-        guard let interval = calendar.dateInterval(of: .day, for: date) else { return nil }
-
-        let components = calendar.dateComponents([.day], from: self, to: interval.end)
-
-        return components.day
-    }
 }

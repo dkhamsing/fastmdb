@@ -389,7 +389,7 @@ private extension Credit {
             castTotal = String.allCreditsText(cast.count)
         }
 
-        let section = ItemSection(header: "movies\(Tmdb.separator)latest", items: topItems, footer: castTotal,
+        let section = ItemSection(header: "movies\(Constant.separator)latest", items: topItems, footer: castTotal,
                                   metadata: Metadata(destination: .items, destinationTitle: "Movies", items: cast.map { $0.movieCastItem }))
 
         return section
@@ -402,7 +402,7 @@ private extension Credit {
         guard upcoming.count > 0 else { return nil }
 
         let i = upcoming.map { $0.movieCastItem }
-        let section = ItemSection(header: "movies\(Tmdb.separator)upcoming", items: i)
+        let section = ItemSection(header: "movies\(Constant.separator)upcoming", items: i)
         return section
     }
 
@@ -436,7 +436,7 @@ private extension Credit {
             total = String.allCreditsText(collapsedItems.count)
         }
 
-        let section = ItemSection(header: "movie credits\(Tmdb.separator)latest", items: Array(collapsedItems.prefix(limit)), footer: total,
+        let section = ItemSection(header: "movie credits\(Constant.separator)latest", items: Array(collapsedItems.prefix(limit)), footer: total,
                                   metadata: Metadata(destination: .items, destinationTitle: "Movies", items: collapsedItems))
 
         return section
@@ -449,7 +449,7 @@ private extension Credit {
         let upcomingCollapsed = Credit.collapsedMovieCrewItems(upcoming)
         guard upcomingCollapsed.count > 0 else {return nil }
 
-        let section = ItemSection(header: "movie credits\(Tmdb.separator)upcoming", items: upcomingCollapsed)
+        let section = ItemSection(header: "movie credits\(Constant.separator)upcoming", items: upcomingCollapsed)
 
         return section
     }
@@ -469,13 +469,13 @@ private extension Credit {
     }
 
     var tmdbUrl: URL? {
-        return Tmdb.Web.person.detailURL(id)
+        return Tmdb.Url.Web.person.detailURL(id)
     }
 
     func tvCrewItem(isImage: Bool = false,
                     isCredit: Bool = true,
                     additional: [Credit] = []) -> Item? {
-        if isImage, Tmdb.mediaPosterUrl(path: poster_path, size: .medium) == nil {
+        if isImage, Tmdb.Url.Image.mediaPoster(path: poster_path, size: .medium) == nil {
             return nil
         }
 
@@ -492,8 +492,8 @@ private extension Credit {
             sub2.insert(value, at: 0)
         }
 
-        let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
-        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        let url = Tmdb.Url.Image.mediaPoster(path: poster_path, size: .xxl)
+        let imageUrl = Tmdb.Url.Image.mediaPoster(path: poster_path, size: .medium)
 
         var sections: [ItemSection] = []
         sections.append(
@@ -526,7 +526,7 @@ private extension Credit {
         }
 
         return Item(title: titleDisplay,
-                    subtitle: sub.joined(separator: Tmdb.separator),
+                    subtitle: sub.joined(separator: Constant.separator),
                     color: ratingColor,
                     metadata: Metadata(id: id,
                                        identifier: credit_id,
@@ -552,7 +552,7 @@ private extension Credit {
         guard items.count > 0 else { return nil }
 
         let prefix = Array(items)
-        let section = ItemSection(header: "tv\(Tmdb.separator)latest", items: prefix)
+        let section = ItemSection(header: "tv\(Constant.separator)latest", items: prefix)
 
         return section
     }
@@ -593,7 +593,7 @@ private extension Credit {
 
         let prefix = Array(items.prefix(limit))
 
-        let section = ItemSection(header: "tv\(Tmdb.separator)more", items: prefix, footer: total,
+        let section = ItemSection(header: "tv\(Constant.separator)more", items: prefix, footer: total,
                                   metadata: Metadata(destination: .items, destinationTitle: "TV", items: c.cast.compactMap { $0.listItemTv }))
 
         if items.count > 0 {
@@ -643,7 +643,7 @@ private extension Credit {
 
         guard items.count > 0 else { return nil }
 
-        return ItemSection(header: "tv\(Tmdb.separator)creator", items: items)
+        return ItemSection(header: "tv\(Constant.separator)creator", items: items)
     }
 
     func TvCrewSectionUpcoming(limit: Int) -> ItemSection? {
@@ -671,7 +671,7 @@ private extension Credit {
             total = String.allCreditsText(items.count)
         }
 
-        return ItemSection(header: "tv credits\(Tmdb.separator)upcoming", items: Array(items.prefix(limit)), footer: total,
+        return ItemSection(header: "tv credits\(Constant.separator)upcoming", items: Array(items.prefix(limit)), footer: total,
                            metadata: Metadata(destination: .items, destinationTitle: "TV", items: items))
     }
 
@@ -712,7 +712,7 @@ private extension Credit {
             total = String.allCreditsText(items.count)
         }
 
-        return ItemSection(header: "tv credits\(Tmdb.separator)latest", items: Array(items.prefix(limit)), footer: total,
+        return ItemSection(header: "tv credits\(Constant.separator)latest", items: Array(items.prefix(limit)), footer: total,
                            metadata: Metadata(destination: .items, destinationTitle: "TV", items: items))
     }
 
@@ -804,7 +804,7 @@ private extension Credits {
 private extension Credit {
 
     var ageAtDeath: String? {
-        let formatter = Tmdb.dateFormatter
+        let formatter = Constant.dateFormatter
 
         guard
             let bday = birthday,
@@ -830,7 +830,7 @@ private extension Credit {
         }
         sub.append(contentsOf: movieCastSubtitles)
 
-        let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .medium)
+        let imageUrl = Tmdb.Url.Image.mediaPoster(path: poster_path, size: .medium)
         return Item(title: titleDisplay, color: ratingColor,
                     metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl, strings: sub))
     }
@@ -852,7 +852,7 @@ private extension Credit {
     }
 
     var movieCastSubtitle: String {
-        return movieCastSubtitles.joined(separator: Tmdb.separator)
+        return movieCastSubtitles.joined(separator: Constant.separator)
     }
 
     var movieCrewItem: Item? {
@@ -875,13 +875,13 @@ private extension Credit {
 
         var imageUrl: URL?
         if isImage {
-            if let url = Tmdb.mediaPosterUrl(path: poster_path, size: .medium) {
+            if let url = Tmdb.Url.Image.mediaPoster(path: poster_path, size: .medium) {
                 imageUrl = url
             } else {
                 return nil
             }
         }
-        return Item(title: titleDisplay, subtitle: sub.joined(separator: Tmdb.separator), color: ratingColor, 
+        return Item(title: titleDisplay, subtitle: sub.joined(separator: Constant.separator), color: ratingColor, 
                     metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl, strings: sub2))
     }
 
@@ -890,7 +890,7 @@ private extension Credit {
 private extension String {
 
     var age: String? {
-        let formatter = Tmdb.dateFormatter
+        let formatter = Constant.dateFormatter
         guard let date = formatter.date(from: self) else { return nil }
 
         guard let age = date.yearDifferenceWithDate(Date()) else { return nil }

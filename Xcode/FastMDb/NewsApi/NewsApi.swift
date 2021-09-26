@@ -31,7 +31,7 @@ struct NewsApi {
         urlComponents.path = Path.search.rawValue
 
         let keyQueryItem = NewsApi.keyQueryItem
-        let languageQueryItem = URLQueryItem(name: "language", value: "en")
+        let languageQueryItem = URLQueryItem(name: "language", value: Tmdb.language)
         let queryQueryItem = URLQueryItem(name: "q", value: query)
 
         urlComponents.queryItems = [ keyQueryItem, languageQueryItem, queryQueryItem ]

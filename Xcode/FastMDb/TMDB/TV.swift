@@ -5,9 +5,6 @@
 //  Copyright © 2020 dk. All rights reserved.
 //
 
-import Foundation
-import UIKit
-
 struct TV: Codable {
     var id: Int
 
@@ -31,7 +28,7 @@ struct TV: Codable {
     var origin_country: [String]?
     var original_language: String?
     var overview: String?
-    var networks: [TvNetwork]?
+    var networks: [Tmdb.Network]?
     var poster_path: String?
     var production_companies: [Production]?
     var production_countries: [ProductionCountry]?
@@ -93,107 +90,4 @@ extension TV {
              external_ids,
              videos
     }
-
-    var countryDisplay: String? {
-        guard
-            let country = origin_country?.first,
-            country != "",
-            country != "US" else { return nil }
-
-        if let name = Locale.current.localizedString(forRegionCode: country) {
-            return name
-        }
-
-        return country
-    }
-
-    var displayName: String {
-        if name != original_name {
-            return "\(name) (\(original_name))"
-        }
-        return name
-    }
-    
-    var listItem: Item {
-        var item = listItemNoSub
-
-        var sub: [String] = []
-        if first_air_date.yearDisplay != "" {
-            sub.append(first_air_date.yearDisplay)
-        }
-        sub.append(contentsOf: subtitleLanguageCountry)
-
-        item.subtitle = sub.joined(separator: Tmdb.separator)
-
-        return item
-    }
-
-    var listItemImage: Item {
-        var item = listItemNoSub
-
-        var sub: [String] = []
-        if first_air_date.yearDisplay != "" {
-            sub.append(first_air_date.yearDisplay)
-        }
-        sub.append(contentsOf: subtitleLanguageCountry)
-        item.subtitle = sub.joined(separator: Tmdb.separator)
-
-        item.metadata = Metadata(id: id, destination: .tv, imageUrl: Tmdb.mediaPosterUrl(path: poster_path, size: .medium))
-
-        return item
-    }
-
-    var listItemWithVotes: Item {
-        var item = listItemNoSub
-
-        var sub: [String] = []
-        if first_air_date.yearDisplay != "" {
-            sub.append(first_air_date.yearDisplay)
-        }
-        sub.append(contentsOf: subtitleLanguageCountry)
-        sub.append("\(vote_count) votes")
-        sub.append("\(vote_average)")
-
-        item.subtitle = sub.joined(separator: Tmdb.separator)
-
-        return item
-    }
-
-    var listItemWithoutYear: Item {
-        var item = listItemNoSub
-        item.subtitle = subtitleLanguageCountry.joined(separator: Tmdb.separator)
-
-        return item
-    }
-
-}
-
-private extension TV {
-
-    var subtitleLanguageCountry: [String] {
-        var sub: [String] = []
-        if
-            let country = original_language,
-            country != "en",
-            let lang = Languages.List[country] {
-            sub.append(lang)
-        }
-        else if let country = countryDisplay {
-            sub.append(country)
-        }
-
-        return sub
-    }
-
-    var listItemNoSub: Item {
-        return Item(title: displayName, color: ratingColor,
-                    metadata: Metadata(id: id, destination: .tv))
-    }
-
-    var ratingColor: UIColor? {
-        guard vote_count > Tmdb.voteThreshold else { return nil }
-
-        return vote_average.color
-    }
-
 }

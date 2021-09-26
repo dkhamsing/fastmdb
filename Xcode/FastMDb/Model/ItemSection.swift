@@ -21,8 +21,8 @@ extension ItemSection {
         var items: [Item] = []
 
         if !(poster_path ?? "").isEmpty {
-            let url = Tmdb.mediaPosterUrl(path: poster_path, size: .xxl)
-            let imageUrl = Tmdb.mediaPosterUrl(path: poster_path, size: .large)
+            let url = Tmdb.Url.Image.mediaPoster(path: poster_path, size: .xxl)
+            let imageUrl = Tmdb.Url.Image.mediaPoster(path: poster_path, size: .large)
             let posterItem = Item(metadata: Metadata(url: url, destination: .safarivc, imageUrl: imageUrl, display: .portraitImage()))
             items.append(posterItem)
         }

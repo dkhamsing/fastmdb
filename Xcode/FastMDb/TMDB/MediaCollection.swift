@@ -5,8 +5,6 @@
 //  Copyright © 2020 dk. All rights reserved.
 //
 
-import Foundation
-
 struct MediaCollection: Codable {
     var id: Int
 

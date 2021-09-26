@@ -62,7 +62,7 @@ private extension Article {
             met = Metadata(url: url, destination: .url)
         }
 
-        let item = Item(title: titleDisplay, subtitle: strings.joined(separator: Tmdb.separator),
+        let item = Item(title: titleDisplay, subtitle: strings.joined(separator: Constant.separator),
                         metadata: met)
 
         return item
@@ -202,19 +202,6 @@ extension Int {
     }
 }
 
-extension NewsApi {
-    static func getArticles(url: URL?, completion: @escaping ([Article]?) -> Void) {
-        url?.get(completion: { (result: Result<Headline, ApiError>) in
-            switch result {
-            case .success(let headline):
-                completion(headline.articles)
-            case .failure(_):
-                completion(nil)
-            }
-        })
-    }
-}
-
 extension Optional where Wrapped == String {
 
     var yearDisplay: String {
@@ -245,13 +232,13 @@ extension String {
     }
 
     var date: Date? {
-        let formatter = Tmdb.dateFormatter
+        let formatter = Constant.dateFormatter
 
         return formatter.date(from: self)
     }
     
     var dateDisplay: String? {
-        let formatter = Tmdb.dateFormatter
+        let formatter = Constant.dateFormatter
 
         guard let date = self.date  else { return nil }
 

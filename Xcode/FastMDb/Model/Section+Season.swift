@@ -80,7 +80,7 @@ private extension Episode {
             sub.append(airDate)
         }
 
-        return Item(title: name, subtitle: sub.joined(separator: Tmdb.separator), color: episodeRatingColor,
+        return Item(title: name, subtitle: sub.joined(separator: Constant.separator), color: episodeRatingColor,
                     metadata: Metadata(id: tvId, destination: .episode, episode: self))
     }
 }

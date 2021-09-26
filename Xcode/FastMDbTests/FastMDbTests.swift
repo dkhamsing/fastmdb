@@ -12,30 +12,6 @@ import XCTest
 
 class MoviesTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testYearDisplayNil() throws {
-        // Given
-        let str: String? = nil
-
-        // Then
-        XCTAssertTrue(str.yearDisplay == "")
-    }
-
-    func testYearDisplayForTmdbReleaseDate() throws {
-        // Given
-        let str: String? = "2019-09-17"
-
-        // Then
-        XCTAssertTrue(str.yearDisplay == "2019")
-    }
-
     func testCastTitleDisplayWithOriginalTitle() throws {
         // Given
         let c = Credit(id: 0, name: "name", title: "1", original_title: "2", release_date: "2019-09-17")
@@ -68,15 +44,6 @@ class MoviesTests: XCTestCase {
         XCTAssertTrue(c.titleDisplay == "1 (2)")
     }
 
-//    func testCastSubtitle() throws {
-//        // Given
-//        let c = Credit(id: 1668, character: "Rachel Green",  name: "Friends",  episode_count: 236)
-//
-//
-//        // Then
-//        XCTAssertTrue(c.subtitle == "Rachel Green")
-//    }
-
     func testMediaTitle() throws {
         // Given
         let m = Media(id: 0, title: "1", original_title: "2", vote_average: 0, vote_count: 0, overview: "")
@@ -91,6 +58,22 @@ class MoviesTests: XCTestCase {
 
         // Then
         XCTAssertTrue(m.titleDisplay == "One Tree Hill")
+    }
+
+    func testYearDisplayNil() throws {
+        // Given
+        let str: String? = nil
+
+        // Then
+        XCTAssertTrue(str.yearDisplay == "")
+    }
+
+    func testYearDisplayForTmdbReleaseDate() throws {
+        // Given
+        let str: String? = "2019-09-17"
+
+        // Then
+        XCTAssertTrue(str.yearDisplay == "2019")
     }
 
 }

@@ -129,13 +129,13 @@ private extension Episode {
 
 private extension Episode {
     var ratingDisplay: String? {
-        guard vote_count > Tmdb.voteThreshold else { return nil }
+        guard vote_count > Constant.voteThreshold else { return nil }
 
         return "\(vote_average)/10"
     }
 
     var voteDisplay: String? {
-        guard vote_count > Tmdb.voteThreshold else { return nil }
+        guard vote_count > Constant.voteThreshold else { return nil }
 
         return "\(vote_count) votes"
     }

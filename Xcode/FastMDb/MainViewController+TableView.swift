@@ -134,11 +134,6 @@ extension MainViewController: UITableViewDelegate {
         loadDestination(item)
     }
 
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let value = tableView.contentOffset.y + tableView.safeAreaInsets.top
-//        imageButton.alpha = (300 - value)/300
-//    }
-
 }
 
 extension MainViewController: CollectionListener {
@@ -286,7 +281,7 @@ private extension MainViewController {
         case .moviesSortedBy:
             let controller = MainViewController()
             controller.title = "Highest Grossing"
-            controller.sortedBy = Tmdb.Sort.byRevenue.rawValue
+            controller.sortedBy = .byRevenue
             navigationController?.pushViewController(controller, animated: true)
         default:
             print("handle button not implemented for \(s)")

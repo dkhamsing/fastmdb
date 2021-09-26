@@ -139,7 +139,7 @@ private extension Media {
             revenue > 0 {
 
             let item = Item(title: revenue.display, subtitle: budgetDisplay, color: boxOfficeColor,
-                            metadata: Metadata(destination: .moviesSortedBy, sortedBy: Tmdb.Sort.byRevenue.rawValue, releaseYear: releaseYear))
+                            metadata: Metadata(destination: .moviesSortedBy, sortedBy: .byRevenue, releaseYear: releaseYear))
             return ItemSection(header: "box office", items: [item])
         }
 
@@ -288,7 +288,7 @@ private extension Media {
             metadata.append(text)
         }
 
-        let metString = metadata.joined(separator: Tmdb.separator)
+        let metString = metadata.joined(separator: Constant.separator)
 
         var items: [Item] = []
 
@@ -409,7 +409,7 @@ private extension Media {
     }
 
     var tmdbUrl: URL? {
-        return Tmdb.Web.movie.detailURL(id)
+        return Tmdb.Url.Web.movie.detailURL(id)
     }
 
 }
@@ -538,7 +538,7 @@ private extension Media {
     var languageDisplay: String? {
         guard
             let lang = original_language,
-            lang != "en" else { return nil }
+            lang != Tmdb.language else { return nil }
 
         guard let value = Languages.List[lang] else { return lang }
 
@@ -552,7 +552,7 @@ private extension Media {
     }
 
     var voteDisplay: String? {
-        guard vote_count > Tmdb.voteThreshold else { return nil }
+        guard vote_count > Constant.voteThreshold else { return nil }
 
         return "\(vote_count) votes"
     }
@@ -560,7 +560,7 @@ private extension Media {
     var ratingDisplay: String? {
         guard
             released,
-            vote_count > Tmdb.voteThreshold else { return nil }
+            vote_count > Constant.voteThreshold else { return nil }
 
         return "\(vote_average)/10"
     }
@@ -568,7 +568,7 @@ private extension Media {
     var recentReleaseItem: Item? {
         guard
             let r = release_date,
-            let date = Tmdb.dateFormatter.date(from: r),
+            let date = Constant.dateFormatter.date(from: r),
             let year = date.yearDifferenceWithDate(Date()),
             year < 1 else { return nil }
 
@@ -585,7 +585,7 @@ private extension Media {
     var releaseDateDisplay: String? {
         guard
             let r = release_date,
-            let date = Tmdb.dateFormatter.date(from: r),
+            let date = Constant.dateFormatter.date(from: r),
             date.timeIntervalSinceNow > 0 else { return nil }
 
         return release_date?.dateDisplay
@@ -596,7 +596,7 @@ private extension Media {
 
         guard
             let r = release_date,
-            let date = Tmdb.dateFormatter.date(from: r) else { return sub }
+            let date = Constant.dateFormatter.date(from: r) else { return sub }
 
         let calendar = Calendar.current
         guard let interval = calendar.dateInterval(of: .day, for: date) else { return sub }

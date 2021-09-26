@@ -5,8 +5,6 @@
 //  Copyright © 2019 dkhamsing. All rights reserved.
 //
 
-import Foundation
-
 struct ContentRatingSearch: Codable {
     var results: [ContentRating]
 }
@@ -16,10 +14,13 @@ struct ImageSearch: Codable {
 }
 
 struct MediaSearch: Codable {
-//    var page: Int
-//    var total_pages: Int
     var total_results: Int
     var results: [Media]
+}
+
+struct MultiSearch: Codable {
+    var total_results: Int
+    var results: [MultiSearchResult]
 }
 
 struct PeopleSearch: Codable {

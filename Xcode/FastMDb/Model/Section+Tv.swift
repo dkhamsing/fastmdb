@@ -276,7 +276,7 @@ private extension TV {
 
             if
                 let country = original_language,
-                country != "en",
+                country != Tmdb.language,
                 let lang = Languages.List[country] {
                 sub.append(lang)
             }
@@ -305,7 +305,7 @@ private extension TV {
                 sub.append(item)
             }
 
-            var subt = sub.joined(separator: Tmdb.separator)
+            var subt = sub.joined(separator: Constant.separator)
 
             if let country = countryDisplay {
                 subt += "\n\(country)"
@@ -361,7 +361,7 @@ private extension TV {
         let vote = "\(vote_count) votes"
 
         var color: UIColor?
-        if vote_count > Tmdb.voteThreshold {
+        if vote_count > Constant.voteThreshold {
             color = vote_average.color
         }
 
@@ -434,7 +434,7 @@ private extension TV {
     }
 
     var tmdbUrl: URL? {
-        return Tmdb.Web.tv.detailURL(id)
+        return Tmdb.Url.Web.tv.detailURL(id)
     }
 
     var watchSection: ItemSection? {
