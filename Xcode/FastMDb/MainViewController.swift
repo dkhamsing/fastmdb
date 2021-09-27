@@ -497,8 +497,10 @@ private extension MainViewController {
             if let _ = releaseYear {
                 footer = "See all time highest grossing"
             }
-
-            let sections = [ ItemSection(items: items, footer: footer, metadata: Metadata(destination: .moviesSortedBy, display: .textImage())) ]
+            let sections = [ ItemSection(header: releaseYear ?? "all time",
+                                         items: items,
+                                         footer: footer,
+                                         metadata: Metadata(destination: .moviesSortedBy, display: .textImage())) ]
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }
@@ -542,7 +544,9 @@ extension MediaSearch {
         guard items.count > 0 else { return nil }
 
         return [
-            ItemSection(header: "highest grossing", items: items, metadata: Metadata(display: .portraitImage(.collection(.image(.portrait)))))
+            ItemSection(header: Tmdb.Url.Kind.Movies.highest_grossing.title,
+                        items: items,
+                        metadata: Metadata(display: .portraitImage(.collection(.image(.portrait)))))
         ]
     }
 
