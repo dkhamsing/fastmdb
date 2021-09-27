@@ -645,19 +645,7 @@ private extension DateComponents {
     }
 }
 
-private extension Double {
 
-    func truncate(places: Int) -> Double {
-
-        let multiplier = pow(10, Double(places))
-        let newDecimal = multiplier * self // move the decimal right
-        let truncated = Double(Int(newDecimal)) // drop the fraction
-        let originalDecimal = truncated / multiplier // move the decimal back
-        return originalDecimal
-
-    }
-
-}
 
 private extension Int {
 
@@ -666,38 +654,6 @@ private extension Int {
         let m = Int(self % 60)
 
         return (h, m)
-    }
-
-    /// Credits: https://stackoverflow.com/questions/48371093/swift-4-formatting-numbers-into-friendly-ks
-    var display: String {
-
-        let num = abs(Double(self))
-        let sign = (self < 0) ? "-" : ""
-
-        switch num {
-        case 1_000_000_000...:
-            var formatted = num / 1_000_000_000
-            formatted = formatted.truncate(places: 2)
-            return "\(sign)\(formatted)B"
-
-        case 1_000_000...:
-            var formatted = num / 1_000_000
-            formatted = formatted.truncate(places: 1)
-            return "\(sign)\(formatted)M"
-
-        case 1_000...:
-            var formatted = num / 1_000
-            formatted = formatted.truncate(places: 1)
-            return "\(sign)\(formatted)K"
-
-        case 0...:
-            return "\(self)"
-
-        default:
-            return "\(sign)\(self)"
-
-        }
-
     }
 
 }

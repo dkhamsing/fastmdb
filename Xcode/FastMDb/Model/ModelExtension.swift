@@ -524,7 +524,13 @@ extension Media {
             }
         }
 
-        return Item(title: titleDisplay, subtitle: sub.joined(separator: Constant.separator), color: ratingColor,
+        if let revenue = revenue, revenue > 0 {
+            sub.append(revenue.display + " revenue")
+        }
+
+        return Item(title: titleDisplay,
+                    subtitle: sub.joined(separator: "\n"),
+                    color: ratingColor,
                     metadata: Metadata(id: id, destination: .movie))
     }
 
@@ -925,6 +931,38 @@ extension WatchSearch {
     }
 }
 
+extension Int {
+    /// Credits: https://stackoverflow.com/questions/48371093/swift-4-formatting-numbers-into-friendly-ks
+    var display: String {
+        let num = abs(Double(self))
+        let sign = (self < 0) ? "-" : ""
+
+        switch num {
+        case 1_000_000_000...:
+            var formatted = num / 1_000_000_000
+            formatted = formatted.truncate(places: 2)
+            return "\(sign)\(formatted)B"
+
+        case 1_000_000...:
+            var formatted = num / 1_000_000
+            formatted = formatted.truncate(places: 1)
+            return "\(sign)\(formatted)M"
+
+        case 1_000...:
+            var formatted = num / 1_000
+            formatted = formatted.truncate(places: 1)
+            return "\(sign)\(formatted)K"
+
+        case 0...:
+            return "\(self)"
+
+        default:
+            return "\(sign)\(self)"
+
+        }
+    }
+}
+
 private extension Date {
     func daysDifferenceWithDate(_ date: Date?) -> Int? {
         guard let date = date else { return nil }
@@ -935,6 +973,16 @@ private extension Date {
         let components = calendar.dateComponents([.day], from: self, to: interval.end)
 
         return components.day
+    }
+}
+
+private extension Double {
+    func truncate(places: Int) -> Double {
+        let multiplier = pow(10, Double(places))
+        let newDecimal = multiplier * self // move the decimal right
+        let truncated = Double(Int(newDecimal)) // drop the fraction
+        let originalDecimal = truncated / multiplier // move the decimal back
+        return originalDecimal
     }
 }
 
@@ -962,8 +1010,9 @@ private extension Episode {
             sub.append(airDate)
         }
 
-        return Item(title: name, subtitle: sub.joined(separator: "\n"), color: episodeRatingColor,
+        return Item(title: name,
+                    subtitle: sub.joined(separator: "\n"),
+                    color: episodeRatingColor,
                     metadata: Metadata(id: id, destination: .episode, episode: self))
     }
 }
-
