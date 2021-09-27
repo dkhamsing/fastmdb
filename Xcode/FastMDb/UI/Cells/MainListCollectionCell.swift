@@ -39,6 +39,7 @@ class MainListCollectionCell: UITableViewCell {
             collection.dataSource = portraitHandler
             collection.delegate = portraitHandler
             portraitHandler.items = items
+            collection.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
             collection.reloadData()
         case .thumbnailImage:
             collection.dataSource = thumbnailHandler
