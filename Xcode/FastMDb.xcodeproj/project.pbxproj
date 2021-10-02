@@ -62,6 +62,13 @@
 		65883AD02472F39600C1A55A /* Section+Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883ACF2472F39600C1A55A /* Section+Season.swift */; };
 		65883AD2247348E100C1A55A /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65883AD1247348E100C1A55A /* Destination.swift */; };
 		659919A926349BEC0045E20E /* CreditResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659919A826349BEC0045E20E /* CreditResult.swift */; };
+		659EBBE22709054600A8F6D7 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 659EBBE12709054600A8F6D7 /* WidgetKit.framework */; };
+		659EBBE42709054600A8F6D7 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 659EBBE32709054600A8F6D7 /* SwiftUI.framework */; };
+		659EBBE72709054600A8F6D7 /* FMDBWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659EBBE62709054600A8F6D7 /* FMDBWidget.swift */; };
+		659EBBE92709054900A8F6D7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 659EBBE82709054900A8F6D7 /* Assets.xcassets */; };
+		659EBBED2709054900A8F6D7 /* FMDBWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 659EBBDF2709054600A8F6D7 /* FMDBWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		659EBBF52709059100A8F6D7 /* NewsApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657655DD2474E4E00080D6B1 /* NewsApi.swift */; };
+		659EBBF62709059100A8F6D7 /* NewsApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657655D52474D5B30080D6B1 /* NewsApiModel.swift */; };
 		65AFACE425A1134D00F841B0 /* TagsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AFACE325A1134D00F841B0 /* TagsCollectionViewCell.swift */; };
 		65B4733A263D06BF009241A8 /* Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B47339263D06BF009241A8 /* Metadata.swift */; };
 		65B4733C263D0AD1009241A8 /* Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4733B263D0AD1009241A8 /* Display.swift */; };
@@ -94,7 +101,28 @@
 			remoteGlobalIDString = 654D0F54246B169800B2A968;
 			remoteInfo = FastMDb;
 		};
+		659EBBEB2709054900A8F6D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 654D0F4D246B169800B2A968 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 659EBBDE2709054600A8F6D7;
+			remoteInfo = FMDBWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		659EBBEE2709054900A8F6D7 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				659EBBED2709054900A8F6D7 /* FMDBWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		650BAB262496BDFD003A0E95 /* StackButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackButtons.swift; sourceTree = "<group>"; };
@@ -156,6 +184,12 @@
 		65883ACF2472F39600C1A55A /* Section+Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Season.swift"; sourceTree = "<group>"; };
 		65883AD1247348E100C1A55A /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
 		659919A826349BEC0045E20E /* CreditResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditResult.swift; sourceTree = "<group>"; };
+		659EBBDF2709054600A8F6D7 /* FMDBWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FMDBWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		659EBBE12709054600A8F6D7 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		659EBBE32709054600A8F6D7 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		659EBBE62709054600A8F6D7 /* FMDBWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMDBWidget.swift; sourceTree = "<group>"; };
+		659EBBE82709054900A8F6D7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		659EBBEA2709054900A8F6D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65AFACE325A1134D00F841B0 /* TagsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsCollectionViewCell.swift; sourceTree = "<group>"; };
 		65B47339263D06BF009241A8 /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
 		65B4733B263D0AD1009241A8 /* Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Display.swift; sourceTree = "<group>"; };
@@ -195,6 +229,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		659EBBDC2709054600A8F6D7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				659EBBE42709054600A8F6D7 /* SwiftUI.framework in Frameworks */,
+				659EBBE22709054600A8F6D7 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -217,6 +260,8 @@
 			children = (
 				654D0F57246B169800B2A968 /* FastMDb */,
 				654D0FBE246B30E700B2A968 /* FastMDbTests */,
+				659EBBE52709054600A8F6D7 /* FMDBWidget */,
+				659EBBE02709054600A8F6D7 /* Frameworks */,
 				654D0F56246B169800B2A968 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -226,6 +271,7 @@
 			children = (
 				654D0F55246B169800B2A968 /* FastMDb.app */,
 				654D0FBD246B30E700B2A968 /* FastMDbTests.xctest */,
+				659EBBDF2709054600A8F6D7 /* FMDBWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -357,6 +403,25 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		659EBBE02709054600A8F6D7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				659EBBE12709054600A8F6D7 /* WidgetKit.framework */,
+				659EBBE32709054600A8F6D7 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		659EBBE52709054600A8F6D7 /* FMDBWidget */ = {
+			isa = PBXGroup;
+			children = (
+				659EBBE62709054600A8F6D7 /* FMDBWidget.swift */,
+				659EBBE82709054900A8F6D7 /* Assets.xcassets */,
+				659EBBEA2709054900A8F6D7 /* Info.plist */,
+			);
+			path = FMDBWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -367,10 +432,12 @@
 				654D0F51246B169800B2A968 /* Sources */,
 				654D0F52246B169800B2A968 /* Frameworks */,
 				654D0F53246B169800B2A968 /* Resources */,
+				659EBBEE2709054900A8F6D7 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				659EBBEC2709054900A8F6D7 /* PBXTargetDependency */,
 			);
 			name = FastMDb;
 			productName = FastMDb;
@@ -395,13 +462,30 @@
 			productReference = 654D0FBD246B30E700B2A968 /* FastMDbTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		659EBBDE2709054600A8F6D7 /* FMDBWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 659EBBF12709054900A8F6D7 /* Build configuration list for PBXNativeTarget "FMDBWidgetExtension" */;
+			buildPhases = (
+				659EBBDB2709054600A8F6D7 /* Sources */,
+				659EBBDC2709054600A8F6D7 /* Frameworks */,
+				659EBBDD2709054600A8F6D7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FMDBWidgetExtension;
+			productName = FMDBWidgetExtension;
+			productReference = 659EBBDF2709054600A8F6D7 /* FMDBWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		654D0F4D246B169800B2A968 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1140;
+				LastSwiftUpdateCheck = 1220;
 				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = dk;
 				TargetAttributes = {
@@ -411,6 +495,9 @@
 					654D0FBC246B30E700B2A968 = {
 						CreatedOnToolsVersion = 11.4.1;
 						TestTargetID = 654D0F54246B169800B2A968;
+					};
+					659EBBDE2709054600A8F6D7 = {
+						CreatedOnToolsVersion = 12.2;
 					};
 				};
 			};
@@ -429,6 +516,7 @@
 			targets = (
 				654D0F54246B169800B2A968 /* FastMDb */,
 				654D0FBC246B30E700B2A968 /* FastMDbTests */,
+				659EBBDE2709054600A8F6D7 /* FMDBWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -448,6 +536,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		659EBBDD2709054600A8F6D7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				659EBBE92709054900A8F6D7 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,6 +638,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		659EBBDB2709054600A8F6D7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				659EBBF62709059100A8F6D7 /* NewsApiModel.swift in Sources */,
+				659EBBE72709054600A8F6D7 /* FMDBWidget.swift in Sources */,
+				659EBBF52709059100A8F6D7 /* NewsApi.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -549,6 +655,11 @@
 			isa = PBXTargetDependency;
 			target = 654D0F54246B169800B2A968 /* FastMDb */;
 			targetProxy = 654D0FC2246B30E700B2A968 /* PBXContainerItemProxy */;
+		};
+		659EBBEC2709054900A8F6D7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 659EBBDE2709054600A8F6D7 /* FMDBWidgetExtension */;
+			targetProxy = 659EBBEB2709054900A8F6D7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -689,6 +800,7 @@
 		654D0F6A246B169A00B2A968 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = FastMDb/Info.plist;
@@ -707,6 +819,7 @@
 		654D0F6B246B169A00B2A968 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = FastMDb/Info.plist;
@@ -762,6 +875,50 @@
 			};
 			name = Release;
 		};
+		659EBBEF2709054900A8F6D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = FMDBWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dk.FastMDb.FMDBWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		659EBBF02709054900A8F6D7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = FMDBWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dk.FastMDb.FMDBWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -788,6 +945,15 @@
 			buildConfigurations = (
 				654D0FC4246B30E700B2A968 /* Debug */,
 				654D0FC5246B30E700B2A968 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		659EBBF12709054900A8F6D7 /* Build configuration list for PBXNativeTarget "FMDBWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				659EBBEF2709054900A8F6D7 /* Debug */,
+				659EBBF02709054900A8F6D7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

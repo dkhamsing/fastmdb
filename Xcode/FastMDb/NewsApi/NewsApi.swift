@@ -11,6 +11,11 @@ struct NewsApi {
 
     static let ApiKey = "<GET NEWS API KEY>"
 
+    static func category(_ category: String, completion: @escaping (Result<Headline, ApiError>) -> Void) {
+        let url = NewsApi.urlForCategory(category)
+        url?.get(completion: completion)
+    }
+
     static func urlForCategory(_ category: String) -> URL? {
         var urlComponents = NewsApi.baseUrlComponents
 
@@ -31,7 +36,7 @@ struct NewsApi {
         urlComponents.path = Path.search.rawValue
 
         let keyQueryItem = NewsApi.keyQueryItem
-        let languageQueryItem = URLQueryItem(name: "language", value: Tmdb.language)
+        let languageQueryItem = URLQueryItem(name: "language", value: "en")
         let queryQueryItem = URLQueryItem(name: "q", value: query)
 
         urlComponents.queryItems = [ keyQueryItem, languageQueryItem, queryQueryItem ]

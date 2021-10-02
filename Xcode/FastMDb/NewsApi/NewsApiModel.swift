@@ -69,6 +69,13 @@ extension Article {
         return title ?? ""
     }
 
+    var safeTitleNoSource: String {
+        let tns = safeTitle
+
+        let list = tns.components(separatedBy: " - ")
+        return list.first ?? ""
+    }
+
     var safeDescription: String {
         return descriptionOrContent ?? ""
     }
