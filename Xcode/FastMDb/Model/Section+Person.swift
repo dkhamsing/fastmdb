@@ -150,10 +150,18 @@ private extension Credit {
         // biography, imdb
         var bioSection = ItemSection(header: "biography")
         var bioItems: [Item] = []
-        if
-            let biography = biography,
-            biography.isEmpty == false {
-            bioItems.append(Item(title: biography))
+        if let biography = biography,
+           biography.isEmpty == false {
+            let magic = 250
+            if biography.count > magic {
+                let truncated = biography.prefix(magic) + "..."
+                let sect = ItemSection(header: "biography", items: [Item(title: biography)])
+                let it = Item(title: String(truncated),
+                              metadata: Metadata(destination: .sections, sections: [sect]))
+                bioItems.append(it)
+            } else {
+                bioItems.append(Item(title: biography))
+            }
         }
 
         // born, died
