@@ -77,7 +77,9 @@ class MainViewController: UIViewController {
 
     var sortedBy: Tmdb.Url.Kind.Sort? {
         didSet {
-            updateSortedBy(sortedBy, releaseYear)
+            updateSortedByMovies(sortedBy,
+                           releaseYear,
+                           voteCountGreaterThanOrEqual: voteCountGreaterThanOrEqual)
         }
     }
 
@@ -86,6 +88,8 @@ class MainViewController: UIViewController {
             updateTv(tvId)
         }
     }
+
+    var voteCountGreaterThanOrEqual: Int?
 
     // Data
     var screen: ScreenType = .landing
@@ -201,14 +205,21 @@ extension MainViewController {
         let updater = Updater(dataSource: [])
         updateScreen(updater)
 
-        if kind == .highest_grossing {
-            let dc = Calendar.current.dateComponents([.year], from: Date())
-            if let year = dc.year {
-                releaseYear = String(year)
-            }
+        let dc = Calendar.current.dateComponents([.year], from: Date())
+        if let year = dc.year {
+            releaseYear = String(year)
+        }
+
+        switch kind {
+        case .highest_grossing:
+            voteCountGreaterThanOrEqual = nil
             sortedBy = .byRevenue
-            updateSortedBy(sortedBy, releaseYear)
-        } else {
+        case .top_rated_movies:
+            voteCountGreaterThanOrEqual = 1000
+            sortedBy = .byVote
+        case .top_rated_tv:
+            updateSortedByTv(.byVote, releaseYear, voteCountGreaterThanOrEqual: 700)
+        default:
             let provider = ContentDataProvider()
             provider.get(kind) { (movie, tv, people, articles) in
                 let sections = ItemSection.contentSections(kind: kind, movie: movie, tv: tv, people: people, articles: articles)
@@ -329,6 +340,17 @@ private extension MainViewController {
 }
 
 private extension MainViewController {
+
+    func numberedItem(_ it: [Item]) -> [Item] {
+        var items: [Item] = []
+        for (index, element) in it.enumerated() {
+            var mElemented = element
+            mElemented.title = "\(index + 1). " + (element.title ?? "")
+            items.append(mElemented)
+        }
+
+        return items
+    }
 
     func updateCollection(_ collectionId: Int?) {
         screen = .list
@@ -475,32 +497,67 @@ private extension MainViewController {
         }
     }
 
-    func updateSortedBy(_ sortedBy: Tmdb.Url.Kind.Sort?, _ releaseYear: String?) {
+    func updateSortedByMovies(_ sortedBy: Tmdb.Url.Kind.Sort?,
+                        _ releaseYear: String?,
+                        voteCountGreaterThanOrEqual: Int? = nil) {
         guard let sortedBy = sortedBy else { return }
 
         screen = .list
         spinner.startAnimating()
 
-        let url = Tmdb.Url.movies(sortedBy: sortedBy, releaseYear: releaseYear)
+        let url = Tmdb.Url.movies(sortedBy: sortedBy,
+                                  releaseYear: releaseYear,
+                                  voteCountGreaterThanOrEqual: voteCountGreaterThanOrEqual)
         DataProvider.get(url) { (result: Result<MediaSearch, Error>) in
             guard case .success(let search) = result else { return }
 
-            var items: [Item] = []
-            let list = search.results.map { $0.listItemTextImage }.enumerated()
-            for (index, element) in list {
-                var mElemented = element
-                mElemented.title = "\(index + 1). " + (element.title ?? "")
-                items.append(mElemented)
+            let list: [Item]
+            let metadata: Metadata
+            if sortedBy == .byVote {
+                list = search.results.map { $0.listItemWithVotes }
+                metadata = Metadata(destination: .best)
+            } else {
+                list = search.results.map { $0.listItemTextImage }
+                metadata = Metadata(destination: .moviesSortedBy,
+                                   sortedBy: sortedBy,
+                                   display: .textImage())
             }
+            let numbered = self.numberedItem(list)
 
             var footer: String?
             if let _ = releaseYear {
-                footer = "See all time highest grossing"
+                footer = "See all time"
             }
             let sections = [ ItemSection(header: releaseYear ?? "all time",
-                                         items: items,
+                                         items: numbered,
                                          footer: footer,
-                                         metadata: Metadata(destination: .moviesSortedBy, display: .textImage())) ]
+                                         metadata: metadata) ]
+            let u = Updater(dataSource: sections)
+            self.updateScreen(u)
+        }
+    }
+
+    func updateSortedByTv(_ sortedBy: Tmdb.Url.Kind.Sort?,
+                          _ releaseYear: String?,
+                          voteCountGreaterThanOrEqual: Int? = nil) {
+          guard let sortedBy = sortedBy,
+                let voteCountGreaterThanOrEqual = voteCountGreaterThanOrEqual else { return }
+
+        let url = Tmdb.Url.tv(original_language: Tmdb.language, voteCountGreaterThanOrEqual: voteCountGreaterThanOrEqual, sortBy: sortedBy.rawValue, year: releaseYear)
+        DataProvider.get(url) { (result: Result<TvSearch, Error>) in
+            guard case .success(let search) = result else { return }
+
+            let list = search.results.map { $0.listItemWithVotes }
+            let numbered = self.numberedItem(list)
+
+            var footer: String?
+            if let _ = releaseYear {
+                footer = "See all time"
+            }
+            let sections = [ ItemSection(header: releaseYear ?? "all time",
+                                         items: numbered,
+                                         footer: footer,
+                                         metadata: Metadata(destination: .best)) ]
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }

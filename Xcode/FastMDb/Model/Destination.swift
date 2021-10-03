@@ -9,7 +9,8 @@
 import Foundation
 
 enum Destination {
-    case collection,
+    case best,
+         collection,
          episode,
          genreMovie,
          genreTv,

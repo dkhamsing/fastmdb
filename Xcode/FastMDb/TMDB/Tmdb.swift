@@ -144,7 +144,8 @@ extension Tmdb {
         static func movies(sortedBy: Kind.Sort,
                            releaseYear: String? = nil,
                            productionId: Int? = nil,
-                           personId: Int? = nil) -> URL? {
+                           personId: Int? = nil,
+                           voteCountGreaterThanOrEqual: Int? = nil) -> URL? {
 
             var urlComponents = baseComponents
             urlComponents.path = Path.discover
@@ -167,6 +168,12 @@ extension Tmdb {
             if let productionId = productionId {
                 urlComponents.queryItems?.append(
                     URLQueryItem(name: QueryName.company.rawValue, value: String(productionId))
+                )
+            }
+
+            if let vote = voteCountGreaterThanOrEqual {
+                urlComponents.queryItems?.append(
+                    URLQueryItem(name: "vote_count.gte" , value: String(vote))
                 )
             }
 
@@ -240,7 +247,10 @@ extension Tmdb {
             return urlComponents.url
         }
 
-        static func tv(original_language: String, voteCountGreaterThanOrEqual: Int, sortBy: String) -> URL? {
+        static func tv(original_language: String,
+                       voteCountGreaterThanOrEqual: Int,
+                       sortBy: String,
+                       year: String? = nil) -> URL? {
             var urlComponents = baseComponents
             urlComponents.path = "\(Path.tvDiscover)"
 
@@ -250,6 +260,12 @@ extension Tmdb {
             urlComponents.queryItems?.append(qi1)
             urlComponents.queryItems?.append(qi2)
             urlComponents.queryItems?.append(qi3)
+
+            if let year = year {
+                urlComponents.queryItems?.append(
+                    URLQueryItem(name: "first_air_date_year", value: year)
+                )
+            }
 
             return urlComponents.url
         }
@@ -378,6 +394,8 @@ extension Tmdb {
             enum Movies: String, CaseIterable {
                 case popular,
                      highest_grossing,
+                     top_rated_movies,
+                     top_rated_tv,
                      top_rated,
                      now_playing,
                      upcoming
@@ -393,7 +411,11 @@ extension Tmdb {
                     case .highest_grossing:
                         return "Highest Grossing"
                     case .top_rated:
-                        return "Top Rated"
+                        return "Best"
+                    case .top_rated_movies:
+                        return "Top Rated Movies"
+                    case .top_rated_tv:
+                        return "Top Rated TV"
                     }
                 }
 
@@ -407,7 +429,7 @@ extension Tmdb {
                         return .airing_today
                     case .upcoming:
                         return .on_the_air
-                    case .highest_grossing:
+                    case .highest_grossing, .top_rated_tv, .top_rated_movies:
                         return nil
                     }
                 }
@@ -420,6 +442,13 @@ extension Tmdb {
             enum Sort: String {
                 case byRevenue = "revenue.desc"
                 case byVote = "vote_average.desc"
+
+                var display: String {
+                    switch self {
+                    case .byRevenue: return Kind.Movies.highest_grossing.title
+                    case .byVote: return Kind.Movies.top_rated.title
+                    }
+                }
             }
 
             enum Tv: String, CaseIterable {

@@ -746,6 +746,8 @@ extension Tmdb.Url.Kind.Movies {
             string = "dollarsign.circle"
         case .top_rated:
             string = "hand.thumbsup"
+        case .top_rated_movies, .top_rated_tv:
+            string = "heart"
         case .upcoming:
             string = "calendar"
         }

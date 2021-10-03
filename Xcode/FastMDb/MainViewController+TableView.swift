@@ -244,8 +244,8 @@ private extension MainViewController {
             let contentView = VideoView(items: items)
             let controller = UIHostingController(rootView: contentView)
             navigationController?.pushViewController(controller, animated: true)
-//        default:
-//            print("todo for \(item)")
+        default:
+            print("todo for \(item)")
         }
     }
 
@@ -261,6 +261,11 @@ private extension MainViewController {
             let s = section.metadata?.destination else { return }
 
         switch s {
+        case .best:
+            let controller = MainViewController()
+            controller.loadContent(.top_rated)
+            controller.screen = .list
+            navigationController?.pushViewController(controller, animated: true)
         case .items:
             let controller = MainViewController()
             controller.title = section.metadata?.destinationTitle
@@ -273,8 +278,9 @@ private extension MainViewController {
             navigationController?.pushViewController(controller, animated: true)
         case .moviesSortedBy:
             let controller = MainViewController()
-            controller.title = Tmdb.Url.Kind.Movies.highest_grossing.title
-            controller.sortedBy = .byRevenue
+            controller.title = section.metadata?.sortedBy?.display
+            controller.voteCountGreaterThanOrEqual = 1000
+            controller.sortedBy = section.metadata?.sortedBy
             navigationController?.pushViewController(controller, animated: true)
         default:
             print("handle button not implemented for \(s)")
