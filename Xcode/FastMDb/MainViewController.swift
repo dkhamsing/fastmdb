@@ -515,7 +515,7 @@ private extension MainViewController {
             let metadata: Metadata
             if sortedBy == .byVote {
                 list = search.results.map { $0.listItemWithVotes }
-                metadata = Metadata(destination: .best)
+                metadata = Metadata(destination: .best, display: .textImage())
             } else {
                 list = search.results.map { $0.listItemTextImage }
                 metadata = Metadata(destination: .moviesSortedBy,
