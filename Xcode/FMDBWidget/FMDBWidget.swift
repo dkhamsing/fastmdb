@@ -207,12 +207,15 @@ private struct Log {
 private extension Headline {
 
     static var excludeDomains: [String] = [
+        "dailymail.co.uk",
         "foxbusiness.com",
         "foxnews.com",
         "pagesix.com",
         "news.google.com",
         "nypost.com",
-        "tmz.com"
+        "tmz.com",
+        "yourtango.com",
+        "youtube.com"
     ]
 
     static var excludeKeywords: [String] = [
