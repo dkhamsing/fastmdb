@@ -41,7 +41,7 @@ class SquareCollectionViewCell: UICollectionViewCell {
 
     func setup() {
         imageView.backgroundColor = .systemGray5
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.layer.masksToBounds = true
 
