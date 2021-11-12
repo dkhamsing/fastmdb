@@ -29,7 +29,10 @@ struct TV: Codable {
     var original_language: String?
     var overview: String?
     var networks: [Tmdb.Network]?
+
+    var backdrop_path: String?
     var poster_path: String?
+
     var production_companies: [Production]?
     var production_countries: [ProductionCountry]?
     var tagline: String?
@@ -76,7 +79,10 @@ extension TV {
              original_language,
              overview,
              networks,
+
+             backdrop_path,
              poster_path,
+
              production_companies,
              production_countries,
              tagline,

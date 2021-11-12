@@ -73,12 +73,14 @@ private extension ItemSection {
 
 private extension TvSearch {
     var section: ItemSection? {
-        let items = results.map { $0.listItem }
+        let items = results.map { $0.listItemTextImage }
 
         guard items.count > 0 else { return nil }
 
         let count = total_results
 
-        return ItemSection(header: "TV (\(count))", items: items)
+        return ItemSection(header: "TV (\(count))",
+                           items: items,
+                           metadata: Metadata(display: .textImage()))        
     }
 }

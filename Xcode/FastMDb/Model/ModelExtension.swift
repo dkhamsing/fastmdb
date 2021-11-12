@@ -604,7 +604,13 @@ private extension MultiSearchResult {
     }
 
     var tv: TV {
-        return TV(id: id ?? 0, name: name ?? "", original_name: original_name ?? "", first_air_date: first_air_date, vote_average: vote_average ?? 0, vote_count: 0)
+        return TV(id: id ?? 0,
+                  name: name ?? "",
+                  original_name: original_name ?? "",
+                  first_air_date: first_air_date,
+                  vote_average: vote_average ?? 0,
+                  vote_count: 0,
+                  backdrop_path: backdrop_path)
     }
 
 }
@@ -787,6 +793,26 @@ extension TV {
         sub.append(contentsOf: subtitleLanguageCountry)
 
         item.subtitle = sub.joined(separator: Constant.separator)
+
+        return item
+    }
+
+    var listItemTextImage: Item {
+        var item = listItemNoSub
+
+        var sub: [String] = []
+        if first_air_date.yearDisplay != "" {
+            sub.append(first_air_date.yearDisplay)
+        }
+        sub.append(contentsOf: subtitleLanguageCountry)
+
+        item.subtitle = sub.joined(separator: Constant.separator)
+
+        let imageUrl = Tmdb.Url.Image.still(path: backdrop_path, size: .medium)
+
+        var met = item.metadata
+        met?.imageUrl = imageUrl
+        item.metadata = met
 
         return item
     }
