@@ -11,6 +11,11 @@ struct Tmdb {
 
     static let language = "en"
 
+    struct Constant {
+        static let host = "api.themoviedb.org"
+        static let imageBaseUrl = "https://image.tmdb.org/t/p/"
+    }
+
 }
 
 private extension Tmdb {
