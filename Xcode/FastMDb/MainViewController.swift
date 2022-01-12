@@ -366,9 +366,26 @@ private extension MainViewController {
                 sections.append(imageSection)
             }
 
+            var metItems: [Item] = []
+            metItems.append(
+                Item(title: String(movies.count), subtitle: "Number of movies")
+            )
+
+            let totalRevenue = movies.compactMap { $0.revenue }.reduce(0, +)
+            if totalRevenue > 0 {
+                metItems.append(
+                    Item(title: totalRevenue.display, subtitle: "Total Revenue")
+                )
+            }
+
+            sections.append(
+                ItemSection(items: metItems)
+            )
+
             let items = movies.map { $0.listItemCollection }
             sections.append(
-                ItemSection(items: items)
+                ItemSection(items: items,
+                            metadata: Metadata(display: .textImage()))
             )
 
             let u = Updater(dataSource: sections)

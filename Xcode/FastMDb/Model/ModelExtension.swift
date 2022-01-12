@@ -528,10 +528,11 @@ extension Media {
             sub.append(revenue.display + " revenue")
         }
 
+        let imageUrl = Tmdb.Url.Image.still(path: backdrop_path, size: .medium)
         return Item(title: titleDisplay,
                     subtitle: sub.joined(separator: "\n"),
                     color: ratingColor,
-                    metadata: Metadata(id: id, destination: .movie))
+                    metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl))
     }
 
     var released: Bool {
