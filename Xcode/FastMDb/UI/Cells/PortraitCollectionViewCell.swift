@@ -122,8 +122,8 @@ class PortraitCollectionViewCell: UICollectionViewCell {
             label.heightAnchor.constraint(equalToConstant: height),
 
             label2.topAnchor.constraint(equalTo: label.bottomAnchor),
-            label2.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            label2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            label2.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
+            label2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
             label2.heightAnchor.constraint(equalToConstant: height),
 
             label3.topAnchor.constraint(equalTo: label2.bottomAnchor),
