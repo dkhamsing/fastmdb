@@ -368,7 +368,7 @@ private extension MainViewController {
 
             var metItems: [Item] = []
             metItems.append(
-                Item(title: String(movies.count), subtitle: "Number of movies")
+                Item(title: String(movies.count), subtitle: "Number of Movies")
             )
 
             let totalRevenue = movies.compactMap { $0.revenue }.reduce(0, +)
