@@ -330,7 +330,7 @@ private extension TV {
         }
 
         // awards
-        if let id = external_ids?.validImdbId {
+        if let id = external_ids?.validImdbId, isCurrent {
             let url = Imdb.awardsUrl(id: id, kind: .title)
             let item = Item(title: "Awards & Nominations",
                             metadata: Metadata(url: url, destination: .url))

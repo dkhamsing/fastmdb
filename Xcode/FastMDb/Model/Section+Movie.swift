@@ -315,7 +315,8 @@ private extension Media {
         }
 
         // awards
-        if let id = external_ids?.validImdbId {
+        if let id = external_ids?.validImdbId,
+           status ?? "" == "Released" {
             let url = Imdb.awardsUrl(id: id, kind: .title)
             let item = Item(title: "Awards & Nominations",
                             metadata: Metadata(url: url, destination: .url))
