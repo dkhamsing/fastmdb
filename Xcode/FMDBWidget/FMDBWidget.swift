@@ -108,6 +108,9 @@ struct NewsWidgetEntryView : View {
     var entry: WidgetEntry
 
     var body: some View {
+        ZStack {
+            Color.red.opacity(0.2)
+
         switch widgetFamily {
         case .systemSmall:
             entry.articles.first.map {
@@ -128,6 +131,8 @@ struct NewsWidgetEntryView : View {
                 }
             }
             .padding()
+        }
+
         }
     }
 
