@@ -484,6 +484,7 @@ private extension Credits {
     var storySection: ItemSection? {
         return jobSection([CrewJob.Novel.rawValue,
                            CrewJob.Story.rawValue,
+                           CrewJob.OriginalWriter.rawValue,
                            CrewJob.ShortStory.rawValue], "story")
     }
 
