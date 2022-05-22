@@ -495,8 +495,6 @@ private extension Credits {
         return jobSection(jobs, "written by")
     }
 
-
-
 }
 
 private extension Media {
