@@ -142,21 +142,59 @@ final class ImageDataProvider: DataProvider {
 
 }
 
+struct MovieDataModel {
+    var movie: Media?
+    var articles: [Article]?
+    var albums: [iTunes.Album]?
+    var moreDirector: MoreDirector?
+}
+
+struct MoreDirector {
+    var name: String?
+    var media: [Media]?
+}
+
 final class MovieDataProvider: DataProvider {
 
-    func get(_ id: Int?, completion: @escaping (Media?, [Article]?, UIImage?, [iTunes.Album]?) -> Void) {
-        var movie: Media?
-        var articles: [Article]?
-        var albums: [iTunes.Album]?
+    func get(_ id: Int?, completion: @escaping (MovieDataModel) -> Void) {
+        var mdm = MovieDataModel()
 
         let url = Tmdb.Url.movie(movieId: id)
         fetchItem(url: url) { (item: Media?) in
-            movie = item
+            mdm.movie = item
+
+            let jobs = [CrewJob.Director.rawValue]
+                let job =
+            item?.credits?.crew.filter { item in
+                    var condition: Bool = false
+                    for job in jobs {
+                        condition = condition || item.job == job
+                    }
+                    return condition
+                }
+
+            if job?.count ?? 0 > 0,
+               let moreUrl = Tmdb.Url.movies(
+                sortedBy: .byRevenue,
+                personId: job?.first?.id) {
+                self.fetchItem(url: moreUrl) { (res: MediaSearch?) in
+                    let med = res?.results
+                        .filter { $0.id != id ?? 0 }
+                        .filter { $0.release_date ?? "" != "" }
+                        .filter { $0.poster_path ?? "" != "" }
+
+                    if med?.count ?? 0 > 0 {
+                        mdm.moreDirector = MoreDirector(
+                            name: job?.first?.name, media: med
+                        )
+                    }
+                }
+            }
 
             if let name = item?.title,
                let url = NewsApi.urlForQuery("\(name) movie") {
                 self.fetchArticles(url: url) { a in
-                    articles = a
+                    mdm.articles = a
                 }
             }
 
@@ -166,14 +204,14 @@ final class MovieDataProvider: DataProvider {
                     if
                         let count = item?.albums.count,
                         count > 0 {
-                        albums = item?.albums
+                        mdm.albums = item?.albums
                     }
                 }
             }
         }
 
         group.notify(queue: .main) {
-            completion(movie, articles, nil, albums)
+            completion(mdm)
         }
     }
 

@@ -10,9 +10,7 @@ import UIKit
 
 extension Media {
     
-    func sections(articles: [Article]?,
-                  albums: [iTunes.Album]?,
-                  limit: Int) -> [ItemSection] {
+    func sections(mdm: MovieDataModel, limit: Int) -> [ItemSection] {
         var list: [ItemSection] = []
 
         if let section = imagesSection {
@@ -23,7 +21,7 @@ extension Media {
             list.append(section)
         }
 
-        if let section = Article.newsSection(articles) {            
+        if let section = Article.newsSection(mdm.articles) {
             list.append(section)
         }
 
@@ -51,7 +49,7 @@ extension Media {
             list.append(section)
         }
 
-        if let section = mediaSection(albums: albums) {
+        if let section = mediaSection(albums: mdm.albums) {
             list.append(section)
         }
 
@@ -89,6 +87,10 @@ extension Media {
         }
 
         if let section = credits?.creditsSection(limit: 6) {
+            list.append(section)
+        }
+
+        if let section = moreDirectorSection(mdm.moreDirector) {
             list.append(section)
         }
 
@@ -329,6 +331,15 @@ private extension Media {
         }
 
         return ItemSection(items: items)
+    }
+
+    func moreDirectorSection(_ md: MoreDirector?) -> ItemSection? {
+        guard let md = md else { return nil }
+
+        let items = md.media?.map { $0.listItemImage }
+        return ItemSection(header: "More by \(md.name ?? "the same director")",
+                           items: items,
+                           metadata: Metadata(display: .portraitImage()))
     }
 
     var productionSection: ItemSection? {

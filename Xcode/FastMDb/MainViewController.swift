@@ -437,10 +437,10 @@ private extension MainViewController {
         spinner.startAnimating()
 
         let provider = MovieDataProvider()
-        provider.get(movieId) { (movie, articles, image, albums) in
-            guard let movie = movie else { return }
+        provider.get(movieId) { mdm in
+            guard let movie = mdm.movie else { return }
 
-            let sections = movie.sections(articles: articles, albums: albums, limit: limit)
+            let sections = movie.sections(mdm: mdm, limit: limit)
             let u = Updater(dataSource:sections)
             self.updateScreen(u)
         }
