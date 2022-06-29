@@ -71,18 +71,18 @@ private extension MainViewController {
         spinner.startAnimating()
 
         let provider = SearchDataProvider()
-        provider.get(query) { (movie, tv, people, articles) in
-            let section = ItemSection.searchSection(movie, tv, people, articles)
+        provider.get(query) { (dpm) in
+            let section = ItemSection.searchSection(dpm.mediaSearch, dpm.tvSearch, dpm.peopleSearch, dpm.articles)
             let u = Updater(dataSource: section)
             self.updateScreen(u)
 
             self.screen = .search
 
             let buttonConfigs = [
-                StackButtonConfiguration(label: "News", value: articles?.count, kind: .news, showCount: false),
-                StackButtonConfiguration(label: "Movies", value: movie?.total_results, kind: .movie),
-                StackButtonConfiguration(label: "TV", value: tv?.total_results, kind: .tv),
-                StackButtonConfiguration(label: "People", value: people?.total_results, kind: .people)
+                StackButtonConfiguration(label: "News", value: dpm.articles?.count, kind: .news, showCount: false),
+                StackButtonConfiguration(label: "Movies", value: dpm.mediaSearch?.total_results, kind: .movie),
+                StackButtonConfiguration(label: "TV", value: dpm.tvSearch?.total_results, kind: .tv),
+                StackButtonConfiguration(label: "People", value: dpm.peopleSearch?.total_results, kind: .people)
             ]
             self.searchResultsButtons.update(buttonConfigs)
 

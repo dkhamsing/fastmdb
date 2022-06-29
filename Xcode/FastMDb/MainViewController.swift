@@ -221,8 +221,8 @@ extension MainViewController {
             updateSortedByTv(.byVote, releaseYear, voteCountGreaterThanOrEqual: 700)
         default:
             let provider = ContentDataProvider()
-            provider.get(kind) { (movie, tv, people, articles) in
-                let sections = ItemSection.contentSections(kind: kind, movie: movie, tv: tv, people: people, articles: articles)
+            provider.get(kind) { (dpm) in
+                let sections = ItemSection.contentSections(kind: kind, movie: dpm.mediaSearch, tv: dpm.tvSearch, people: dpm.peopleSearch, articles: dpm.articles)
                 let updater = Updater(dataSource: sections)
                 self.updateScreen(updater)
             }
@@ -357,12 +357,12 @@ private extension MainViewController {
         spinner.startAnimating()
 
         let provider = CollectionDataProvider()
-        provider.get(collectionId) { (movies, image) in
-            guard let movies = movies else { return }
+        provider.get(collectionId) { (dpm) in
+            guard let movies = dpm.movies else { return }
 
             var sections: [ItemSection] = []
 
-            if let imageSection = image?.backdropsSection {
+            if let imageSection = dpm.images?.backdropsSection {
                 sections.append(imageSection)
             }
 
@@ -465,12 +465,12 @@ private extension MainViewController {
         spinner.startAnimating()
 
         let provider = PersonDataProvider()
-        provider.get(personId) { (credit, articles, highGross) in
-            guard let credit = credit else { return }
+        provider.get(personId) { (dpm) in
+            guard let credit = dpm.credit else { return }
 
             let sections = ItemSection.personSections(credit: credit,
-                                                      articles: articles,
-                                                      highGross: highGross,
+                                                      articles: dpm.articles,
+                                                      highGross: dpm.mediaSearch,
                                                       limit: limit)
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
@@ -482,18 +482,18 @@ private extension MainViewController {
         spinner.startAnimating()
 
         let provider = ProductionDataProvider()
-        provider.get(productionId) { (movie, tv, highGross) in
+        provider.get(productionId) { (dpm) in
             var sections: [ItemSection] = []
 
-            if let s = highGross?.highestGrossingSections {
+            if let s = dpm.mediaSearch2?.highestGrossingSections {
                 sections.append(contentsOf: s)
             }
 
-            if let s = movie?.productionSections {
+            if let s = dpm.mediaSearch?.productionSections {
                 sections.append(contentsOf: s)
             }
 
-            if let s = tv?.productionSections {
+            if let s = dpm.tvSearch?.productionSections {
                 sections.append(contentsOf: s)
             }
 
@@ -592,10 +592,10 @@ private extension MainViewController {
         spinner.startAnimating()
 
         let provider = TvDataProvider()
-        provider.get(id) { (tv, image, articles, albums) in
-            guard let tv = tv else { return }
+        provider.get(id) { (dpm) in
+            guard let tv = dpm.tv else { return }
 
-            let sections = tv.sections(articles: articles, albums: albums)
+            let sections = tv.sections(articles: dpm.articles, albums: dpm.albums)
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }

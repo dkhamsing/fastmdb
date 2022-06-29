@@ -10,7 +10,7 @@ import UIKit
 
 extension Media {
     
-    func sections(mdm: MovieDataModel, limit: Int) -> [ItemSection] {
+    func sections(mdm: DataProviderModel, limit: Int) -> [ItemSection] {
         var list: [ItemSection] = []
 
         if let section = imagesSection {
