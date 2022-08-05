@@ -428,7 +428,10 @@ private extension Credit {
         return sections
     }
 
-    func movieCrewReleasedSection(crew: [Credit]?, limit: Int) -> ItemSection? {
+    func movieCrewReleasedSection(crew: [Credit]?,
+                                  isShowingDirector: Bool = false,
+                                  header: String = "movie credits\(Constant.separator)latest",
+                                  limit: Int) -> ItemSection? {
         guard let crew = crew else { return nil }
 
         let upcoming = creditsUpcoming(crew)
@@ -436,7 +439,9 @@ private extension Credit {
         let crewSorted = crew
             .filter { released.contains($0.original_title) == false }
             .sorted(by: { $0.release_date ?? "" > $1.release_date ?? ""})
+
         let collapsedItems = Credit.collapsedMovieCrewItems(crewSorted)
+            .filter { ($0.subtitle ?? "").contains(CrewJob.Director.rawValue) == isShowingDirector }
         guard collapsedItems.count > 0 else { return nil }
 
         var total: String?
@@ -444,7 +449,7 @@ private extension Credit {
             total = String.allCreditsText(collapsedItems.count)
         }
 
-        let section = ItemSection(header: "movie credits\(Constant.separator)latest", items: Array(collapsedItems.prefix(limit)), footer: total,
+        let section = ItemSection(header: header, items: Array(collapsedItems.prefix(limit)), footer: total,
                                   metadata: Metadata(destination: .items, destinationTitle: "Movies", items: collapsedItems))
 
         return section
@@ -466,6 +471,14 @@ private extension Credit {
         var sections: [ItemSection] = []
 
         if let section = movieCrewUpcomingSection(movie_credits?.crew) {
+            sections.append(section)
+        }
+
+        if let section = movieCrewReleasedSection(
+            crew: movie_credits?.crew,
+            isShowingDirector: true,
+            header: "director credits",
+            limit: limit) {
             sections.append(section)
         }
 
