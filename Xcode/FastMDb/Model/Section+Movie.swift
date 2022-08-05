@@ -628,7 +628,7 @@ private extension Media {
             return "\(m)m"
         }
 
-        return "\(h)h \(m)m"
+        return m > 0 ? "\(h)h \(m)m" : "\(h)h"
     }
 
 }
