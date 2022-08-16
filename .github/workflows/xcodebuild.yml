@@ -1,10 +1,10 @@
-name: Xcode build
+name: Xcode build iOS 14
 
 on: [push, pull_request]
 
 jobs:
   Build:
-    runs-on: macOS-latest
+    runs-on: macos-11
 
     steps:
     - uses: actions/checkout@v2
