@@ -30,21 +30,21 @@ struct Constant {
     }
 
     struct Vote {
-        var voteCount: Int
-        var voteAverage: Double?
+        var count: Int
+        var average: Double?
         var threshold: Int = Constant.voteThreshold
 
         var ratingDisplay: String? {
-            guard let voteAverage = voteAverage,
-                  voteCount > threshold else { return nil }
+            guard let voteAverage = average,
+                  count > threshold else { return nil }
 
             return "\(String(format: "%.2f", voteAverage))/10"
         }
 
         var voteDisplay: String? {
-            guard voteCount > threshold else { return nil }
+            guard count > threshold else { return nil }
 
-            let number = NSNumber(value: voteCount)
+            let number = NSNumber(value: count)
             guard let formattedValue = Constant.numberFormatter.string(from: number) else { return nil }
 
             return "\(formattedValue) votes"

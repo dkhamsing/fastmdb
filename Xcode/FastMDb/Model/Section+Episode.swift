@@ -129,10 +129,10 @@ private extension Episode {
 
 private extension Episode {
     var ratingDisplay: String? {        
-        return Constant.Vote(voteCount: vote_count, voteAverage: vote_average).ratingDisplay
+        return Constant.Vote(count: vote_count, average: vote_average).ratingDisplay
     }
 
     var voteDisplay: String? {
-        return Constant.Vote(voteCount: vote_count).voteDisplay
+        return Constant.Vote(count: vote_count).voteDisplay
     }
 }

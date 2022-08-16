@@ -563,13 +563,13 @@ private extension Media {
     }
 
     var voteDisplay: String? {
-        return Constant.Vote(voteCount: vote_count).voteDisplay
+        return Constant.Vote(count: vote_count).voteDisplay
     }
 
     var ratingDisplay: String? {
         guard released else { return nil }
 
-        return Constant.Vote(voteCount: vote_count, voteAverage: vote_average).ratingDisplay
+        return Constant.Vote(count: vote_count, average: vote_average).ratingDisplay
     }
 
     var recentReleaseItem: Item? {
