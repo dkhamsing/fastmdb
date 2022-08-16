@@ -131,7 +131,7 @@ private extension Episode {
     var ratingDisplay: String? {
         guard vote_count > Constant.voteThreshold else { return nil }
 
-        return "\(vote_average)/10"
+        return "\(String(format: "%.2f", vote_average))/10"
     }
 
     var voteDisplay: String? {

@@ -573,7 +573,7 @@ private extension Media {
             released,
             vote_count > Constant.voteThreshold else { return nil }
 
-        return "\(vote_average)/10"
+        return "\(String(format: "%.2f", vote_average))/10"
     }
 
     var recentReleaseItem: Item? {
