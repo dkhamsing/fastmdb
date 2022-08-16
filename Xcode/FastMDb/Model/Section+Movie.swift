@@ -565,7 +565,14 @@ private extension Media {
     var voteDisplay: String? {
         guard vote_count > Constant.voteThreshold else { return nil }
 
-        return "\(vote_count) votes"
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+
+        let number = NSNumber(value: vote_count)
+        guard let formattedValue = formatter.string(from: number) else { return nil }
+
+        return "\(formattedValue) votes"
     }
 
     var ratingDisplay: String? {
