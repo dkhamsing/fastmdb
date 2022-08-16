@@ -128,22 +128,11 @@ private extension Episode {
 }
 
 private extension Episode {
-    var ratingDisplay: String? {
-        guard vote_count > Constant.voteThreshold else { return nil }
-
-        return "\(String(format: "%.2f", vote_average))/10"
+    var ratingDisplay: String? {        
+        return Constant.Vote(voteCount: vote_count, voteAverage: vote_average).ratingDisplay
     }
 
     var voteDisplay: String? {
-        guard vote_count > Constant.voteThreshold else { return nil }
-
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 0
-
-        let number = NSNumber(value: vote_count)
-        guard let formattedValue = formatter.string(from: number) else { return nil }
-
-        return "\(formattedValue) votes"
+        return Constant.Vote(voteCount: vote_count).voteDisplay
     }
 }
