@@ -39,14 +39,14 @@ struct Constant {
             guard let voteAverage = average,
                   count > threshold else { return nil }
 
-            return "\(String(format: "%.2f", voteAverage))/10"
+            return "\(String(format: "%.1f", voteAverage))/10"
         }
 
         var ratingDisplayAttributed: NSAttributedString? {
             guard let voteAverage = average,
                   count > threshold else { return nil }
 
-            let attributed = NSMutableAttributedString(string: (String(format: "%.2f", voteAverage)))
+            let attributed = NSMutableAttributedString(string: (String(format: "%.1f", voteAverage)))
             let attr: NSAttributedString = NSAttributedString(string: "/10",
                                                               attributes: [.foregroundColor : UIColor.secondaryLabel])
             attributed.append(attr)
