@@ -497,7 +497,11 @@ extension Media {
 
     var listItemWithVotes: Item {
         var sub = listItemSub
-        sub.append("\(vote_count) votes")
+
+        if let str = Constant.Vote(count: vote_count).voteDisplay {
+            sub.append(str)
+        }
+
         sub.append("\(vote_average)")
         let imageUrl = Tmdb.Url.Image.still(path: backdrop_path, size: .medium)
         return Item(title: titleDisplay, subtitle: sub.joined(separator: Constant.separator), color: ratingColor,
@@ -841,7 +845,11 @@ extension TV {
             sub.append(first_air_date.yearDisplay)
         }
         sub.append(contentsOf: subtitleLanguageCountry)
-        sub.append("\(vote_count) votes")
+
+        if let str = Constant.Vote(count: vote_count).voteDisplay {
+            sub.append(str)
+        }
+        
         sub.append("\(vote_average)")
 
         item.subtitle = sub.joined(separator: Constant.separator)

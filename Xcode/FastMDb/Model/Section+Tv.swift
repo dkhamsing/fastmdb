@@ -356,9 +356,9 @@ private extension TV {
             return ItemSection(header: "rating", items: [item])
         }
 
-        let rating = "\(vote_average)/10"
-
-        let vote = "\(vote_count) votes"
+        let helper = Constant.Vote(count: vote_count, average: vote_average)
+        let rating = helper.ratingDisplay
+        var vote = helper.voteDisplay
 
         var color: UIColor?
         if vote_count > Constant.voteThreshold {
