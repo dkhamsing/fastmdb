@@ -46,7 +46,7 @@ struct Constant {
             guard let voteAverage = average,
                   count > threshold else { return nil }
 
-            let font = UIFont.preferredFont(forTextStyle: .title2)
+            let font = UIFont.preferredFont(forTextStyle: .title1)
             let attributed = NSMutableAttributedString(string: (String(format: "%.1f", voteAverage)),
                                                        attributes: [.font: font])
             attributed.append(
