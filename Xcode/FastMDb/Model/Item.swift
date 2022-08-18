@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 struct Item {
+    var attributedTitle: NSAttributedString?
     var title: String?
     var subtitle: String?
     var color: UIColor?

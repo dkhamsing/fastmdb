@@ -353,7 +353,7 @@ private extension Media {
     var ratingSection: ItemSection? {
         guard let rating = ratingDisplay else { return nil }
 
-        let item = Item(title: rating, subtitle: voteDisplay, color: vote_average.color)
+        let item = Item(attributedTitle: rating, subtitle: voteDisplay, color: vote_average.color)
         var section = ItemSection(header: "rating", items: [item])
 
         if let count = reviews?.results.count,
@@ -566,10 +566,10 @@ private extension Media {
         return Constant.Vote(count: vote_count).voteDisplay
     }
 
-    var ratingDisplay: String? {
+    var ratingDisplay: NSAttributedString? {
         guard released else { return nil }
 
-        return Constant.Vote(count: vote_count, average: vote_average).ratingDisplay
+        return Constant.Vote(count: vote_count, average: vote_average).ratingDisplayAttributed
     }
 
     var recentReleaseItem: Item? {

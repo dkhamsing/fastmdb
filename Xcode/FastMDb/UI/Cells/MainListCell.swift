@@ -11,7 +11,11 @@ class MainListCell: UITableViewCell {
 
     var item: Item? {
         didSet {
-            textLabel?.text = item?.title
+            if let title = item?.attributedTitle {
+                textLabel?.attributedText = title
+            } else {
+                textLabel?.text = item?.title
+            }
             detailTextLabel?.text = item?.subtitle
             accessoryType = item?.metadata?.destination == nil ? .none : .disclosureIndicator
             imageView?.image = item?.metadata?.link?.image
