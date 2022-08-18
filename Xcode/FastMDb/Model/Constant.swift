@@ -46,10 +46,14 @@ struct Constant {
             guard let voteAverage = average,
                   count > threshold else { return nil }
 
-            let attributed = NSMutableAttributedString(string: (String(format: "%.1f", voteAverage)))
-            let attr: NSAttributedString = NSAttributedString(string: "/10",
-                                                              attributes: [.foregroundColor : UIColor.secondaryLabel])
-            attributed.append(attr)
+            let font = UIFont.preferredFont(forTextStyle: .title2)
+            let attributed = NSMutableAttributedString(string: (String(format: "%.1f", voteAverage)),
+                                                       attributes: [.font: font])
+            attributed.append(
+                NSAttributedString(string: "/10",
+                                   attributes: [.foregroundColor: UIColor.secondaryLabel,
+                                                .font: font])
+            )
 
             return attributed
         }
