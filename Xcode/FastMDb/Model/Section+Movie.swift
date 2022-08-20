@@ -408,10 +408,10 @@ private extension Media {
             return s
         }
 
-        if let s = status,
-            s == "Canceled" {
-            return s
-        }
+//        if let s = status,
+//            s == "Canceled" {
+//            return s
+//        }
 
         if let year = releaseYear {
             return year
