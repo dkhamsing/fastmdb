@@ -119,8 +119,7 @@ extension Media {
     var ratingTvCreditSection: ItemSection? {
         guard vote_count > 0 else { return nil }
 
-        let rating = "\(vote_average)/10"
-        let item = Item(title: rating, subtitle: voteDisplay, color: vote_average.color)
+        let item = Item(attributedTitle: ratingDisplay, subtitle: voteDisplay, color: vote_average.color)
         var section = ItemSection(header: "rating", items: [item])
 
         if let count = reviews?.results.count,
@@ -567,7 +566,10 @@ private extension Media {
     }
 
     var ratingDisplay: NSAttributedString? {
-        guard released else { return nil }
+        if !released, // movie
+           seasons?.count ?? 0 == 0 { // tv
+            return nil
+        }
 
         return Constant.Vote(count: vote_count, average: vote_average).ratingDisplayAttributed
     }
