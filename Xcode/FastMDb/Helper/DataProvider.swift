@@ -61,6 +61,41 @@ private extension DataProvider {
 
 }
 
+final class WikiFxDataProvider: DataProvider {
+
+    func get(_ name: String?, completion: @escaping (Bool) -> Void) {
+        guard let url = name?.wikifxUrl else {
+            comp { completion(false) }
+            return
+        }
+
+        Log.log(#function + ": \(url.absoluteString)")
+
+        let session = URLSession.shared
+        session.dataTask(with: url) { data, response, __ in
+            guard let httpResp = response as? HTTPURLResponse,
+            httpResp.statusCode == 200 else {
+                self.comp { completion(false) }
+                return
+            }
+
+            guard let data = data else {
+                self.comp { completion(false) }
+                return
+            }
+
+            self.comp { completion(true) }
+        }.resume()
+    }
+
+    private func comp(task: @escaping () -> Void) {
+        DispatchQueue.main.async {
+            task()
+        }
+    }
+
+}
+
 final class CollectionDataProvider: DataProvider {
 
     func get(_ collectionId: Int?, completion: @escaping (DataProviderModel) -> Void) {

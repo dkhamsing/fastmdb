@@ -441,8 +441,23 @@ private extension MainViewController {
             guard let movie = mdm.movie else { return }
 
             let sections = movie.sections(mdm: mdm, limit: limit)
-            let u = Updater(dataSource:sections)
+            let u = Updater(dataSource: sections)
             self.updateScreen(u)
+
+            let wikiProvider = WikiFxDataProvider()
+            wikiProvider.get(movie.title) { success in
+                guard success else { return }
+
+                let item = Item(title: "WikiFX",
+                                metadata: Metadata(
+                                    url: movie.title?.wikifxUrl, destination: .url, link: .link
+                                ))
+                let section = ItemSection(header: "vfx", items: [item])
+                var temp = sections
+                temp.append(section)
+                let u2 = Updater(dataSource: temp)
+                self.updateScreen(u2)
+            }
         }
     }
 

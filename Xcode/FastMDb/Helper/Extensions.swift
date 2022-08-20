@@ -303,6 +303,13 @@ extension String {
         return URL(string: "\(baseUrl)\(item)")
     }
 
+    var wikifxUrl: URL? {
+        let baseUrl = "https://wiki-fx.net/project"
+        guard let item = self.replacingOccurrences(of: " ", with: "_").addingPercentEncoding else { return nil }
+
+        return URL(string: "\(baseUrl)/\(item.lowercased())/")
+    }
+
     var wikipediaUrl: URL? {
         let baseUrl = "https://en.wikipedia.org/wiki"
         guard let item = self.replacingOccurrences(of: " ", with: "_").addingPercentEncoding else { return nil }
