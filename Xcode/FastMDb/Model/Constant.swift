@@ -43,8 +43,9 @@ struct Constant {
         }
 
         var ratingDisplayAttributed: NSAttributedString? {
-            guard let voteAverage = average,
-                  count > threshold else { return nil }
+            guard let voteAverage = average
+//                  count > threshold
+            else { return nil }
 
             let font = UIFont.preferredFont(forTextStyle: .title1)
             let attributed = NSMutableAttributedString(string: (String(format: "%.1f", voteAverage)),
@@ -59,7 +60,7 @@ struct Constant {
         }
 
         var voteDisplay: String? {
-            guard count > threshold else { return nil }
+//            guard count > threshold else { return nil }
 
             let number = NSNumber(value: count)
             guard let formattedValue = Constant.numberFormatter.string(from: number) else { return nil }
