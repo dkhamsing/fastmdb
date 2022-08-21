@@ -43,7 +43,8 @@ struct Constant {
         }
 
         var ratingDisplayAttributed: NSAttributedString? {
-            guard let voteAverage = average
+            guard let voteAverage = average,
+                    count > 0
 //                  count > threshold
             else { return nil }
 
@@ -60,6 +61,7 @@ struct Constant {
         }
 
         var voteDisplay: String? {
+            guard count > 0 else { return nil }
 //            guard count > threshold else { return nil }
 
             let number = NSNumber(value: count)
