@@ -5,6 +5,41 @@
 
 import UIKit
 
+class StringDownloader {
+    static let shared = StringDownloader()
+
+    private var dataCache = NSCache<NSString, NSString>()
+
+    func load(url: URL, completion: @escaping (NSString?) -> Void) {
+        let key = NSString(string: url.absoluteString)
+        if let cacheData = dataCache.object(forKey: key) {
+            print("cache hit **")
+            completion(cacheData)
+            return
+        }
+
+        let session = URLSession.shared
+        session.dataTask(with: url) { data, response, __ in
+            guard let httpResp = response as? HTTPURLResponse,
+                  httpResp.statusCode == 200 else {
+                completion(nil)
+                return
+            }
+
+            guard let data = data,
+                  let string = String(data: data, encoding: .utf8) else {
+                completion(nil)
+                return
+            }
+
+            let nsstring = NSString(string: string)
+            self.dataCache.setObject(nsstring, forKey: key)
+            completion(nsstring)
+        }.resume()
+    }
+
+}
+
 class ImageDownloader {
 
     static let shared = ImageDownloader()

@@ -71,37 +71,34 @@ final class WikiFxDataProvider: DataProvider {
 
         Log.log(#function + ": \(url.absoluteString)")
 
-        let session = URLSession.shared
-        session.dataTask(with: url) { data, response, __ in
-            guard let httpResp = response as? HTTPURLResponse,
-            httpResp.statusCode == 200 else {
-                self.comp { completion(false, []) }
-                return
-            }
-
-            if let data = data,
-               let string = String(data: data, encoding: .utf8) {
-                let result = string.slices(from: "vfx-studio", to: "/a")
-                print(result)
-
-                var studios: [String] = []
-                for sub in result {
-                    let str = String(sub)
-                    let res = str.slices(from: ">", to: "<")
-
-                    if let studio = res.first {
-                        studios.append(
-                            String(studio.replacingOccurrences(of: "amp;", with: ""))
-                        )
-                    }
+        let downloader = StringDownloader.shared
+        downloader.load(url: url) { result1 in
+            guard let result1 = result1 else {
+                self.comp {
+                    completion(false, [])
                 }
-
-                self.comp { completion(true, studios) }
                 return
             }
 
-            self.comp { completion(true, []) }
-        }.resume()
+            let string = String(result1)
+
+            let result = string.slices(from: "vfx-studio", to: "/a")
+//            print(result)
+
+            var studios: [String] = []
+            for sub in result {
+                let str = String(sub)
+                let res = str.slices(from: ">", to: "<")
+
+                if let studio = res.first {
+                    studios.append(
+                        String(studio.replacingOccurrences(of: "amp;", with: ""))
+                    )
+                }
+            }
+
+            self.comp { completion(true, studios) }
+        }
     }
 
     private func comp(task: @escaping () -> Void) {
