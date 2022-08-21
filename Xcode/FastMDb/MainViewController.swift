@@ -445,10 +445,11 @@ private extension MainViewController {
             self.updateScreen(u)
 
             let wikiProvider = WikiFxDataProvider()
-            wikiProvider.get(movie.title) { success in
+            wikiProvider.get(movie.title) { success, studios in
                 guard success else { return }
 
-                let item = Item(title: "WikiFX",
+                let title = studios.isEmpty ? "WikiFX" : studios.joined(separator: ", ")
+                let item = Item(title: title,
                                 metadata: Metadata(
                                     url: movie.title?.wikifxUrl, destination: .url, link: .link
                                 ))

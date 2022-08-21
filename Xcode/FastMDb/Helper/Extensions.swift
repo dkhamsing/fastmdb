@@ -305,7 +305,7 @@ extension String {
 
     var wikifxUrl: URL? {
         let baseUrl = "https://wiki-fx.net/project"
-        guard let item = self.replacingOccurrences(of: " ", with: "_").addingPercentEncoding else { return nil }
+        guard let item = self.replacingOccurrences(of: " ", with: "-").addingPercentEncoding else { return nil }
 
         return URL(string: "\(baseUrl)/\(item.lowercased())/")
     }

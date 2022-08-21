@@ -63,9 +63,9 @@ private extension DataProvider {
 
 final class WikiFxDataProvider: DataProvider {
 
-    func get(_ name: String?, completion: @escaping (Bool) -> Void) {
+    func get(_ name: String?, completion: @escaping (Bool, [String]) -> Void) {
         guard let url = name?.wikifxUrl else {
-            comp { completion(false) }
+            comp { completion(false, []) }
             return
         }
 
@@ -75,16 +75,32 @@ final class WikiFxDataProvider: DataProvider {
         session.dataTask(with: url) { data, response, __ in
             guard let httpResp = response as? HTTPURLResponse,
             httpResp.statusCode == 200 else {
-                self.comp { completion(false) }
+                self.comp { completion(false, []) }
                 return
             }
 
-            guard let data = data else {
-                self.comp { completion(false) }
+            if let data = data,
+               let string = String(data: data, encoding: .utf8) {
+                let result = string.slices(from: "vfx-studio", to: "/a")
+                print(result)
+
+                var studios: [String] = []
+                for sub in result {
+                    let str = String(sub)
+                    let res = str.slices(from: ">", to: "<")
+
+                    if let studio = res.first {
+                        studios.append(
+                            String(studio.replacingOccurrences(of: "amp;", with: ""))
+                        )
+                    }
+                }
+
+                self.comp { completion(true, studios) }
                 return
             }
 
-            self.comp { completion(true) }
+            self.comp { completion(true, []) }
         }.resume()
     }
 
@@ -95,6 +111,25 @@ final class WikiFxDataProvider: DataProvider {
     }
 
 }
+
+private extension String {
+    func ranges(of string: String, options: CompareOptions = .literal) -> [Range<Index>] {
+        var result: [Range<Index>] = []
+        var start = startIndex
+        while let range = range(of: string, options: options, range: start..<endIndex) {
+            result.append(range)
+            start = range.lowerBound < range.upperBound ? range.upperBound : index(range.lowerBound, offsetBy: 1, limitedBy: endIndex) ?? endIndex
+        }
+        return result
+    }
+
+    func slices(from: String, to: String) -> [Substring] {
+        let pattern = "(?<=" + from + ").*?(?=" + to + ")"
+        return ranges(of: pattern, options: .regularExpression)
+            .map{ self[$0] }
+    }
+}
+
 
 final class CollectionDataProvider: DataProvider {
 
