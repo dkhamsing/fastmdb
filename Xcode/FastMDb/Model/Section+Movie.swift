@@ -204,14 +204,6 @@ private extension Media {
             items.append(item)
         }
 
-        if let name = title {
-            let url = name.wikifxUrl
-            let imageUrl = url?.urlToSourceLogo
-            let item = Item(title: "WikiFX",
-                            metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
-            items.append(item)
-        }
-
         if let url = tmdbUrl {
             let imageUrl = url.urlToSourceLogo
             let item = Item(metadata: Metadata(url: url, destination: .url, imageUrl: imageUrl, link: .link))
