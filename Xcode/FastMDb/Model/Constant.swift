@@ -43,8 +43,11 @@ struct Constant {
         }
 
         var ratingDisplayAttributed: NSAttributedString? {
-            guard let voteAverage = average,
-                    count > 0
+            guard count > 0 else {
+                return NSAttributedString(string: "Unrated")
+            }
+
+            guard let voteAverage = average
 //                  count > threshold
             else { return nil }
 
