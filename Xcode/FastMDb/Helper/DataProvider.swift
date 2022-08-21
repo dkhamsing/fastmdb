@@ -73,14 +73,14 @@ final class WikiFxDataProvider: DataProvider {
 
         let downloader = StringDownloader.shared
         downloader.load(url: url) { result1 in
-            guard let result1 = result1 else {
+            let string = String(result1)
+
+            guard !string.isEmpty else {
                 self.comp {
                     completion(false, [])
                 }
                 return
             }
-
-            let string = String(result1)
 
             let result = string.slices(from: "vfx-studio", to: "/a")
 //            print(result)

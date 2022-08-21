@@ -10,10 +10,10 @@ class StringDownloader {
 
     private var dataCache = NSCache<NSString, NSString>()
 
-    func load(url: URL, completion: @escaping (NSString?) -> Void) {
+    func load(url: URL, completion: @escaping (NSString) -> Void) {
         let key = NSString(string: url.absoluteString)
         if let cacheData = dataCache.object(forKey: key) {
-            print("cache hit **")
+//            print("cache hit **")
             completion(cacheData)
             return
         }
@@ -22,13 +22,15 @@ class StringDownloader {
         session.dataTask(with: url) { data, response, __ in
             guard let httpResp = response as? HTTPURLResponse,
                   httpResp.statusCode == 200 else {
-                completion(nil)
+                self.dataCache.setObject("", forKey: key)
+                completion("")
                 return
             }
 
             guard let data = data,
                   let string = String(data: data, encoding: .utf8) else {
-                completion(nil)
+                completion("")
+                self.dataCache.setObject("", forKey: key)
                 return
             }
 
