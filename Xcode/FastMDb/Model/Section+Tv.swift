@@ -77,10 +77,6 @@ extension TV {
             list.append(section)
         }
 
-        if let section = googleSection {
-            list.append(section)
-        }
-
         if let section = recommendedSection {
             list.append(section)
         }
@@ -142,22 +138,6 @@ private extension TV {
 
     var imagesSection: ItemSection? {
         return ItemSection.imagesSection(poster_path: poster_path, images: images)
-    }
-
-    var googleSection: ItemSection? {
-        guard isValidWatchStatus else { return nil }
-
-        var items: [Item] = []
-
-        if name != "" {
-            let item = Item(title: "Music",
-                            metadata: Metadata(url: name.googleSearchMusicUrl, destination: .url, link: .link))
-            items.append(item)
-        }
-
-        guard items.count > 0 else { return nil }
-
-        return ItemSection(header: "google", items: items)
     }
 
     var linksSection: ItemSection? {
@@ -330,11 +310,20 @@ private extension TV {
         }
 
         // awards
-        if let id = external_ids?.validImdbId, isCurrent {
-            let url = Imdb.awardsUrl(id: id, kind: .title)
-            let item = Item(title: "Awards & Nominations",
-                            metadata: Metadata(url: url, destination: .url))
-            items.append(item)
+        if let id = external_ids?.validImdbId, isValidWatchStatus {
+            do {
+                let url = Imdb.awardsUrl(id: id, kind: .title)
+                let item = Item(title: "Awards & Nominations",
+                                metadata: Metadata(url: url, destination: .url))
+                items.append(item)
+            }
+
+            do {
+                let url = Imdb.soundtrackUrl(id: id, kind: .title)
+                let item = Item(title: "Soundtrack",
+                                metadata: Metadata(url: url, destination: .url))
+                items.append(item)
+            }
         }
 
         return ItemSection(header: "tv", items: items)

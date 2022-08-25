@@ -82,10 +82,6 @@ extension Media {
             list.append(section)
         }
 
-        if let section = googleSection {
-            list.append(section)
-        }
-
         if let section = credits?.creditsSection(limit: 6) {
             list.append(section)
         }
@@ -159,22 +155,6 @@ private extension Media {
         let items = genre.map { Item(title: $0.name,
                                      metadata: Metadata(id: $0.id, destination: .genreMovie)) }
         return ItemSection(header: "genre", items: items, metadata: Metadata(display: .tags()))
-    }
-
-    var googleSection: ItemSection? {
-        guard status == "Released" else { return nil }
-
-        var items: [Item] = []
-
-        if let name = title {
-            let item = Item(title: "Music",
-                            metadata: Metadata(url: name.googleSearchMusicUrl, destination: .url, link: .link))
-            items.append(item)
-        }
-
-        guard items.count > 0 else { return nil }
-
-        return ItemSection(header: "google", items: items)
     }
 
     var languageSection: ItemSection? {
@@ -318,10 +298,19 @@ private extension Media {
         // awards
         if let id = external_ids?.validImdbId,
            status ?? "" == "Released" {
-            let url = Imdb.awardsUrl(id: id, kind: .title)
-            let item = Item(title: "Awards & Nominations",
-                            metadata: Metadata(url: url, destination: .url))
-            items.append(item)
+            do {
+                let url = Imdb.awardsUrl(id: id, kind: .title)
+                let item = Item(title: "Awards & Nominations",
+                                metadata: Metadata(url: url, destination: .url))
+                items.append(item)
+            }
+
+            do {
+                let url = Imdb.soundtrackUrl(id: id, kind: .title)
+                let item = Item(title: "Soundtrack",
+                                metadata: Metadata(url: url, destination: .url))
+                items.append(item)
+            }
         }
 
         if let c = belongs_to_collection {

@@ -277,10 +277,6 @@ extension String {
         return URL(string: "\(baseUrl)\(item)")
     }
 
-    var googleSearchMusicUrl: URL? { 
-        return String.googleSearchUrlWithQuery("music \(self)")
-    }
-
     var googleSearchWatchUrl: URL? {
         return String.googleSearchUrlWithQuery("watch \(self)")
     }
