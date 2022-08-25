@@ -444,6 +444,8 @@ private extension MainViewController {
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
 
+            guard movie.status ?? "" == "Released" else { return }
+
             let wikiProvider = WikiFxDataProvider()
             wikiProvider.get(movie.title) { success, studios in
                 guard success else { return }
@@ -455,9 +457,20 @@ private extension MainViewController {
                                 ))
                 let section = ItemSection(header: "vfx", items: [item])
                 var temp = sections
-                temp.append(section)
-                let u2 = Updater(dataSource: temp)
-                self.updateScreen(u2)
+
+                // replace vfx section
+                for (index, section2) in sections.enumerated() {
+                    if section2.header ?? "" == "vfx" {
+                        print(index)
+
+                        temp[index] = section
+
+                        let u2 = Updater(dataSource: temp)
+                        self.updateScreen(u2)
+
+                        break
+                    }
+                }
             }
         }
     }

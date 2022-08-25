@@ -82,6 +82,10 @@ extension Media {
             list.append(section)
         }
 
+        if let section = vfxSection {
+            list.append(section)
+        }
+
         if let section = credits?.creditsSection(limit: 6) {
             list.append(section)
         }
@@ -155,6 +159,17 @@ private extension Media {
         let items = genre.map { Item(title: $0.name,
                                      metadata: Metadata(id: $0.id, destination: .genreMovie)) }
         return ItemSection(header: "genre", items: items, metadata: Metadata(display: .tags()))
+    }
+
+    var vfxSection: ItemSection? {
+        guard let id = external_ids?.validImdbId,
+              status ?? "" == "Released" else { return nil }
+
+        let url = Imdb.companyUrl(id: id, kind: .title)
+        let item = Item(title: "IMDb",
+                        metadata: Metadata(url: url, destination: .url, link: .link))
+
+        return ItemSection(header: "vfx", items: [item])
     }
 
     var languageSection: ItemSection? {

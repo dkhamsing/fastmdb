@@ -20,6 +20,13 @@ struct Imdb {
         return URL(string: path)
     }
 
+    static func companyUrl(id: String?, kind: Kind) -> URL? {
+        guard var path = path(id: id, kind: kind) else { return nil }
+
+        path += "/companycredits"
+        return URL(string: path)
+    }
+
     static func soundtrackUrl(id: String?, kind: Kind) -> URL? {
         guard var path = path(id: id, kind: kind) else { return nil }
 
