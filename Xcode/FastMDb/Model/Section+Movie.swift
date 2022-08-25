@@ -243,6 +243,12 @@ private extension Media {
             let item = Item(title: "Apple Music",
                             metadata: Metadata(destination: .music, albums: albums, link: .video))
             items.append(item)
+        } else if let id = external_ids?.validImdbId,
+                  status ?? "" == "Released" {
+            let url = Imdb.soundtrackUrl(id: id, kind: .title)
+            let item = Item(title: "IMDb Soundtrack",
+                            metadata: Metadata(url: url, destination: .url, link: .link))
+            items.append(item)
         }
 
         guard items.count > 0 else { return nil }
@@ -298,19 +304,10 @@ private extension Media {
         // awards
         if let id = external_ids?.validImdbId,
            status ?? "" == "Released" {
-            do {
-                let url = Imdb.awardsUrl(id: id, kind: .title)
-                let item = Item(title: "Awards & Nominations",
-                                metadata: Metadata(url: url, destination: .url))
-                items.append(item)
-            }
-
-            do {
-                let url = Imdb.soundtrackUrl(id: id, kind: .title)
-                let item = Item(title: "Soundtrack",
-                                metadata: Metadata(url: url, destination: .url))
-                items.append(item)
-            }
+            let url = Imdb.awardsUrl(id: id, kind: .title)
+            let item = Item(title: "Awards & Nominations",
+                            metadata: Metadata(url: url, destination: .url))
+            items.append(item)
         }
 
         if let c = belongs_to_collection {

@@ -210,6 +210,12 @@ private extension TV {
             let item = Item(title: "Apple Music",
                             metadata: Metadata(destination: .music, albums: albums, link: .video))
             items.append(item)
+        } else if let id = external_ids?.validImdbId,
+                  isValidWatchStatus {            
+            let url = Imdb.soundtrackUrl(id: id, kind: .title)
+            let item = Item(title: "IMDb Soundtrack",
+                            metadata: Metadata(url: url, destination: .url, link: .link))
+            items.append(item)
         }
 
         guard items.count > 0 else { return nil }
@@ -310,20 +316,12 @@ private extension TV {
         }
 
         // awards
-        if let id = external_ids?.validImdbId, isValidWatchStatus {
-            do {
-                let url = Imdb.awardsUrl(id: id, kind: .title)
-                let item = Item(title: "Awards & Nominations",
-                                metadata: Metadata(url: url, destination: .url))
-                items.append(item)
-            }
-
-            do {
-                let url = Imdb.soundtrackUrl(id: id, kind: .title)
-                let item = Item(title: "Soundtrack",
-                                metadata: Metadata(url: url, destination: .url))
-                items.append(item)
-            }
+        if let id = external_ids?.validImdbId,
+           isValidWatchStatus {
+            let url = Imdb.awardsUrl(id: id, kind: .title)
+            let item = Item(title: "Awards & Nominations",
+                            metadata: Metadata(url: url, destination: .url))
+            items.append(item)
         }
 
         return ItemSection(header: "tv", items: items)
