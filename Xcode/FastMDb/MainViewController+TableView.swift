@@ -184,7 +184,17 @@ private extension MainViewController {
         case .moviesSortedBy:
             // TODO: able to load more than one page of highest grossing
             let controller = MainViewController()
-            controller.title = Tmdb.Url.Kind.Movies.highest_grossing.title
+
+            if let sorted = item.metadata?.sortedBy {
+                switch sorted {
+                case .byVote:
+                    controller.voteCountGreaterThanOrEqual = 1000
+                    controller.title = Tmdb.Url.Kind.Movies.top_rated_movies.title
+                case .byRevenue:
+                    controller.title = Tmdb.Url.Kind.Movies.highest_grossing.title
+                }
+            }
+
             controller.releaseYear = item.metadata?.releaseYear
             controller.sortedBy = item.metadata?.sortedBy
             navigationController?.pushViewController(controller, animated: true)

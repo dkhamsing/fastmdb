@@ -353,7 +353,10 @@ private extension Media {
     var ratingSection: ItemSection? {
         guard let rating = ratingDisplay else { return nil }
 
-        let item = Item(attributedTitle: rating, subtitle: voteDisplay, color: vote_average.color)
+        let item = Item(attributedTitle: rating,
+                        subtitle: voteDisplay,
+                        color: vote_average.color,
+                        metadata: Metadata(destination: .moviesSortedBy, sortedBy: .byVote, releaseYear: releaseYear))
         var section = ItemSection(header: "rating", items: [item])
 
         if let count = reviews?.results.count,
