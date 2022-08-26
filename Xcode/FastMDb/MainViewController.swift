@@ -461,8 +461,6 @@ private extension MainViewController {
                 // replace vfx section
                 for (index, section2) in sections.enumerated() {
                     if section2.header ?? "" == "vfx" {
-                        print(index)
-
                         temp[index] = section
 
                         let u2 = Updater(dataSource: temp)
