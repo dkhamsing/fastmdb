@@ -27,14 +27,14 @@ class StringDownloader {
                 return
             }
 
-            guard let data = data,
-                  let string = String(data: data, encoding: .utf8) else {
+            guard let data = data else {
                 completion("")
                 self.dataCache.setObject("", forKey: key)
                 return
             }
 
-            let nsstring = NSString(string: string)
+            let str = String(decoding: data, as: UTF8.self)
+            let nsstring = NSString(string: str)
             self.dataCache.setObject(nsstring, forKey: key)
             completion(nsstring)
         }.resume()
