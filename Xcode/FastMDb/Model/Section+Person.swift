@@ -440,8 +440,22 @@ private extension Credit {
             .filter { released.contains($0.original_title) == false }
             .sorted(by: { $0.release_date ?? "" > $1.release_date ?? ""})
 
-        let collapsedItems = Credit.collapsedMovieCrewItems(crewSorted)
-            .filter { ($0.subtitle ?? "").contains(CrewJob.Director.rawValue) == isShowingDirector }
+        let temp = Credit.collapsedMovieCrewItems(crewSorted)
+        var collapsedItems: [Item] = []
+        if !isShowingDirector {
+            collapsedItems = temp
+        } else {
+            for item in temp {
+                let subtitles = (item.subtitle ?? "").components(separatedBy: ", ")
+                for sub in subtitles {
+                    let subItem = sub.components(separatedBy: Constant.separator)
+                    if subItem.contains(CrewJob.Director.rawValue) {
+                        collapsedItems.append(item)
+                    }
+                }
+            }
+        }
+
         guard collapsedItems.count > 0 else { return nil }
 
         var total: String?
