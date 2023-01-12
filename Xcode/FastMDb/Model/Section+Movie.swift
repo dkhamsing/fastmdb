@@ -58,15 +58,15 @@ extension Media {
             list.append(section)
         }
 
-        if let section = credits?.cinematographerSection {
-            list.append(section)
-        }
-
         if let section = credits?.writerSection {
             list.append(section)
         }
 
         if let section = credits?.storySection {
+            list.append(section)
+        }
+
+        if let section = credits?.cinematographerSection {
             list.append(section)
         }
 
@@ -82,11 +82,11 @@ extension Media {
             list.append(section)
         }
 
-        if let section = vfxSection {
+        if let section = credits?.creditsSection(limit: 6) {
             list.append(section)
         }
 
-        if let section = credits?.creditsSection(limit: 6) {
+        if let section = vfxSection {
             list.append(section)
         }
 
