@@ -436,8 +436,10 @@ private extension Credits {
 
         let items = cast.map { $0.listItemCast }
 
-        return ItemSection(header: "cast", items: items,
-                           metadata: Metadata(destination: .items, destinationTitle: "Cast", display: .portraitImage()))
+        return ItemSection(header: "cast",
+                           items: items,
+                           footer: "Cast List",
+                           metadata: Metadata(destination: .items, destinationTitle: "Cast", items: items, display: .portraitImage()))
     }
 
     func creditsSection(limit: Int) -> ItemSection? {
