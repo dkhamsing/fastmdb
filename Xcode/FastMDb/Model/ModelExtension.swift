@@ -938,6 +938,7 @@ extension WatchSearch {
             .filter { !WatchSearch.providersNotInterested.contains($0.provider_name.lowercased()) }
             .filter { !$0.provider_name.lowercased().contains("amazon channel") }
             .filter { !$0.provider_name.lowercased().contains("roku premium") }
+            .filter { !$0.provider_name.lowercased().contains("netflix basic with ads") }
             .sorted { $0.provider_name < $1.provider_name }
 
         let items: [Item] = myProviders.map {
