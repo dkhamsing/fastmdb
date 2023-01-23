@@ -16,8 +16,8 @@ struct Media: Codable {
     var budget: Int?
     var revenue: Int?
 
-    var vote_average: Double
-    var vote_count: Int
+    var vote_average: Double?
+    var vote_count: Int?
 
     var backdrop_path: String?
     var belongs_to_collection: MediaCollection?

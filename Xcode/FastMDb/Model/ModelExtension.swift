@@ -498,11 +498,11 @@ extension Media {
     var listItemWithVotes: Item {
         var sub = listItemSub
 
-        if let str = Constant.Vote(count: vote_count).voteDisplay {
+        if let str = Constant.Vote(count: vote_count ?? 0).voteDisplay {
             sub.append(str)
         }
 
-        sub.append("\(vote_average)")
+        sub.append("\(vote_average ?? 0)")
         let imageUrl = Tmdb.Url.Image.still(path: backdrop_path, size: .medium)
         return Item(title: titleDisplay, subtitle: sub.joined(separator: Constant.separator), color: ratingColor,
                     metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl))
@@ -592,9 +592,9 @@ private extension Media {
     var ratingColor: UIColor? {
         guard
             released,
-            vote_count > Constant.voteThreshold else { return nil }
+            vote_count ?? 0 > Constant.voteThreshold else { return nil }
 
-        return vote_average.color
+        return vote_average?.color ?? .gray
     }
 }
 

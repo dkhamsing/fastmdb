@@ -50,7 +50,7 @@ private extension ItemSection {
 
         switch kind {
         case .top_rated:
-            results = results.filter { $0.vote_count > voteLimit }
+            results = results.filter { $0.vote_count ?? 0 > voteLimit }
         case .upcoming:
             results = results.sorted { $0.release_date ?? "" > $1.release_date ?? "" }
         default:
@@ -83,7 +83,7 @@ private extension ItemSection {
         }
 
         if kind == .top_rated {
-            let lessVotes = movie.results.filter { $0.vote_count < (voteLimit + 1) }.map { $0.listItemWithVotes }
+            let lessVotes = movie.results.filter { $0.vote_count ?? 0 < (voteLimit + 1) }.map { $0.listItemWithVotes }
             if !lessVotes.isEmpty {
                 let section = ItemSection(header: "movies\(Constant.separator)also top rated", items: lessVotes)
                 sections.append(section)

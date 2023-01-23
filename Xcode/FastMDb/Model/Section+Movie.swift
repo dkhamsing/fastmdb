@@ -117,9 +117,9 @@ extension Media {
 extension Media {
 
     var ratingTvCreditSection: ItemSection? {
-        guard vote_count > 0 else { return nil }
+        guard vote_count ?? 0 > 0 else { return nil }
 
-        let item = Item(attributedTitle: ratingDisplay, subtitle: voteDisplay, color: vote_average.color)
+        let item = Item(attributedTitle: ratingDisplay, subtitle: voteDisplay, color: vote_average?.color ?? .gray)
         var section = ItemSection(header: "rating", items: [item])
 
         if let count = reviews?.results.count,
@@ -355,7 +355,7 @@ private extension Media {
 
         let item = Item(attributedTitle: rating,
                         subtitle: voteDisplay,
-                        color: vote_average.color,
+                        color: vote_average?.color ?? .gray,
                         metadata: Metadata(destination: .moviesSortedBy, sortedBy: .byVote, releaseYear: releaseYear))
         var section = ItemSection(header: "rating", items: [item])
 
@@ -568,7 +568,7 @@ private extension Media {
     }
 
     var voteDisplay: String? {
-        return Constant.Vote(count: vote_count).voteDisplay
+        return Constant.Vote(count: vote_count ?? 0).voteDisplay
     }
 
     var ratingDisplay: NSAttributedString? {
@@ -577,7 +577,7 @@ private extension Media {
             return nil
         }
 
-        return Constant.Vote(count: vote_count, average: vote_average).ratingDisplayAttributed
+        return Constant.Vote(count: vote_count ?? 0, average: vote_average).ratingDisplayAttributed
     }
 
     var recentReleaseItem: Item? {
