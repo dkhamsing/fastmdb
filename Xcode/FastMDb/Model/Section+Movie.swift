@@ -74,6 +74,10 @@ extension Media {
             list.append(section)
         }
 
+        if let section = credits?.producerSection {
+            list.append(section)
+        }
+
         if let section = productionSection {
             list.append(section)
         }
@@ -490,6 +494,11 @@ private extension Credits {
 
     var directorSection: ItemSection? {
         return jobSection([CrewJob.Director.rawValue], "directed by")
+    }
+
+    var producerSection: ItemSection? {
+        return jobSection([CrewJob.Producer.rawValue,
+                           CrewJob.ExecutiveProducer.rawValue], "producer")
     }
 
     var scoreSection: ItemSection? {
