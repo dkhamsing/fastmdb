@@ -242,7 +242,7 @@ extension String {
 
         guard let date = self.date  else { return nil }
 
-        formatter.dateFormat = "MMM d, yyyy"
+        formatter.dateStyle = .long
 
         return formatter.string(from: date)
     }
