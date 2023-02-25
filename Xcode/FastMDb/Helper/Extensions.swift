@@ -80,7 +80,7 @@ private extension Article {
         if let source = source?.name {
             sub.append(source)
         }
-        if let desc = descriptionOrContent {
+        if let desc = descriptionOrContent, !desc.isEmpty {
             sub.append(desc)
         }
 
