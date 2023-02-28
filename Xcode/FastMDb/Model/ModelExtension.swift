@@ -926,6 +926,7 @@ extension WatchSearch {
     static let providersNotInterested = [
         "directv",
         "fubotv",
+        "netflix basic with ads",
         "sling tv",
         "spectrum on demand"
     ]
@@ -937,9 +938,11 @@ extension WatchSearch {
         let myProviders = providers
             .filter { !WatchSearch.providersNotInterested.contains($0.provider_name.lowercased()) }
             .filter { !$0.provider_name.lowercased().contains("amazon channel") }
+            .filter { !$0.provider_name.lowercased().contains("apple tv channel") }
             .filter { !$0.provider_name.lowercased().contains("roku premium") }
-            .filter { !$0.provider_name.lowercased().contains("netflix basic with ads") }
             .sorted { $0.provider_name < $1.provider_name }
+
+//        print(myProviders, "**")
 
         let items: [Item] = myProviders.map {
             Item(title: $0.provider_name, metadata: Metadata(url: country.link, destination: .url, imageUrl: $0.iconImageUrl, imageCornerRadius: 12))
