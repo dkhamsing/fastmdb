@@ -963,7 +963,7 @@ extension WatchSearch {
                              metadata: Metadata(url: URL(string: "https://justwatch.com"), destination: .url, link: .link))
         let items = [google, justWatch]
 
-        return ItemSection(header: "Watch", items: items)
+        return ItemSection(header: "Watch ⚠️", items: items)//⚠
     }
 
     func watchSection(_ name: String?) -> ItemSection? {
