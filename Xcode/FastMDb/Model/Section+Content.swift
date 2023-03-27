@@ -10,7 +10,7 @@ import Foundation
 
 extension ItemSection {
 
-    static func contentSections(kind: Tmdb.Url.Kind.Movies, movie: MediaSearch?, tv: TvSearch?, people: PeopleSearch?, articles: [Article]?) -> [ItemSection] {
+    static func contentSections(kind: Tmdb.Url.Kind.Movies, movie: MediaSearch?, tv: TvSearch?, people: PeopleSearch?, articles: [Article]?, providers: [Provider]?) -> [ItemSection] {
         var sections: [ItemSection] = []
 
         if let s = Article.newsSection(articles, limit: 3) {
@@ -29,6 +29,10 @@ extension ItemSection {
         }
 
         if let s = tvSections(tv: tv, kind: kind) {
+            sections.append(contentsOf: s)
+        }
+
+        if let s = providerSections(providers) {
             sections.append(contentsOf: s)
         }
 
@@ -95,6 +99,17 @@ private extension ItemSection {
         return sections
     }
 
+    static func providerSections(_ providers: [Provider]?) -> [ItemSection]? {
+        guard let providers = providers else { return nil }
+
+        var sections: [ItemSection] = []
+        let items = providers.compactMap { $0.listItem }
+        sections.append(
+            ItemSection(header: "Stream", items: items)
+        )
+        return sections
+    }
+
     static func tvSections(tv: TvSearch?, kind: Tmdb.Url.Kind.Movies) -> [ItemSection]? {
         guard let tv = tv else { return nil }
 
@@ -135,4 +150,19 @@ private extension ItemSection {
         return sections
     }
 
+}
+extension Provider {
+    var listItem: Item? {
+        if WatchSearch.providersNotInterested.contains(provider_name.lowercased()) { return nil }
+
+        if provider_name.lowercased().contains("amazon channel") ||
+            provider_name.lowercased().contains("apple tv channel") ||
+            provider_name.lowercased().contains("roku premium")  {
+            return nil
+        }
+
+        return .init(title: provider_name,
+                     metadata: .init(id: provider_id, destination: .provider, destinationTitle: provider_name)
+        )
+    }
 }

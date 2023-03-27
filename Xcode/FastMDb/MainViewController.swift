@@ -61,6 +61,12 @@ class MainViewController: UIViewController {
         }
     }
 
+    var providerId: Int? {
+        didSet {
+            updateProvider(providerId)
+        }
+    }
+
     var seasonItem: Item? {
         didSet {
             updateSeason(seasonItem)
@@ -222,7 +228,7 @@ extension MainViewController {
         default:
             let provider = ContentDataProvider()
             provider.get(kind) { (dpm) in
-                let sections = ItemSection.contentSections(kind: kind, movie: dpm.mediaSearch, tv: dpm.tvSearch, people: dpm.peopleSearch, articles: dpm.articles)
+                let sections = ItemSection.contentSections(kind: kind, movie: dpm.mediaSearch, tv: dpm.tvSearch, people: dpm.peopleSearch, articles: dpm.articles, providers: dpm.providers)
                 let updater = Updater(dataSource: sections)
                 self.updateScreen(updater)
             }
@@ -524,6 +530,33 @@ private extension MainViewController {
                 sections.append(contentsOf: s)
             }
 
+            let u = Updater(dataSource: sections)
+            self.updateScreen(u)
+        }
+    }
+
+    func updateProvider(_ providerrId: Int?) {
+        screen = .list
+        spinner.startAnimating()
+
+        let provider = ProviderDataProvider()
+        provider.get(providerrId) { dpm in
+            var sections: [ItemSection] = []
+
+            let items = dpm.mediaSearch?.results.map { $0.listItemTextImage }
+            sections.append(
+                ItemSection(
+                    header: "Movies",
+                    items: items, metadata: .init(Metadata(display: .textImage())))
+            )
+
+            let tvItems = dpm.tvSearch?.results.map { $0.listItemTextImage }
+            sections.append(
+                ItemSection(
+                    header: "TV",
+                    items: tvItems, metadata: .init(Metadata(display: .textImage())))
+            )
+            
             let u = Updater(dataSource: sections)
             self.updateScreen(u)
         }

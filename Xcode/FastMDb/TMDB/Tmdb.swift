@@ -32,6 +32,7 @@ private extension Tmdb {
         static let searchMulti = "/3/search/multi"
         static let tv = "/3/tv"
         static let tvDiscover = "/3/discover/tv"
+        static let watch = "/3/watch/providers/movie"
     }
 
     static var baseComponents: URLComponents {
@@ -103,6 +104,14 @@ extension Tmdb {
             return urlComponents.url
         }
 
+        static func watch() -> URL? {
+            var urlComponents = baseComponents
+            urlComponents.path = Path.watch
+            let genreQueryItem = URLQueryItem(name: "watch_region", value: "US")
+            urlComponents.queryItems?.append(genreQueryItem)
+            return urlComponents.url
+        }
+
         static func movie(movieId: Int?, append: String = "credits,videos,external_ids,recommendations,similar,reviews,release_dates,watch/providers,images") -> URL? {
             guard let movieId = movieId else { return nil }
 
@@ -116,6 +125,7 @@ extension Tmdb {
         }
 
         static func movies(kind: Kind.Movies) -> URL? {
+            guard kind != .stream else { return nil }
             var urlComponents = baseComponents
             urlComponents.path = "\(Path.movie)/\(kind.rawValue)"
 
@@ -145,6 +155,38 @@ extension Tmdb {
 
             return urlComponents.url
         }
+
+        enum DiscoverKind { case movie, tv}
+
+        static func discover(
+            kind: DiscoverKind,
+            providerId: Int?) -> URL? {
+            guard let providerId = providerId else { return nil }
+
+            var urlComponents = baseComponents
+
+                switch kind {
+                case .movie: urlComponents.path = Path.discover
+                case .tv: urlComponents.path = Path.tvDiscover
+                }
+
+
+            urlComponents.queryItems?.append(
+                URLQueryItem(name: QueryName.sort.rawValue, value: "popularity")
+            )
+
+            urlComponents.queryItems?.append(
+                URLQueryItem(name: "watch_region", value: "US")
+            )
+
+            urlComponents.queryItems?.append(
+                URLQueryItem(name: "with_watch_providers", value: String(providerId))
+            )
+
+            return urlComponents.url
+        }
+
+
 
         static func movies(sortedBy: Kind.Sort,
                            releaseYear: String? = nil,
@@ -403,7 +445,8 @@ extension Tmdb {
                      top_rated_tv,
                      top_rated,
                      now_playing,
-                     upcoming
+                     upcoming,
+                     stream
 
                 var title: String {
                     switch self {
@@ -421,6 +464,8 @@ extension Tmdb {
                         return "Top Rated Movies"
                     case .top_rated_tv:
                         return "Top Rated TV"
+                    case .stream:
+                        return "Stream"
                     }
                 }
 
@@ -434,7 +479,7 @@ extension Tmdb {
                         return .airing_today
                     case .upcoming:
                         return .on_the_air
-                    case .highest_grossing, .top_rated_tv, .top_rated_movies:
+                    case .highest_grossing, .top_rated_tv, .top_rated_movies, .stream:
                         return nil
                     }
                 }

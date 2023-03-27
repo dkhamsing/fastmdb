@@ -219,6 +219,11 @@ private extension MainViewController {
             controller.title = item.title
             controller.productionId = item.metadata?.id
             navigationController?.pushViewController(controller, animated: true)
+        case .provider:
+            let controller = MainViewController()
+            controller.title = item.metadata?.destinationTitle
+            controller.providerId = item.metadata?.id
+            navigationController?.pushViewController(controller, animated: true)
         case .safarivc:
             guard let url = item.metadata?.url else { return }
             let sfvc = SFSafariViewController(url: url)

@@ -755,6 +755,8 @@ extension Tmdb.Url.Kind.Movies {
             string = "play"
         case .highest_grossing:
             string = "dollarsign.circle"
+        case .stream:
+            string = "tv"
         case .top_rated:
             string = "hand.thumbsup"
         case .top_rated_movies, .top_rated_tv:
@@ -928,7 +930,9 @@ extension WatchSearch {
         "fubotv",
         "netflix basic with ads",
         "sling tv",
-        "spectrum on demand"
+        "spectrum on demand",
+        "amazon video",
+        "google play movies"
     ]
 
     func watchSectionProvider(_ name: String?) -> ItemSection? {

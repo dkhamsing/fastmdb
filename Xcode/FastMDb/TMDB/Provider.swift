@@ -7,6 +7,7 @@
 //
 
 struct Provider: Codable {
+    var provider_id: Int
     var provider_name: String
     var logo_path: String
 }

@@ -28,6 +28,10 @@ struct PeopleSearch: Codable {
     var results: [Credit]
 }
 
+struct ProviderSearch: Codable {
+    var results: [Provider]
+}
+
 struct ReleaseSearch: Codable {
     var results: [ReleaseInfo]
 }

@@ -171,6 +171,12 @@ final class ContentDataProvider: DataProvider {
             }
         }
 
+        if kind == .stream, let url = Tmdb.Url.watch() {
+            fetchItem(url: url) { (item: ProviderSearch?)  in
+                dpm.providers = item?.results
+            }
+        }
+
         if let url = Tmdb.Url.movies(kind: kind) {
             fetchItem(url: url) { (item: MediaSearch?) in
                 dpm.mediaSearch = item
@@ -223,6 +229,7 @@ struct DataProviderModel {
     var mediaSearch2: MediaSearch?
 
     var peopleSearch: PeopleSearch?
+    var providers: [Provider]?
 
     var tv: TV?
 }
@@ -337,6 +344,26 @@ final class ProductionDataProvider: DataProvider {
 
         fetchItem(url: Tmdb.Url.movies(sortedBy: .byRevenue, productionId: id)) { (item: MediaSearch?) in
             dpm.mediaSearch2 = item
+        }
+
+        group.notify(queue: .main) {
+            completion(dpm)
+        }
+    }
+
+}
+
+final class ProviderDataProvider: DataProvider {
+
+    func get(_ id: Int?, completion: @escaping (DataProviderModel) -> Void) {
+        var dpm = DataProviderModel()
+
+        fetchItem(url: Tmdb.Url.discover(kind: .movie, providerId: id)) { (item: MediaSearch?) in
+            dpm.mediaSearch = item
+        }
+
+        fetchItem(url: Tmdb.Url.discover(kind: .tv, providerId: id)) { (item: TvSearch?) in
+            dpm.tvSearch = item
         }
 
         group.notify(queue: .main) {

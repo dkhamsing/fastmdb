@@ -19,6 +19,7 @@ enum Destination {
          music,
          moviesSortedBy,
          person,
+         provider, 
          network,
          production,
          safarivc,
