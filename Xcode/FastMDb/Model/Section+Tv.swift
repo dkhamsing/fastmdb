@@ -301,7 +301,7 @@ private extension TV {
             }
 
             // content rating
-            if let contentRating = content_ratings?.contentRating("US") {
+            if let contentRating = content_ratings?.contentRating(Tmdb.country) {
                 subt += "\nRated " + contentRating
             }
 

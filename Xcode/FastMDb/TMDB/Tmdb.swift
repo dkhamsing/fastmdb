@@ -58,6 +58,8 @@ private extension Tmdb {
 
 extension Tmdb {
 
+    static let country = "US"
+
     struct Url {
 
         static let baseImage = "https://image.tmdb.org/t/p/"
@@ -107,7 +109,7 @@ extension Tmdb {
         static func watch() -> URL? {
             var urlComponents = baseComponents
             urlComponents.path = Path.watch
-            let genreQueryItem = URLQueryItem(name: "watch_region", value: "US")
+            let genreQueryItem = URLQueryItem(name: QueryName.watchRegion.rawValue, value: Tmdb.country)
             urlComponents.queryItems?.append(genreQueryItem)
             return urlComponents.url
         }
@@ -176,7 +178,7 @@ extension Tmdb {
             )
 
             urlComponents.queryItems?.append(
-                URLQueryItem(name: "watch_region", value: "US")
+                URLQueryItem(name: QueryName.watchRegion.rawValue, value: Tmdb.country)
             )
 
             urlComponents.queryItems?.append(
@@ -185,8 +187,6 @@ extension Tmdb {
 
             return urlComponents.url
         }
-
-
 
         static func movies(sortedBy: Kind.Sort,
                            releaseYear: String? = nil,
@@ -529,6 +529,7 @@ extension Tmdb {
             case genre = "with_genres"
             case query = "query"
             case sort = "sort_by"
+            case watchRegion = "watch_region"
         }
 
         enum Web: String {

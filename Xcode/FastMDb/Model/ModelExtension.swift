@@ -774,7 +774,7 @@ extension TV {
         guard
             let country = origin_country?.first,
             country != "",
-            country != "US" else { return nil }
+            country != Tmdb.country  else { return nil }
 
         if let name = Locale.current.localizedString(forRegionCode: country) {
             return name
@@ -936,7 +936,7 @@ extension WatchSearch {
     ]
 
     func watchSectionProvider(_ name: String?) -> ItemSection? {
-        guard let country = results["US"],
+        guard let country = results[Tmdb.country],
               let providers = country.flatrate else { return watchSectionGoogleJustWatch(name) }
 
         let myProviders = providers

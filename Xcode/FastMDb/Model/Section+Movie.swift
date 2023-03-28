@@ -289,7 +289,7 @@ private extension Media {
         }
 
         // rating
-        if let contentRating = release_dates?.contentRating("US") {
+        if let contentRating = release_dates?.contentRating(Tmdb.country) {
             let text = "Rated " + contentRating
             metadata.append(text)
         }
