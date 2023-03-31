@@ -162,28 +162,32 @@ extension Tmdb {
 
         static func discover(
             kind: DiscoverKind,
-            providerId: Int?) -> URL? {
-            guard let providerId = providerId else { return nil }
-
-            var urlComponents = baseComponents
-
+            providerId: Int?,
+            originalLanguage: String = Tmdb.language,
+            sortBy: String = "primary_release_date.desc") -> URL? {
+                guard let providerId = providerId else { return nil }
+                
+                var urlComponents = baseComponents
                 switch kind {
                 case .movie: urlComponents.path = Path.discover
                 case .tv: urlComponents.path = Path.tvDiscover
                 }
-
-
-            urlComponents.queryItems?.append(
-                URLQueryItem(name: QueryName.sort.rawValue, value: "popularity")
-            )
-
-            urlComponents.queryItems?.append(
-                URLQueryItem(name: QueryName.watchRegion.rawValue, value: Tmdb.country)
-            )
-
-            urlComponents.queryItems?.append(
-                URLQueryItem(name: "with_watch_providers", value: String(providerId))
-            )
+                
+                urlComponents.queryItems?.append(
+                    URLQueryItem(name: QueryName.sort.rawValue, value: sortBy)
+                )
+                
+                urlComponents.queryItems?.append(
+                    URLQueryItem(name: QueryName.watchRegion.rawValue, value: Tmdb.country)
+                )
+                
+                urlComponents.queryItems?.append(
+                    URLQueryItem(name: "with_watch_providers", value: String(providerId))
+                )
+                
+                urlComponents.queryItems?.append(
+                    URLQueryItem(name: "with_original_language", value: originalLanguage)
+                )
 
             return urlComponents.url
         }
