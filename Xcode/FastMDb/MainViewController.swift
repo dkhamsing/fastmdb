@@ -543,14 +543,14 @@ private extension MainViewController {
         provider.get(providerrId) { dpm in
             var sections: [ItemSection] = []
 
-            let items = dpm.mediaSearch?.results.map { $0.listItemTextImage }
+            let items = dpm.mediaSearch?.results.map { $0.listItemWithVotes }
             sections.append(
                 ItemSection(
                     header: "Movies",
                     items: items, metadata: .init(Metadata(display: .textImage())))
             )
 
-            let tvItems = dpm.tvSearch?.results.map { $0.listItemTextImage }
+            let tvItems = dpm.tvSearch?.results.map { $0.listItemWithVotes }
             sections.append(
                 ItemSection(
                     header: "TV",
