@@ -18,7 +18,7 @@ jobs:
     - name: Xcode unit tests
       run: |
         cd Xcode/
-        xcodebuild clean test -scheme FastMDb -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.2' -resultBundlePath TestResults
+        xcodebuild clean test -scheme FastMDb -destination 'platform=iOS Simulator,name=iPhone 12,OS=16.2' -resultBundlePath TestResults
 
     - uses: actions/upload-artifact@v2
       with:
