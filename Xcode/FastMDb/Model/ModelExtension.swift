@@ -502,7 +502,10 @@ extension Media {
             sub.append(str)
         }
 
-        sub.append("\(vote_average ?? 0)")
+        sub.append(
+            vote_average ?? 0 == 0 ? "Unrated" : "\(vote_average ?? 0)"
+        )
+        
         let imageUrl = Tmdb.Url.Image.still(path: backdrop_path, size: .medium)
         return Item(title: titleDisplay, subtitle: sub.joined(separator: Constant.separator), color: ratingColor,
                     metadata: Metadata(id: id, destination: .movie, imageUrl: imageUrl))
@@ -851,9 +854,11 @@ extension TV {
         if let str = Constant.Vote(count: vote_count).voteDisplay {
             sub.append(str)
         }
+                
+        sub.append(
+            vote_average == 0 ? "Unrated" : "\(vote_average)"
+        )
         
-        sub.append("\(vote_average)")
-
         item.subtitle = sub.joined(separator: Constant.separator)
 
         return item
