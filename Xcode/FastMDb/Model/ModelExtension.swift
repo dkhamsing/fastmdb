@@ -948,6 +948,7 @@ extension WatchSearch {
             .filter { !WatchSearch.providersNotInterested.contains($0.provider_name.lowercased()) }
             .filter { !$0.provider_name.lowercased().contains("amazon channel") }
             .filter { !$0.provider_name.lowercased().contains("apple tv channel") }
+            .filter { !$0.provider_name.lowercased().contains("hbo") }
             .filter { !$0.provider_name.lowercased().contains("roku premium") }
             .sorted { $0.provider_name < $1.provider_name }
 
