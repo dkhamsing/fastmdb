@@ -70,7 +70,7 @@ struct Constant {
             let number = NSNumber(value: count)
             guard let formattedValue = Constant.numberFormatter.string(from: number) else { return nil }
 
-            return "\(formattedValue) votes"
+            return "\(formattedValue) vote" + (count == 1 ? "" : "s")
         }
     }
 
